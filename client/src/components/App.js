@@ -4,6 +4,7 @@ import jwt_decode from "jwt-decode";
 
 import NotFound from "./pages/NotFound.js";
 import Skeleton from "./pages/Skeleton.js";
+import TreeView from "./pages/TreeView";
 
 import "../utilities.css";
 
@@ -45,6 +46,7 @@ const App = () => {
     <>
       <Router>
         <Skeleton path="/" handleLogin={handleLogin} handleLogout={handleLogout} userId={userId} />
+        <TreeView path="/treeview/:snippet_id" userId={userId} />
         <NotFound default />
       </Router>
     </>

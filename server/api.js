@@ -11,6 +11,7 @@ const express = require("express");
 
 // import models so we can interact with the database
 const User = require("./models/user");
+const Snippet = require("./models/snippet");
 
 // import authentication library
 const auth = require("./auth");
@@ -42,6 +43,14 @@ router.post("/initsocket", (req, res) => {
 // |------------------------------|
 // | write your API methods below!|
 // |------------------------------|
+
+router.get("/treeview", (req, res) => {
+  console.log("api called, finding snippet with id " + req.query._id);
+  Snippet.findById(req.query._id).then((snippet) => {
+    console.log(snippet.content);
+    res.send(snippet);
+  });
+});
 
 // anything else falls to this "not found" case
 router.all("*", (req, res) => {
