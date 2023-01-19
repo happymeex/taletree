@@ -8,18 +8,21 @@ import "./TreeViewSnippet.css";
  * @param {String} authorName
  * @param {String} authorId
  * @param {String} content
+ * @param {Boolean} highlight
+ * @param {Function} onClick
  */
 const TreeViewSnippet = (props) => {
+  console.log("box highlight");
+  console.log(props.highlight);
+  const style = {
+    left: `${props.pos.x}px`,
+    top: `${props.pos.y}px`,
+    width: `${props.size.width}px`,
+    height: `${props.size.height}px`,
+    border: props.highlight ? `10px solid` : `0`,
+  };
   return (
-    <div
-      className="TreeViewSnippet-container"
-      style={{
-        left: `${props.pos.x}px`,
-        top: `${props.pos.y}px`,
-        width: `${props.size.width}px`,
-        height: `${props.size.height}px`,
-      }}
-    >
+    <div className="TreeViewSnippet-container" style={style} onClick={props.onClick}>
       <div>{props.authorName}</div>
       <div>{props.content}</div>
     </div>

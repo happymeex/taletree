@@ -54,7 +54,7 @@ router.get("/treeview", (req, res) => {
     const snippetList = await Snippet.find({ rootId: snippet.rootId });
     res.send({
       rootId: snippet.rootId,
-      snippetList: snippetList.reduce((acc, curr) => {
+      tree: snippetList.reduce((acc, curr) => {
         acc[curr._id] = curr;
         return acc;
       }, {}),
