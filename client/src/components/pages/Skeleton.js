@@ -10,9 +10,6 @@ import { get, post } from "../../utilities";
 const GOOGLE_CLIENT_ID = "614278991840-38k97pg151j5p5vp8is590n9fom48eko.apps.googleusercontent.com";
 
 const Skeleton = ({ userId, handleLogin, handleLogout }) => {
-  get("/api/treeview", { _id: "63c851742ceef29d76c7985c" }).then((snippet) => {
-    console.log(snippet, null, 4);
-  });
   return (
     <div>
       <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
@@ -49,7 +46,9 @@ const Skeleton = ({ userId, handleLogin, handleLogout }) => {
       </GoogleOAuthProvider>
       <button
         onClick={() => {
-          navigate(`/treeview/63c851742ceef29d76c7985c`, { state: { userId: userId } });
+          navigate(`/treeview/63c851742ceef29d76c7985c`, {
+            state: { userId: userId },
+          });
         }}
       >
         Go to TreeView

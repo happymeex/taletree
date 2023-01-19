@@ -46,10 +46,21 @@ router.post("/initsocket", (req, res) => {
 
 router.get("/treeview", (req, res) => {
   console.log("api called, finding snippet with id " + req.query._id);
-  Snippet.findById(req.query._id).then((snippet) => {
-    console.log(snippet.content);
-    res.send(snippet);
-  });
+  const getTree = async () => {
+    const snippet = await Snippet.findById(req.query._id).catch(() => {
+      console.log("snippet does not exist");
+      res.send({});
+    });
+    const snippetList = await Snippet.find({ root_id: snippet.root_id });
+    res.send({
+      root_id: snippet.root_id,
+      snippetList: snippetList.reduce((acc, curr) => {
+        acc[curr._id] = curr;
+        return acc;
+      }, {}),
+    });
+  };
+  getTree();
 });
 
 // anything else falls to this "not found" case
