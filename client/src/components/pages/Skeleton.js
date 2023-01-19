@@ -46,7 +46,7 @@ const Skeleton = ({ userId, handleLogin, handleLogout }) => {
       </GoogleOAuthProvider>
       <button
         onClick={() => {
-          navigate(`/treeview/63c851742ceef29d76c7985c`, {
+          navigate(`/treeview/63c870ed53ecea1d0cbdc569`, {
             state: { userId: userId },
           });
         }}
