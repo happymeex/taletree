@@ -5,19 +5,19 @@ import { get, post } from "../../utilities";
 /**
  * Page for viewing a snippet tree.
  * Proptypes
- * @param {String} snippet_id
+ * @param {String} snippetId
  * @param {String} userId
  */
 const TreeView = (props) => {
   useEffect(() => {
-    get("/api/treeview", { _id: props.snippet_id }).then((ret) => {
+    get("/api/treeview", { _id: props.snippetId }).then((ret) => {
       console.log(ret);
     });
   }, []);
 
   return (
     <div>
-      <div>Made it to the TreeView for snippet {props.snippet_id}</div>
+      <div>Made it to the TreeView for snippet {props.snippetId}</div>
       <div>User ID: {props.userId}</div>
     </div>
   );

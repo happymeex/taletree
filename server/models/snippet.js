@@ -1,11 +1,11 @@
 const mongoose = require("mongoose");
 
 const snippetScheme = new mongoose.Schema({
-  author_name: String,
-  author_id: String,
-  parent_id: String,
-  root_id: String,
-  children_id: [String],
+  authorName: String,
+  authorId: String,
+  parentId: String,
+  rootId: String,
+  children: [String],
   content: String,
 });
 

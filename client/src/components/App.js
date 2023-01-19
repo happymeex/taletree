@@ -46,7 +46,7 @@ const App = () => {
     <>
       <Router>
         <Skeleton path="/" handleLogin={handleLogin} handleLogout={handleLogout} userId={userId} />
-        <TreeView path="/treeview/:snippet_id" userId={userId} />
+        <TreeView path="/treeview/:snippetId" userId={userId} />
         <NotFound default />
       </Router>
     </>

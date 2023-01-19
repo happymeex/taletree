@@ -51,9 +51,9 @@ router.get("/treeview", (req, res) => {
       console.log("snippet does not exist");
       res.send({});
     });
-    const snippetList = await Snippet.find({ root_id: snippet.root_id });
+    const snippetList = await Snippet.find({ rootId: snippet.rootId });
     res.send({
-      root_id: snippet.root_id,
+      rootId: snippet.rootId,
       snippetList: snippetList.reduce((acc, curr) => {
         acc[curr._id] = curr;
         return acc;
