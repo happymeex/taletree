@@ -6,6 +6,7 @@
  * @param {String} targetId
  */
 const getCoords = (config, targetId) => {
+  console.log("getCoords called");
   const { rootId, snippetList } = config;
 
   //get all snippets in the target thread, extended
@@ -24,6 +25,9 @@ const getCoords = (config, targetId) => {
       targetThread.add(curr);
     }
   }
+
+  console.log("targetThread:");
+  console.log(targetThread);
 
   let targetThreadIndices = [0]; //ith entry indicates the ``horizontal'' index of ith snippet in its corresponding level
   let levels = [];
@@ -51,6 +55,9 @@ const getCoords = (config, targetId) => {
     layer = newLayer;
   }
 
+  console.log("levels:");
+  console.log(levels);
+
   let numLeaves = {};
   for (let i = levels.length - 1; i >= 0; i--) {
     for (let j = 0; j < levels[i].length; j++) {
@@ -65,6 +72,9 @@ const getCoords = (config, targetId) => {
     }
   }
 
+  console.log("numLeaves");
+  console.log(numLeaves);
+
   let coords = {};
   for (let i = 0; i < levels.length; i++) {
     const startIndex = i < targetThread.size ? targetThreadIndices[i] : 0;
@@ -76,6 +86,8 @@ const getCoords = (config, targetId) => {
       coords[levels[i][j].id] = { x: coords[levels[i][j - 1].id].x + 1, y: i };
     }
   }
+  console.log("returning:");
+  console.log(coords);
   return coords;
 };
 
