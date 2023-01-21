@@ -1,7 +1,14 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { get, post } from "../../utilities";
-import { getCoords, getThread, convertToPosition, getDimensions } from "../../utils/treeview.utils";
+import {
+  getCoords,
+  getThread,
+  convertToPosition,
+  getDimensions,
+  getIncomingLine,
+  getOutgoingLine,
+} from "../../utils/treeview.utils";
 import TreeViewSnippet from "../modules/TreeViewSnippet";
 import TreeViewButton from "../modules/TreeViewButton";
 import TreeViewSnippetWriter from "../modules/TreeViewSnippetWriter";
@@ -120,17 +127,31 @@ const TreeView = (props) => {
   let snippetList = [];
   for (const id in snippets) {
     const s = snippets[id];
+    const pos = convertToPosition(coords[id], delta);
+    const size = getDimensions(scale);
+    const line = {
+      fromParent:
+        s.parentId === ""
+          ? undefined
+          : getIncomingLine(pos, size, coords[id].x - coords[s.parentId].x, scale),
+      toChild: s.children.length === 0 ? undefined : getOutgoingLine(pos, size, scale),
+    };
     snippetList.push(
       <TreeViewSnippet
-        key={s._id}
-        pos={convertToPosition(coords[id], delta)}
-        size={getDimensions(scale)}
+        key={id}
+        container={{
+          pos: pos,
+          size: size,
+        }}
+        line={line}
         authorName={s.authorName}
         authorId={s.authorId}
         content={s.content}
-        highlight={highlight && thread.has(s._id)}
+        highlight={highlight}
+        isTarget={id === target}
+        inTargetThread={thread.has(id)}
         onClick={() => {
-          handleSnippetClick(s._id);
+          handleSnippetClick(id);
         }}
       />
     );
@@ -144,7 +165,7 @@ const TreeView = (props) => {
     >
       <div className="TreeView-optionsBarContainer u-flex-spaceBetween u-flex-alignCenter">
         <h1 className="u-bold u-bringToFront u-padded">TaleTree</h1>
-        <div className="u-bringToFront">
+        <div className="u-bringToFront u-flex-alignCenter">
           <TreeViewButton iconURL="Center Selected Thread" onClick={centerCurrentThread} />
           <TreeViewButton iconURL="Write" onClick={toggleSnippetWriter} />
         </div>

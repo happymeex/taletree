@@ -1,29 +1,48 @@
 import React from "react";
 import "./TreeViewSnippet.css";
+import { assembleStyle } from "../../utils/treeview.utils";
 
 /**
  * proptypes
- * @param {x: Number, y: Number} pos
- * @param {length: Number, width: Number} size
+ * @param {pos: Object, size: Object} container
  * @param {String} authorName
  * @param {String} authorId
  * @param {String} content
  * @param {Boolean} highlight
+ * @param {Object} line object containing all position/sizing data for lines
+ * @param {Boolean} inTargetThread
+ * @param {Boolean} isTarget
  * @param {Function} onClick
  */
 const TreeViewSnippet = (props) => {
-  const style = {
-    left: `${props.pos.x}px`,
-    top: `${props.pos.y}px`,
-    width: `${props.size.width}px`,
-    height: `${props.size.height}px`,
-    border: props.highlight ? `10px solid` : `0`,
-  };
+  const { highlight, inTargetThread, isTarget } = props;
+  const containerStyle = assembleStyle(props.container, highlight && inTargetThread);
+  const upLineFromParentStyle = props.line.fromParent
+    ? assembleStyle(props.line.fromParent.up, highlight && inTargetThread, true)
+    : undefined;
+  const horizontalLineFromParentStyle = props.line.fromParent
+    ? assembleStyle(props.line.fromParent.horizontal, highlight && inTargetThread, true)
+    : undefined;
+  const lineToChildStyle = props.line.toChild
+    ? assembleStyle(props.line.toChild, highlight && inTargetThread && !isTarget, true)
+    : undefined;
+
   return (
-    <div className="TreeViewSnippet-container" style={style} onClick={props.onClick}>
-      <div>{props.authorName}</div>
-      <div>{props.content}</div>
-    </div>
+    <>
+      {props.line.fromParent ? (
+        <>
+          <div style={upLineFromParentStyle}></div>
+          <div style={horizontalLineFromParentStyle}></div>
+        </>
+      ) : (
+        <></>
+      )}
+      {props.line.toChild ? <div style={lineToChildStyle}></div> : <></>}
+      <div className="TreeViewSnippet-container" style={containerStyle} onClick={props.onClick}>
+        <div>{props.authorName}</div>
+        <div>{props.content}</div>
+      </div>
+    </>
   );
 };
 

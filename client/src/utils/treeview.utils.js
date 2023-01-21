@@ -2,7 +2,11 @@ const DEFAULT_LENGTH = 3.5;
 const DEFAULT_HEIGHT = 1.5;
 const DEFAULT_SCALE = 100;
 const HORIZONTAL_SPACING = 4.5;
-const VERTICAL_SPACING = 2;
+const DEFAULT_LINE_HEIGHT = 1;
+const DEFAULT_BORDER = 1; //in pixels
+const BORDER_HIGHLIGHT_MULTIPLIER = 5;
+const DEFAULT_LINE_WIDTH = 0.01;
+const LINE_HIGHLIGHT_MULTIPLIER = 2;
 
 const getThread = (tree, targetId) => {
   let thread = new Set([targetId]);
@@ -145,12 +149,69 @@ const convertToPosition = (coords, delta) => ({
   y:
     delta.y +
     0.5 * window.innerHeight +
-    (VERTICAL_SPACING * coords.y - 0.5 * DEFAULT_HEIGHT) * DEFAULT_SCALE,
+    ((2 * DEFAULT_LINE_HEIGHT + DEFAULT_HEIGHT) * coords.y - 0.5 * DEFAULT_HEIGHT) * DEFAULT_SCALE,
 });
 
-const getDimensions = (scale) => ({
-  width: DEFAULT_LENGTH * DEFAULT_SCALE * scale,
-  height: DEFAULT_HEIGHT * DEFAULT_SCALE * scale,
+const getDimensions = (scale, stretchHeight = 1) => {
+  const trueScale = DEFAULT_SCALE * scale;
+  return {
+    x: DEFAULT_LENGTH * trueScale,
+    y: DEFAULT_HEIGHT * trueScale * stretchHeight,
+    border: DEFAULT_BORDER * scale,
+  };
+};
+
+const getOutgoingLine = (pos, size, scale = 1) => ({
+  pos: { x: pos.x + 0.5 * size.x, y: pos.y + size.y },
+  size: { x: 0, y: DEFAULT_LINE_HEIGHT * DEFAULT_SCALE * scale },
+  thickness: DEFAULT_LINE_WIDTH * DEFAULT_SCALE * scale,
 });
 
-export { getCoords, getThread, convertToPosition, getDimensions };
+const getIncomingLine = (pos, size, xdiff, scale = 1) => {
+  const trueScale = DEFAULT_SCALE * scale;
+  return {
+    up: {
+      pos: { x: pos.x + 0.5 * size.x, y: pos.y - DEFAULT_LINE_HEIGHT * trueScale },
+      size: {
+        x: 0,
+        y: DEFAULT_LINE_HEIGHT * trueScale,
+      },
+      thickness: DEFAULT_LINE_WIDTH * trueScale,
+    },
+    horizontal: {
+      pos: {
+        x: pos.x + 0.5 * size.x - (xdiff < 0 ? 0 : xdiff * HORIZONTAL_SPACING * trueScale),
+        y: pos.y - DEFAULT_LINE_HEIGHT * trueScale,
+      },
+      size: {
+        x: Math.abs(xdiff) * HORIZONTAL_SPACING * trueScale,
+        y: 0,
+      },
+      thickness: DEFAULT_LINE_WIDTH * trueScale,
+    },
+  };
+};
+
+const assembleStyle = (obj, highlight, isLine = false) => {
+  return {
+    position: `absolute`,
+    left: `${obj.pos.x}px`,
+    top: `${obj.pos.y}px`,
+    width: `${obj.size.x}px`,
+    height: `${obj.size.y}px`,
+    border: `${
+      isLine
+        ? obj.thickness * (highlight ? LINE_HIGHLIGHT_MULTIPLIER : 1)
+        : obj.size.border * (highlight ? BORDER_HIGHLIGHT_MULTIPLIER : 1)
+    }px solid`,
+  };
+};
+export {
+  getCoords,
+  getThread,
+  convertToPosition,
+  getDimensions,
+  getOutgoingLine,
+  getIncomingLine,
+  assembleStyle,
+};
