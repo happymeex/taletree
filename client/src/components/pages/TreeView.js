@@ -35,6 +35,7 @@ const TreeView = (props) => {
   useEffect(() => {
     get("/api/treeview", { _id: props.snippetId }).then((tree) => {
       console.log("empty UseEffect hook called");
+      console.log("Logged in as: " + props.userName);
       console.log(tree);
       setCoords(getCoords(tree, target));
       setThread(getThread(tree, props.snippetId));
@@ -134,8 +135,7 @@ const TreeView = (props) => {
       <div className="TreeView-optionsBarContainer u-flex-spaceBetween u-flex-alignCenter">
         <h1 className="u-bold u-bringToFront u-padded">TaleTree</h1>
         <div>
-          <TreeViewButton imgURL="Write" onClick={toggleSnippetWriter} />
-          <TreeViewButton imgURL="Write" onClick={toggleSnippetWriter} />
+          <TreeViewButton iconURL="Write" onClick={toggleSnippetWriter} />
         </div>
       </div>
 

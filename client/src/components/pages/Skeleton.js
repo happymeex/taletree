@@ -9,7 +9,7 @@ import { get, post } from "../../utilities";
 //TODO: REPLACE WITH YOUR OWN CLIENT_ID
 const GOOGLE_CLIENT_ID = "614278991840-38k97pg151j5p5vp8is590n9fom48eko.apps.googleusercontent.com";
 
-const Skeleton = ({ userId, handleLogin, handleLogout }) => {
+const Skeleton = ({ userId, userName, handleLogin, handleLogout }) => {
   return (
     <div>
       <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
@@ -47,7 +47,7 @@ const Skeleton = ({ userId, handleLogin, handleLogout }) => {
       <button
         onClick={() => {
           navigate(`/treeview/63c870ed53ecea1d0cbdc569`, {
-            state: { userId: userId },
+            state: { userId: userId, userName: userName },
           });
         }}
       >
