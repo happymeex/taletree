@@ -26,7 +26,8 @@ const TreeView = (props) => {
   const [delta, setDelta] = useState({ x: 0, y: 0 });
   const [coords, setCoords] = useState({});
   const [snippets, setSnippets] = useState();
-  const [target, setTarget] = useState(props.snippetId);
+  const [target, setTarget] = useState(props.snippetId); //the leaf snippet in the currently highlighted thread
+  const [viewTarget, setViewTarget] = useState(props.snippetId); //the snippet assigned coordinates (0,0)
   const [thread, setThread] = useState();
   const [highlight, setHighlight] = useState(true);
   const [writer, setWriter] = useState(false);
@@ -37,7 +38,7 @@ const TreeView = (props) => {
       console.log("empty UseEffect hook called");
       console.log("Logged in as: " + props.userName);
       console.log(tree);
-      setCoords(getCoords(tree, target));
+      setCoords(getCoords(tree, props.snippetId));
       setThread(getThread(tree, props.snippetId));
       setSnippets(tree);
     });
@@ -100,11 +101,20 @@ const TreeView = (props) => {
         let tree = structuredClone(snippets);
         tree[s._id] = s;
         tree[s.parentId].children.push(s._id);
-        const newCoords = getCoords(tree, s._id);
+        const newCoords = getCoords(tree, viewTarget);
         setCoords(newCoords);
         setSnippets(tree);
       }
     });
+  };
+
+  const centerCurrentThread = () => {
+    const newCoords = getCoords(snippets, target);
+    const newThread = getThread(snippets, target);
+    setThread(newThread);
+    setDelta({ x: 0, y: 0 });
+    setCoords(newCoords);
+    setViewTarget(target);
   };
 
   let snippetList = [];
@@ -134,7 +144,8 @@ const TreeView = (props) => {
     >
       <div className="TreeView-optionsBarContainer u-flex-spaceBetween u-flex-alignCenter">
         <h1 className="u-bold u-bringToFront u-padded">TaleTree</h1>
-        <div>
+        <div className="u-bringToFront">
+          <TreeViewButton iconURL="Center Selected Thread" onClick={centerCurrentThread} />
           <TreeViewButton iconURL="Write" onClick={toggleSnippetWriter} />
         </div>
       </div>
