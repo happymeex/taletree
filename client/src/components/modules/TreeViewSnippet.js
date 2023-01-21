@@ -12,8 +12,6 @@ import "./TreeViewSnippet.css";
  * @param {Function} onClick
  */
 const TreeViewSnippet = (props) => {
-  console.log("box highlight");
-  console.log(props.highlight);
   const style = {
     left: `${props.pos.x}px`,
     top: `${props.pos.y}px`,

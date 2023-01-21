@@ -1,3 +1,9 @@
+const DEFAULT_LENGTH = 3.5;
+const DEFAULT_HEIGHT = 1.5;
+const DEFAULT_SCALE = 100;
+const HORIZONTAL_SPACING = 4.5;
+const VERTICAL_SPACING = 2;
+
 const getThread = (tree, targetId) => {
   let thread = new Set([targetId]);
   let curr = targetId;
@@ -14,9 +20,10 @@ const getThread = (tree, targetId) => {
  * @param {{rootId: String, snippetList: Object}} config
  * @param {String} targetId
  */
-const getCoords = (tree, rootId, targetId) => {
+const getCoords = (tree, targetId) => {
   console.log("getCoords called");
 
+  const rootId = tree[targetId].rootId;
   //get all snippets in the target thread, extended
   //so that the target thread ends on a leaf
   let thread = getThread(tree, targetId);
@@ -29,37 +36,41 @@ const getCoords = (tree, rootId, targetId) => {
     }
   }
 
-  console.log("thread:");
+  console.log("thread: ");
   console.log(thread);
 
-  let threadIndices = [0]; //ith entry indicates the ``horizontal'' index of ith snippet in its corresponding level
+  let threadIndices = []; //ith entry indicates the ``horizontal'' index of ith snippet in its corresponding level
   let levels = [];
   let layer = [{ id: rootId, l: true, r: true }];
   while (layer.length !== 0) {
     levels.push(layer);
     let newLayer = [];
-    if (levels.length >= thread.size) {
-      for (const s of layer)
+    for (const s of layer) {
+      if (thread.has(s.id)) {
+        let flag = false;
+        for (let i = 0; i < tree[s.id].children.length; i++) {
+          const child = tree[s.id].children[i];
+          if (thread.has(child)) {
+            flag = true;
+            threadIndices.push(i);
+            newLayer.push({ id: child, l: true, r: true });
+          } else {
+            newLayer.push({ id: child, l: !flag, r: flag });
+          }
+        }
+      } else {
         for (const child of tree[s.id].children) {
           newLayer.push({ id: child, l: s.l, r: s.r });
-        }
-    } else {
-      for (const s of layer) {
-        let flag = false;
-        for (const child of tree[s.id].children) {
-          if (thread.has(child)) {
-            threadIndices.push(newLayer.length);
-            newLayer.push({ id: child, l: true, r: true });
-            flag = true;
-          } else newLayer.push({ id: child, l: !flag, r: flag });
         }
       }
     }
     layer = newLayer;
   }
-
   console.log("levels:");
   console.log(levels);
+
+  console.log("Thread indices: ");
+  console.log(threadIndices);
 
   let numLeaves = {};
   for (let i = levels.length - 1; i >= 0; i--) {
@@ -75,23 +86,71 @@ const getCoords = (tree, rootId, targetId) => {
     }
   }
 
-  console.log("numLeaves");
+  console.log("numleaves:");
   console.log(numLeaves);
 
   let coords = {};
-  for (let i = 0; i < levels.length; i++) {
-    const startIndex = i < thread.size ? threadIndices[i] : 0;
-    coords[levels[i][startIndex].id] = { x: 0, y: i };
-    for (let j = startIndex - 1; j >= 0; j--) {
-      coords[levels[i][j].id] = { x: coords[levels[i][j + 1].id].x - 1, y: i };
+  coords[rootId] = { x: 0, y: 0 };
+
+  //id: parent node
+  //dir: either "l" or "r"
+  //start: index of the child to be positioned directly underneath the parent
+  const computeChildCoords = (id, dir, start) => {
+    console.log("computing child coords of id: " + id);
+    console.log("coords is currently:");
+    console.log(coords);
+    const ch = tree[id].children;
+    console.log("children:");
+    console.log(ch);
+    if (ch.length === 0) return;
+    const depth = coords[id].y;
+    const end = dir === "l" ? -1 : ch.length;
+    const step = dir === "l" ? -1 : 1;
+    let tot = coords[id].x;
+    let i = start;
+    while (i !== end) {
+      console.log("looking at child " + ch[i]);
+      coords[ch[i]] = { x: tot, y: depth + 1 };
+      tot += step * numLeaves[ch[i]][dir];
+      i += step;
     }
-    for (let j = startIndex + 1; j < levels[i].length; j++) {
-      coords[levels[i][j].id] = { x: coords[levels[i][j - 1].id].x + 1, y: i };
+  };
+
+  for (let depth = 0; depth < levels.length; depth++) {
+    for (const { id, l, r } of levels[depth]) {
+      if (l && r) {
+        //if node is in targetThread
+        computeChildCoords(id, "l", threadIndices[depth]);
+        computeChildCoords(id, "r", threadIndices[depth]);
+      } else if (l) computeChildCoords(id, "l", tree[id].children.length - 1);
+      else if (r) computeChildCoords(id, "r", 0);
     }
   }
+
   console.log("returning:");
+  const { x, y } = coords[targetId];
+  for (const id in coords) {
+    coords[id].x -= x;
+    coords[id].y -= y;
+  }
   console.log(coords);
   return coords;
 };
 
-export { getCoords, getThread };
+const convertToPosition = (coords, delta) => ({
+  x:
+    delta.x +
+    0.5 * window.innerWidth +
+    (HORIZONTAL_SPACING * coords.x - 0.5 * DEFAULT_LENGTH) * DEFAULT_SCALE,
+  y:
+    delta.y +
+    0.5 * window.innerHeight +
+    (VERTICAL_SPACING * coords.y - 0.5 * DEFAULT_HEIGHT) * DEFAULT_SCALE,
+});
+
+const getDimensions = (scale) => ({
+  width: DEFAULT_LENGTH * DEFAULT_SCALE * scale,
+  height: DEFAULT_HEIGHT * DEFAULT_SCALE * scale,
+});
+
+export { getCoords, getThread, convertToPosition, getDimensions };

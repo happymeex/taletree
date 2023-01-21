@@ -52,15 +52,36 @@ router.get("/treeview", (req, res) => {
       res.send({});
     });
     const snippetList = await Snippet.find({ rootId: snippet.rootId });
-    res.send({
-      rootId: snippet.rootId,
-      tree: snippetList.reduce((acc, curr) => {
+    res.send(
+      snippetList.reduce((acc, curr) => {
         acc[curr._id] = curr;
         return acc;
-      }, {}),
-    });
+      }, {})
+    );
   };
   getTree();
+});
+
+router.post("/treeview", (req, res) => {
+  console.log("posting snippet to DB");
+  auth.ensureLoggedIn(req, res, () => {
+    console.log("from post: user is indeed logged in");
+    const leaf = new Snippet({
+      authorName: req.body.authorName,
+      authorId: req.body.authorId,
+      content: req.body.input,
+      children: [],
+      parentId: req.body.parentId,
+      rootId: req.body.rootId,
+    });
+    leaf.save().then((snippet) => {
+      Snippet.findById(req.body.parentId).then((parent) => {
+        parent.children.push(snippet._id);
+        parent.save();
+      });
+      res.send(snippet);
+    });
+  });
 });
 
 // anything else falls to this "not found" case

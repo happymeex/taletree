@@ -16,6 +16,7 @@
 
 /* TODO: REPLACE WITH YOUR OWN FONT! */
 @import url("https://fonts.googleapis.com/css?family=Roboto&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300&display=swap");
 
 :root {
   --primary: #396dff;
@@ -34,7 +35,7 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: "Roboto", sans-serif;
+  font-family: "Lato", monospace;
   font-weight: 300;
 }
 
@@ -51,12 +52,31 @@ form {
   flex-direction: column;
 }
 
+.u-flex-end {
+  display: flex;
+  justify-content: flex-end;
+}
+
 .u-flex-justifyCenter {
+  display: flex;
   justify-content: center;
+}
+.u-flex-spaceBetween {
+  display: flex;
+  justify-content: space-between;
 }
 
 .u-flex-alignCenter {
+  display: flex;
   align-items: center;
+}
+
+.u-bringToFront {
+  z-index: 1;
+}
+
+.u-padded {
+  padding: 10px;
 }
 
 .u-inlineBlock {
