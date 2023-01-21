@@ -109,8 +109,11 @@ const TreeView = (props) => {
         tree[s._id] = s;
         tree[s.parentId].children.push(s._id);
         const newCoords = getCoords(tree, viewTarget);
+        const newThread = getThread(tree, s._id);
         setCoords(newCoords);
         setSnippets(tree);
+        setThread(newThread);
+        setTarget(s._id);
       }
     });
   };
