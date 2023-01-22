@@ -11,7 +11,8 @@ import {
 } from "../../utils/treeview.utils";
 import TreeViewSnippet from "../modules/TreeViewSnippet";
 import TreeViewButton from "../modules/TreeViewButton";
-import TreeViewSnippetWriter from "../modules/TreeViewSnippetWriter";
+import WriteNewSnippet from "../modules/WriteNewSnippet";
+import ModalBackground from "../modules/ModalBackground";
 import "./TreeView.css";
 
 const DEFAULT_LENGTH = 3.5;
@@ -42,7 +43,6 @@ const TreeView = (props) => {
 
   useEffect(() => {
     get("/api/treeview", { _id: props.snippetId }).then((tree) => {
-      console.log("empty UseEffect hook called");
       console.log("Logged in as: " + props.userName);
       console.log(tree);
       setCoords(getCoords(tree, props.snippetId));
@@ -54,10 +54,13 @@ const TreeView = (props) => {
       setPos({ x: e.x, y: e.y });
     };
     window.addEventListener("mousemove", updatePos);
+    window.addEventListener("click", (e) => {
+      if (e.target.id === "ModalBackground") setWriter(false);
+    });
   }, []);
 
   useEffect(() => {
-    if (isDrag) {
+    if (isDrag && !writer) {
       setDelta((d) => {
         d.x += pos.x - startPos.x;
         d.y += pos.y - startPos.y;
@@ -67,9 +70,11 @@ const TreeView = (props) => {
     }
   }, [pos]);
 
-  const handleMouseDown = () => {
-    setIsDrag(true);
-    setStartPos(pos);
+  const handleMouseDown = (e) => {
+    if (e.target.id === "TreeViewContainer") {
+      setIsDrag(true);
+      setStartPos(pos);
+    }
   };
 
   const handleMouseUp = () => {
@@ -77,16 +82,12 @@ const TreeView = (props) => {
   };
 
   const handleSnippetClick = (id) => {
-    console.log("set target id to " + id);
     setTarget(id);
     const newThread = getThread(snippets, id);
-    console.log("new thread: ");
-    console.log(newThread);
     setThread(newThread);
   };
 
   const toggleSnippetWriter = () => {
-    console.log("button clicked");
     setWriter((state) => !state);
   };
 
@@ -159,9 +160,15 @@ const TreeView = (props) => {
       />
     );
   }
+  //{writer && (
+  //  <div id="ModalBackground" className="TreeView-modal u-flex-justifyCenter">
+  //    <WriteNewSnippet onPost={handlePost} onClose={toggleSnippetWriter} />
+  //  </div>
+  //)}
 
   return (
     <div
+      id="TreeViewContainer"
       className="TreeView-container u-flex-end"
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
@@ -174,8 +181,15 @@ const TreeView = (props) => {
         </div>
       </div>
 
-      {writer ? <TreeViewSnippetWriter onPost={handlePost} onClose={toggleSnippetWriter} /> : <></>}
       <>{snippetList}</>
+      {writer && (
+        <ModalBackground
+          onClose={() => {
+            setWriter(false);
+          }}
+          children={<WriteNewSnippet onPost={handlePost} onClose={toggleSnippetWriter} />}
+        />
+      )}
     </div>
   );
 };

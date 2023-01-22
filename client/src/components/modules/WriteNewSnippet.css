@@ -1,0 +1,21 @@
+.WriteNewSnippet-container {
+  background-color: white;
+  padding: var(--m);
+  width: 50%;
+  border-radius: var(--m);
+  gap: var(--m);
+}
+.WriteNewSnippet-textbox {
+  resize: none;
+  font-family: inherit;
+  font-size: var(--l);
+  padding: 0;
+  border: none;
+  outline: none;
+}
+
+.WriteNewSnippet-postButton {
+  font-family: inherit;
+  font-size: var(--l);
+  padding: var(--s);
+}

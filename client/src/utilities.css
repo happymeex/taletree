@@ -30,12 +30,14 @@
   --s: 8px;
   --m: 16px;
   --l: 24px;
+  --xl: 32px;
+  --xxl: 48px;
 }
 
 body {
   margin: 0;
   padding: 0;
-  font-family: "Lato", monospace;
+  font-family: "Lato", sans-serif;
   font-weight: 300;
 }
 
