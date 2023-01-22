@@ -62,7 +62,7 @@ router.get("/treeview", (req, res) => {
   getTree();
 });
 
-router.post("/treeview", (req, res) => {
+router.post("/new-snippet", (req, res) => {
   console.log("posting snippet to DB");
   auth.ensureLoggedIn(req, res, () => {
     console.log("from post: user is indeed logged in");

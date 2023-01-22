@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { get, post } from "../../utilities";
 import {
   getCoords,
@@ -13,13 +13,20 @@ import TreeViewSnippet from "../modules/TreeViewSnippet";
 import TreeViewButton from "../modules/TreeViewButton";
 import WriteNewSnippet from "../modules/WriteNewSnippet";
 import ModalBackground from "../modules/ModalBackground";
+import TreeViewMenu from "../modules/TreeViewMenu";
 import "./TreeView.css";
 
-const DEFAULT_LENGTH = 3.5;
-const DEFAULT_HEIGHT = 1.5;
-const DEFAULT_SCALE = 100;
-const HORIZONTAL_SPACING = 4.5;
-const VERTICAL_SPACING = 2;
+const ALLOW_DRAG = (classname) => {
+  return classname.startsWith("TreeView-") || classname === "TreeViewSnippet-container";
+};
+const ALLOW_HIGHLIGHT = (classname) => {
+  return (
+    classname === "TreeViewSnippet-content" ||
+    classname === "TreeViewSnippet-author" ||
+    classname === "WriteNewSnippet-textbox"
+  );
+};
+
 /**
  * Page for viewing a snippet tree.
  * Proptypes
@@ -60,7 +67,7 @@ const TreeView = (props) => {
   }, []);
 
   useEffect(() => {
-    if (isDrag && !writer) {
+    if (isDrag) {
       setDelta((d) => {
         d.x += pos.x - startPos.x;
         d.y += pos.y - startPos.y;
@@ -71,7 +78,8 @@ const TreeView = (props) => {
   }, [pos]);
 
   const handleMouseDown = (e) => {
-    if (e.target.id === "TreeViewContainer") {
+    if (!ALLOW_HIGHLIGHT(e.target.className)) e.preventDefault();
+    if (ALLOW_DRAG(e.target.className)) {
       setIsDrag(true);
       setStartPos(pos);
     }
@@ -92,9 +100,9 @@ const TreeView = (props) => {
   };
 
   const handlePost = (input) => {
-    console.log("posting snippet with input:");
+    console.log("posting snippet as " + props.userName + " with input:");
     console.log(input);
-    post("/api/treeview", {
+    post("/api/new-snippet", {
       authorName: props.userName,
       authorId: props.userId,
       parentId: target,
@@ -102,10 +110,7 @@ const TreeView = (props) => {
       rootId: snippets[target].rootId,
     }).then((s) => {
       //returned snippet object
-      console.log("got back new snippet:");
-      console.log(s);
       if (s._id) {
-        console.log("setting snippet");
         let tree = structuredClone(snippets);
         tree[s._id] = s;
         tree[s.parentId].children.push(s._id);
@@ -119,7 +124,7 @@ const TreeView = (props) => {
     });
   };
 
-  const centerCurrentThread = () => {
+  const alignCurrentThread = () => {
     const newCoords = getCoords(snippets, target);
     const newThread = getThread(snippets, target);
     setThread(newThread);
@@ -160,11 +165,6 @@ const TreeView = (props) => {
       />
     );
   }
-  //{writer && (
-  //  <div id="ModalBackground" className="TreeView-modal u-flex-justifyCenter">
-  //    <WriteNewSnippet onPost={handlePost} onClose={toggleSnippetWriter} />
-  //  </div>
-  //)}
 
   return (
     <div
@@ -173,14 +173,19 @@ const TreeView = (props) => {
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
     >
-      <div className="TreeView-optionsBarContainer u-flex-spaceBetween u-flex-alignCenter">
-        <h1 className="u-bold u-bringToFront u-padded">TaleTree</h1>
-        <div className="u-bringToFront u-flex-alignCenter">
-          <TreeViewButton iconURL="Center Selected Thread" onClick={centerCurrentThread} />
-          <TreeViewButton iconURL="Write" onClick={toggleSnippetWriter} />
-        </div>
-      </div>
+      <div className="TreeView-title u-bringToFront">TaleTree</div>
 
+      <TreeViewMenu>
+        {useMemo(
+          () => (
+            <>
+              <TreeViewButton text="Write" onClick={toggleSnippetWriter} />
+              <TreeViewButton text="Align" onClick={alignCurrentThread} />
+            </>
+          ),
+          [snippets, target]
+        )}
+      </TreeViewMenu>
       <>{snippetList}</>
       {writer && (
         <ModalBackground

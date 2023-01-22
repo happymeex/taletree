@@ -3,14 +3,17 @@ import "./TreeViewButton.css";
 
 /**
  * proptypes
- * @param {String} iconURL
- * @param {Function} onClick
+ * @param {String} text button label
+ * @param {Function} onClick handler function for click
  */
 
 const TreeViewButton = (props) => {
   return (
-    <button className="u-bringToFront TreeViewButton-button" onClick={props.onClick}>
-      {props.iconURL}
+    <button
+      className="TreeViewButton-button u-flex-alignCenter u-flex-justifyCenter"
+      onClick={props.onClick}
+    >
+      {props.text}
     </button>
   );
 };

@@ -1,11 +1,17 @@
 .TreeView-container {
   width: 100%;
   height: 100%;
-  background-color: rgb(140, 231, 140);
+  background-color: var(--primary--dim);
   position: fixed;
 }
 
-.TreeView-optionsBarContainer {
-  width: 100%;
-  height: 80px;
+@import url("https://fonts.googleapis.com/css2?family=EB+Garamond&display=swap");
+
+.TreeView-title {
+  position: absolute;
+  left: var(--xl);
+  top: var(--m);
+  font-size: var(--xxl);
+  font-family: "EB Garamond", serif;
+  cursor: pointer;
 }

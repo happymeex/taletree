@@ -100,12 +100,7 @@ const getCoords = (tree, targetId) => {
   //dir: either "l" or "r"
   //start: index of the child to be positioned directly underneath the parent
   const computeChildCoords = (id, dir, start) => {
-    console.log("computing child coords of id: " + id);
-    console.log("coords is currently:");
-    console.log(coords);
     const ch = tree[id].children;
-    console.log("children:");
-    console.log(ch);
     if (ch.length === 0) return;
     const depth = coords[id].y;
     const end = dir === "l" ? -1 : ch.length;
@@ -113,7 +108,6 @@ const getCoords = (tree, targetId) => {
     let tot = coords[id].x;
     let i = start;
     while (i !== end) {
-      console.log("looking at child " + ch[i]);
       coords[ch[i]] = { x: tot, y: depth + 1 };
       tot += step * numLeaves[ch[i]][dir];
       i += step;

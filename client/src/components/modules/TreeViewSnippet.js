@@ -39,8 +39,8 @@ const TreeViewSnippet = (props) => {
       )}
       {props.line.toChild ? <div style={lineToChildStyle}></div> : <></>}
       <div className="TreeViewSnippet-container" style={containerStyle} onClick={props.onClick}>
-        <div>{props.authorName}</div>
-        <div>{props.content}</div>
+        <div className="TreeViewSnippet-author">{props.authorName}</div>
+        <div className="TreeViewSnippet-content">{props.content}</div>
       </div>
     </>
   );

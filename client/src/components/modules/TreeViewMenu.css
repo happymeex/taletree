@@ -1,0 +1,38 @@
+.TreeViewMenu-container {
+  position: fixed;
+  width: 200px;
+  background-color: var(--white);
+  border-radius: var(--m);
+  bottom: var(--xl);
+  right: var(--xl);
+  box-shadow: 5px 5px 6px 5px rgba(0, 0, 0, 0.4);
+}
+
+.TreeViewMenu-bar {
+  height: 64px;
+  gap: var(--m);
+  font-size: var(--l);
+  font-weight: 900;
+}
+
+.TreeViewMenu-arrowWrapper {
+  height: 50%;
+  width: 15%;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  border-radius: var(--s);
+  cursor: pointer;
+}
+
+.TreeViewMenu-arrowWrapper:hover {
+  background-color: var(--primary);
+}
+
+.TreeViewMenu-arrowIcon {
+  background-size: contain;
+}
+
+.TreeViewMenu-buttonContainer {
+  padding: var(--s);
+}
