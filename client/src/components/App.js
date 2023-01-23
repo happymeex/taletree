@@ -5,6 +5,7 @@ import jwt_decode from "jwt-decode";
 import NotFound from "./pages/NotFound.js";
 import Skeleton from "./pages/Skeleton.js";
 import TreeView from "./pages/TreeView";
+import Profile from "./pages/Profile.js";
 
 import "../utilities.css";
 
@@ -58,6 +59,7 @@ const App = () => {
           userName={userName}
         />
         <TreeView path="/treeview/:snippetId" userId={userId} userName={userName} />
+        <Profile path="/profile/:profileId" userId={userId} />
         <NotFound default />
       </Router>
     </>

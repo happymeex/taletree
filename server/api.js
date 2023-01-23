@@ -84,6 +84,39 @@ router.post("/new-snippet", (req, res) => {
   });
 });
 
+router.get("/profile", (req, res) => {
+  console.log("getting profile data of user " + req.query.id);
+  User.findById(req.query.id)
+    .then((user) => {
+      res.send(user);
+    })
+    .catch((err) => {
+      res.status(400).send(err);
+    });
+});
+
+router.get("/profile-snippet-data", (req, res) => {
+  console.log("getting snippet data");
+  console.log(req.query);
+  const query = async (field) => {
+    const ids = req.query[field];
+    if (ids === "") return [];
+    return Snippet.find({ _id: { $in: ids.split(",") } }).catch((err) => {
+      res.status(400).send(err);
+    });
+  };
+  const queryDB = async () => {
+    ret = {};
+    for (const field in req.query) {
+      const list = await query(field);
+      if (!list) return; //in case error occurred in query
+      ret[field] = list;
+    }
+    res.send(ret);
+  };
+  queryDB();
+});
+
 // anything else falls to this "not found" case
 router.all("*", (req, res) => {
   console.log(`API route not found: ${req.method} ${req.url}`);
