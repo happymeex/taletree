@@ -1,4 +1,4 @@
-.TreeViewButton-button {
+.GenericButton-button {
   padding: var(--m);
   background-color: transparent;
   width: 100%;
@@ -10,7 +10,7 @@
   color: var(--darkgrey);
 }
 
-.TreeViewButton-button:hover {
+.GenericButton-button:hover {
   background-color: var(--primary);
   color: black;
   transition: 0.2s;

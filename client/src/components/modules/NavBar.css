@@ -1,0 +1,42 @@
+.NavBar-container {
+  position: relative;
+  top: 0;
+  background-color: transparent;
+  height: 100px;
+}
+
+@import url("https://fonts.googleapis.com/css2?family=EB+Garamond&display=swap");
+.NavBar-websiteName {
+  position: fixed;
+  font-size: var(--xxl);
+  top: var(--m);
+  left: var(--xxl);
+  font-family: "EB Garamond", serif;
+  z-index: 2;
+}
+
+.NavBar-profilePic {
+  border-radius: 50%;
+  border: 2px solid black;
+  height: var(--xxl);
+  width: var(--xxl);
+  z-index: 2;
+}
+.NavBar-profilePic:hover {
+  cursor: pointer;
+}
+.NavBar-buttonWrapper {
+  position: fixed;
+  right: var(--m);
+  top: var(--m);
+  z-index: 2;
+}
+
+.NavBar-dropdownContainer {
+  background-color: white;
+  border-radius: var(--s);
+  position: absolute;
+  right: var(--m);
+  top: 64px;
+  box-shadow: 3px 3px 4px 2px rgba(0, 0, 0, 0.4);
+}

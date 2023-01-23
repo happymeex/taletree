@@ -40,9 +40,6 @@ const getCoords = (tree, targetId) => {
     }
   }
 
-  console.log("thread: ");
-  console.log(thread);
-
   let threadIndices = []; //ith entry indicates the ``horizontal'' index of ith snippet in its corresponding level
   let levels = [];
   let layer = [{ id: rootId, l: true, r: true }];
@@ -70,11 +67,6 @@ const getCoords = (tree, targetId) => {
     }
     layer = newLayer;
   }
-  console.log("levels:");
-  console.log(levels);
-
-  console.log("Thread indices: ");
-  console.log(threadIndices);
 
   let numLeaves = {};
   for (let i = levels.length - 1; i >= 0; i--) {
@@ -89,9 +81,6 @@ const getCoords = (tree, targetId) => {
         };
     }
   }
-
-  console.log("numleaves:");
-  console.log(numLeaves);
 
   let coords = {};
   coords[rootId] = { x: 0, y: 0 };

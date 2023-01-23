@@ -6,6 +6,7 @@ const UserSchema = new mongoose.Schema({
   bio: String,
   contribs: [String],
   favorites: [String],
+  pictureURL: String,
 });
 
 // compile model from schema

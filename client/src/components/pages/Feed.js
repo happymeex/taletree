@@ -7,9 +7,6 @@ import "../../utilities.css";
 import "./Feed.css";
 import { get, post } from "../../utilities";
 
-//TODO: REPLACE WITH YOUR OWN CLIENT_ID
-const GOOGLE_CLIENT_ID = "614278991840-38k97pg151j5p5vp8is590n9fom48eko.apps.googleusercontent.com";
-
 const Feed = ({ userId, userName, handleLogin, handleLogout }) => {
   const [snippets, setSnippets] = useState([]);
 
@@ -49,20 +46,6 @@ const Feed = ({ userId, userName, handleLogin, handleLogout }) => {
 
   return (
     <div>
-      <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
-        {userId ? (
-          <button
-            onClick={() => {
-              googleLogout();
-              handleLogout();
-            }}
-          >
-            Logout
-          </button>
-        ) : (
-          <GoogleLogin onSuccess={handleLogin} onError={(err) => console.log(err)} />
-        )}
-      </GoogleOAuthProvider>
       <NewFeedSnippet />
       <div>{snippetList}</div>
       <button

@@ -10,17 +10,18 @@ import {
   getOutgoingLine,
 } from "../../utils/treeview.utils";
 import TreeViewSnippet from "../modules/TreeViewSnippet";
-import TreeViewButton from "../modules/TreeViewButton";
+import GenericButton from "../modules/GenericButton";
 import WriteNewSnippet from "../modules/WriteNewSnippet";
 import ModalBackground from "../modules/ModalBackground";
 import TreeViewMenu from "../modules/TreeViewMenu";
 import "./TreeView.css";
-import "./NavBar.css";
-// import CatPic  from '../../public/menu_down.svg'; 
-// import CatPic from "../../public/cat_profile_pic.svg";
 
 const ALLOW_DRAG = (classname) => {
-  return classname.startsWith("TreeView-") || classname === "TreeViewSnippet-container";
+  return (
+    classname.startsWith("TreeView-") ||
+    classname === "TreeViewSnippet-container" ||
+    classname === "NavBar-container"
+  );
 };
 const ALLOW_HIGHLIGHT = (classname) => {
   return (
@@ -53,7 +54,7 @@ const TreeView = (props) => {
 
   useEffect(() => {
     get("/api/treeview", { _id: props.snippetId }).then((tree) => {
-      console.log("Logged in as: " + props.userName);
+      console.log("Treeview got: " + props.userName);
       console.log(tree);
       setCoords(getCoords(tree, props.snippetId));
       setThread(getThread(tree, props.snippetId));
@@ -81,6 +82,7 @@ const TreeView = (props) => {
   }, [pos]);
 
   const handleMouseDown = (e) => {
+    console.log(e.target.className);
     if (!ALLOW_HIGHLIGHT(e.target.className)) e.preventDefault();
     if (ALLOW_DRAG(e.target.className)) {
       setIsDrag(true);
@@ -176,21 +178,12 @@ const TreeView = (props) => {
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
     >
-      <div className="TreeView-title u-bringToFront">TaleTree</div>
-      <Navbar>
-        <NavItem icon = "🥳">
-
-          <DropdownMenu />
-        </NavItem>
-
-      </Navbar>
-
       <TreeViewMenu>
         {useMemo(
           () => (
             <>
-              <TreeViewButton text="Write" onClick={toggleSnippetWriter} />
-              <TreeViewButton text="Align" onClick={alignCurrentThread} />
+              <GenericButton text="Write" onClick={toggleSnippetWriter} />
+              <GenericButton text="Align" onClick={alignCurrentThread} />
             </>
           ),
           [snippets, target]
@@ -208,50 +201,5 @@ const TreeView = (props) => {
     </div>
   );
 };
-
-function Navbar(props) {
-  return (
-    <nav className="navbar">
-      <ul className="navbar-nav"> { props.children } </ul>
-    </nav>
-  );   
-}
-
-function NavItem(props) {
-  const [open, setOpen] = useState(false);
-
-  return (
-    <li className="nav-item">
-      <a href="#" className="icon-button" onClick={() => setOpen(!open)}>
-        {props.icon}
-      </a>
-      {open && props.children}
-    </li>
-  );
-}
-
-function DropdownMenu() {
-
-  function DropdownItem(props) {
-    return (
-      <a href="#" className="menu-item">
-        <span className="icon-button">{props.leftIcon}</span>
-
-        {props.children}
-
-        <span className="icon-right">{props.rightIcon}</span>
-
-      </a>
-    )
-  }
-
-  return (
-    <div className="dropdown">
-      <DropdownItem leftIcon="🥳" rightIcon="My Profile"> </DropdownItem>
-      <DropdownItem leftIcon="🙌" rightIcon="Friends"> </DropdownItem>
-      <DropdownItem leftIcon="⚙️" rightIcon="Settings"> </DropdownItem>
-    </div>
-  );
-}
 
 export default TreeView;

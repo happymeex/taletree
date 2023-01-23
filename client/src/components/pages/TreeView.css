@@ -2,16 +2,6 @@
   width: 100%;
   height: 100%;
   background-color: var(--primary--dim);
-  position: fixed;
-}
-
-@import url("https://fonts.googleapis.com/css2?family=EB+Garamond&display=swap");
-
-.TreeView-title {
   position: absolute;
-  left: var(--xl);
-  top: var(--m);
-  font-size: var(--xxl);
-  font-family: "EB Garamond", serif;
-  cursor: pointer;
+  top: 0;
 }
