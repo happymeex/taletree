@@ -44,6 +44,15 @@ router.post("/initsocket", (req, res) => {
 // | write your API methods below!|
 // |------------------------------|
 
+router.get("/snippets", (req, res) => {
+  console.log("api called, grabbing several snippets");
+  const getSnippets = async () => {
+    const snippetList = await Snippet.find({ authorName: "Maxwell Jiang" });
+    res.send(snippetList);
+  };
+  getSnippets();
+});
+
 router.get("/treeview", (req, res) => {
   console.log("api called, finding snippet with id " + req.query._id);
   const getTree = async () => {
