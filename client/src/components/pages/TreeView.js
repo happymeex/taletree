@@ -15,6 +15,9 @@ import WriteNewSnippet from "../modules/WriteNewSnippet";
 import ModalBackground from "../modules/ModalBackground";
 import TreeViewMenu from "../modules/TreeViewMenu";
 import "./TreeView.css";
+import "./NavBar.css";
+// import CatPic  from '../../public/menu_down.svg'; 
+// import CatPic from "../../public/cat_profile_pic.svg";
 
 const ALLOW_DRAG = (classname) => {
   return classname.startsWith("TreeView-") || classname === "TreeViewSnippet-container";
@@ -174,6 +177,15 @@ const TreeView = (props) => {
       onMouseUp={handleMouseUp}
     >
       <div className="TreeView-title u-bringToFront">TaleTree</div>
+      <Navbar>
+        <NavItem icon = "🥳" />
+
+        <NavItem icon = "👇">
+
+          <p>Hello World!</p>
+        </NavItem>
+
+      </Navbar>
 
       <TreeViewMenu>
         {useMemo(
@@ -198,5 +210,26 @@ const TreeView = (props) => {
     </div>
   );
 };
+
+function Navbar(props) {
+  return (
+    <nav className="navbar">
+      <ul className="navbar-nav"> { props.children } </ul>
+    </nav>
+  );   
+}
+
+function NavItem(props) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <li className="nav-item">
+      <a href="#" className="icon-button" onClick={() => setOpen(!open)}>
+        {props.icon}
+      </a>
+      {open && props.children}
+    </li>
+  );
+}
 
 export default TreeView;
