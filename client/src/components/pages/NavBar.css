@@ -52,3 +52,31 @@
     filter: brightness(1.2);
 }
 
+.dropdown {
+    position: absolute;
+    top: 96px;
+    width: 300px;
+    transform: translateX(-45%);
+    background-color: #ffffff;
+    border: 1px solid #474a4d;
+    border-radius: 8px;
+    padding: 1rem;
+    overflow: hidden;
+}
+
+.menu-item {
+    height: 50px;
+    display: flex;
+    align-items: center;
+    border-radius: 8px;
+    /* transition: background 500ms; */
+    padding: 0.5rem;
+}
+
+.menu-item:hover {
+    background-color: #525357
+}
+
+.icon-right {
+    margin-left: auto;
+}

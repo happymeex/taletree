@@ -178,11 +178,9 @@ const TreeView = (props) => {
     >
       <div className="TreeView-title u-bringToFront">TaleTree</div>
       <Navbar>
-        <NavItem icon = "🥳" />
+        <NavItem icon = "🥳">
 
-        <NavItem icon = "👇">
-
-          <p>Hello World!</p>
+          <DropdownMenu />
         </NavItem>
 
       </Navbar>
@@ -229,6 +227,30 @@ function NavItem(props) {
       </a>
       {open && props.children}
     </li>
+  );
+}
+
+function DropdownMenu() {
+
+  function DropdownItem(props) {
+    return (
+      <a href="#" className="menu-item">
+        <span className="icon-button">{props.leftIcon}</span>
+
+        {props.children}
+
+        <span className="icon-right">{props.rightIcon}</span>
+
+      </a>
+    )
+  }
+
+  return (
+    <div className="dropdown">
+      <DropdownItem leftIcon="🥳" rightIcon="My Profile"> </DropdownItem>
+      <DropdownItem leftIcon="🙌" rightIcon="Friends"> </DropdownItem>
+      <DropdownItem leftIcon="⚙️" rightIcon="Settings"> </DropdownItem>
+    </div>
   );
 }
 
