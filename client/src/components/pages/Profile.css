@@ -1,0 +1,58 @@
+.Profile-container {
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
+}
+
+.Profile-personalInfoContainer {
+  width: 30vw;
+  height: 100%;
+}
+
+.Profile-name {
+  font-size: var(--xxl);
+}
+
+.Profile-bio {
+  font-size: var(--m);
+  color: var(--medgrey);
+}
+
+.ProfileContent-container {
+  position: relative;
+  top: 150px;
+  width: 60vw;
+}
+
+.ProfileContent-tabBar {
+  width: 100%;
+  flex-direction: row;
+  margin-bottom: var(--m);
+}
+
+.ProfileContent-tabBar > * {
+  flex: 1 1 0;
+}
+
+.ProfileContent-tab {
+  border-radius: var(--s);
+  background-color: transparent;
+  padding: var(--m);
+  font-size: var(--l);
+  color: var(--darkgrey);
+  text-align: center;
+}
+
+.ProfileContent-tab:hover {
+  cursor: pointer;
+  background-color: var(--primary--dim);
+}
+
+.ProfileContentSnippetViewer-container {
+  width: 100%;
+}
+
+.ProfileContent-separator {
+  color: var(--lightgrey);
+  margin: 0;
+}
