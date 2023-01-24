@@ -11,7 +11,7 @@ const Feed = ({ userId, userName, handleLogin, handleLogout }) => {
   const [snippets, setSnippets] = useState([]);
 
   useEffect(() => {
-    get("/api/snippets").then((snippets) => {
+    get("/api/snippets", { userId: userId }).then((snippets) => {
       setSnippets(snippets);
     });
   }, []);
@@ -32,7 +32,7 @@ const Feed = ({ userId, userName, handleLogin, handleLogout }) => {
 
   let snippetList = null;
   if (snippets.length === 0) {
-    snippetList = <div> No snippets! </div>;
+    snippetList = <div> No snippets, log in and write one! </div>;
   } else {
     snippetList = snippets.map((snippet) => (
       <SingleSnippet
@@ -45,18 +45,9 @@ const Feed = ({ userId, userName, handleLogin, handleLogout }) => {
   }
 
   return (
-    <div>
+    <div class="Feed-container">
       <NewFeedSnippet />
-      <div>{snippetList}</div>
-      <button
-        onClick={() => {
-          navigate(`/treeview/63c870ed53ecea1d0cbdc569`, {
-            state: { userId: userId, userName: userName },
-          });
-        }}
-      >
-        Go to TreeView
-      </button>
+      <div class="Feed-snippets">{snippetList}</div>
     </div>
   );
 };

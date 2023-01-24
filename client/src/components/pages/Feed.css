@@ -1,0 +1,15 @@
+.Feed-container {
+  display: flex;
+}
+
+.Feed-write {
+  flex: 1;
+}
+
+.Feed-snippets {
+  flex: 2;
+}
+
+.Feed-snippets:first-child {
+  margin-right: 20px;
+}
