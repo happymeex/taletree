@@ -13,6 +13,7 @@
   left: var(--xxl);
   font-family: "EB Garamond", serif;
   z-index: 2;
+  cursor: pointer;
 }
 
 .NavBar-profilePic {

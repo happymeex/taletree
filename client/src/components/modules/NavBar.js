@@ -48,7 +48,21 @@ const NavBar = ({ handleLogin, handleLogout, userId, userName, profilePicURL }) 
   console.log("ProfilePicURL: " + profilePicURL);
   return (
     <div className="NavBar-container u-flex-spaceBetween">
-      <div className="NavBar-websiteName">TaleTree</div>
+      <div
+        className="NavBar-websiteName"
+        onClick={() => {
+          navigate("/", {
+            state: {
+              handleLogin: handleLogin,
+              handleLogout: handleLogout,
+              userId: userId,
+              userName: userName,
+            },
+          });
+        }}
+      >
+        TaleTree
+      </div>
       <div className="NavBar-buttonWrapper">
         <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
           {userId ? (
