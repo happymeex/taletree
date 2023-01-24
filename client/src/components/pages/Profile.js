@@ -23,7 +23,7 @@ const Profile = ({ userId, profileId }) => {
       setData(res);
     };
     getData();
-  }, []);
+  }, [profileId]);
   return (
     <>
       {!data ? (
