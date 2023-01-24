@@ -84,11 +84,17 @@ router.post("/new-snippet", (req, res) => {
       rootId: req.body.rootId,
     });
     leaf.save().then((snippet) => {
+      res.send(snippet);
+      //add to parent snippet's children
       Snippet.findById(req.body.parentId).then((parent) => {
         parent.children.push(snippet._id);
         parent.save();
       });
-      res.send(snippet);
+      //add to author's contribs
+      User.findById(snippet.authorId).then((user) => {
+        user.contribs.push(snippet._id);
+        user.save();
+      });
     });
   });
 });
