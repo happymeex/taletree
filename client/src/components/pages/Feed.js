@@ -7,6 +7,8 @@ import "../../utilities.css";
 import "./Feed.css";
 import { get, post } from "../../utilities";
 
+const ROOT = "63d04ff67f9ad37d137f7750";
+
 const Feed = ({ userId, userName, handleLogin, handleLogout }) => {
   const [snippets, setSnippets] = useState([]);
 
@@ -20,11 +22,19 @@ const Feed = ({ userId, userName, handleLogin, handleLogout }) => {
     const addPost = (input) => {
       console.log("posting snippet as " + userName + " with input:");
       console.log(input);
-      post("/api/new-snippet", {
-        authorName: userName,
-        authorId: userId,
-        input: input,
-      });
+      const writeToDB = async () => {
+        const treeId = await post("/api/new-tree");
+        console.log("browser got treeId: " + treeId);
+        if (treeId)
+          post("/api/new-snippet", {
+            authorName: userName,
+            authorId: userId,
+            input: input,
+            parentId: ROOT,
+            treeId: treeId,
+          });
+      };
+      writeToDB();
     };
     //returned snippet object
     return <WriteNewSnippet onPost={addPost} onClose={() => {}} />;

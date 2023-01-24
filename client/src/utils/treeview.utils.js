@@ -8,13 +8,16 @@ const BORDER_HIGHLIGHT_MULTIPLIER = 5;
 const DEFAULT_LINE_WIDTH = 0.01;
 const LINE_HIGHLIGHT_MULTIPLIER = 2;
 
+const ROOT = "63d04ff67f9ad37d137f7750";
+let rootId = undefined;
 const getThread = (tree, targetId) => {
   let thread = new Set([targetId]);
   let curr = targetId;
-  while (tree[curr].parentId !== "") {
+  while (tree[curr].parentId !== ROOT) {
     curr = tree[curr].parentId;
     thread.add(curr);
   }
+  rootId = curr;
   return thread;
 };
 /**
@@ -27,7 +30,6 @@ const getThread = (tree, targetId) => {
 const getCoords = (tree, targetId) => {
   console.log("getCoords called");
 
-  const rootId = tree[targetId].rootId;
   //get all snippets in the target thread, extended
   //so that the target thread ends on a leaf
   let thread = getThread(tree, targetId);
@@ -39,6 +41,8 @@ const getCoords = (tree, targetId) => {
       thread.add(curr);
     }
   }
+
+  console.log("rootid of this tree: " + rootId);
 
   let threadIndices = []; //ith entry indicates the ``horizontal'' index of ith snippet in its corresponding level
   let levels = [];
@@ -190,6 +194,7 @@ const assembleStyle = (obj, highlight, isLine = false) => {
   };
 };
 export {
+  ROOT,
   getCoords,
   getThread,
   convertToPosition,

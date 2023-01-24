@@ -4,9 +4,10 @@ const snippetScheme = new mongoose.Schema({
   authorName: String,
   authorId: String,
   parentId: String,
-  rootId: String,
+  treeId: String,
   children: [String],
   content: String,
+  numLikes: Number,
 });
 
 module.exports = mongoose.model("snippet", snippetScheme);

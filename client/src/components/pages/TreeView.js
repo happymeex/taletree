@@ -8,6 +8,7 @@ import {
   getDimensions,
   getIncomingLine,
   getOutgoingLine,
+  ROOT,
 } from "../../utils/treeview.utils";
 import TreeViewSnippet from "../modules/TreeViewSnippet";
 import GenericButton from "../modules/GenericButton";
@@ -112,7 +113,7 @@ const TreeView = (props) => {
       authorId: props.userId,
       parentId: target,
       input: input,
-      rootId: snippets[target].rootId,
+      treeId: snippets[target].treeId,
     }).then((s) => {
       //returned snippet object
       if (s._id) {
@@ -145,7 +146,7 @@ const TreeView = (props) => {
     const size = getDimensions(scale);
     const line = {
       fromParent:
-        s.parentId === ""
+        s.parentId === ROOT
           ? undefined
           : getIncomingLine(pos, size, coords[id].x - coords[s.parentId].x, scale),
       toChild: s.children.length === 0 ? undefined : getOutgoingLine(pos, size, scale),

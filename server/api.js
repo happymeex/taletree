@@ -12,6 +12,7 @@ const express = require("express");
 // import models so we can interact with the database
 const User = require("./models/user");
 const Snippet = require("./models/snippet");
+const Tree = require("./models/tree");
 
 // import authentication library
 const auth = require("./auth");
@@ -44,6 +45,16 @@ router.post("/initsocket", (req, res) => {
 // | write your API methods below!|
 // |------------------------------|
 
+router.post("/new-tree", (req, res) => {
+  console.log("making new tree");
+  auth.ensureLoggedIn(req, res, () => {
+    const tree = new Tree({ snippets: [] });
+    tree.save().then((ret) => {
+      res.send(ret._id);
+    });
+  });
+});
+
 router.get("/snippets", (req, res) => {
   console.log(`api called, grabbing several snippets for user with id ${req.query.userId}`);
   const getSnippets = async () => {
@@ -56,11 +67,14 @@ router.get("/snippets", (req, res) => {
 router.get("/treeview", (req, res) => {
   console.log("api called, finding snippet with id " + req.query._id);
   const getTree = async () => {
-    const snippet = await Snippet.findById(req.query._id).catch(() => {
-      console.log("snippet does not exist");
-      res.send({});
-    });
-    const snippetList = await Snippet.find({ rootId: snippet.rootId });
+    const snippet = await Snippet.findById(req.query._id);
+    if (!snippet) {
+      res.status(404).send("Snippet not found");
+      return;
+    }
+    const tree = await Tree.findById(snippet.treeId);
+    console.log("Got treeid " + tree._id);
+    const snippetList = await Snippet.find({ _id: { $in: tree.snippets } });
     res.send(
       snippetList.reduce((acc, curr) => {
         acc[curr._id] = curr;
@@ -81,7 +95,7 @@ router.post("/new-snippet", (req, res) => {
       content: req.body.input,
       children: [],
       parentId: req.body.parentId,
-      rootId: req.body.rootId,
+      treeId: req.body.treeId,
     });
     leaf.save().then((snippet) => {
       res.send(snippet);
@@ -94,6 +108,11 @@ router.post("/new-snippet", (req, res) => {
       User.findById(snippet.authorId).then((user) => {
         user.contribs.push(snippet._id);
         user.save();
+      });
+      //add to tree
+      Tree.findById(snippet.treeId).then((tree) => {
+        tree.snippets.push(snippet._id);
+        tree.save();
       });
     });
   });
