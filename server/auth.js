@@ -30,6 +30,7 @@ function getOrCreateUser(user) {
       bio: "",
       contribs: [],
       favorites: [],
+      bookmarks: [],
     });
 
     return newUser.save();
