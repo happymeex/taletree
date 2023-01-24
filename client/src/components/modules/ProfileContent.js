@@ -54,24 +54,25 @@ const ProfileContentSnippetViewer = ({ snippetList }) => {
  * @param {Boolean} isViewer
  * @returns
  */
-const ProfileContent = ({ contribs, favorites, bookmarks, isViewer }) => {
+const ProfileContent = (props) => {
   const [data, setData] = useState(undefined);
   const [currTab, setCurrTab] = useState(0);
+
   useEffect(() => {
     const getData = async () => {
       const res = await get("/api/profile-snippet-data", {
-        0: contribs,
-        1: favorites,
-        2: bookmarks,
+        0: props.contribs,
+        1: props.favorites,
+        2: props.bookmarks,
       });
       console.log("got data: ");
       console.log(res);
       setData(res);
     };
     getData();
-  }, []);
+  }, [props]);
 
-  const tabs = ["Contributions", "Favorites"].concat(isViewer ? ["Bookmarks"] : []);
+  const tabs = ["Contributions", "Favorites"].concat(props.isViewer ? ["Bookmarks"] : []);
   let tabList = tabs.map((t, i) => (
     <ProfileContentTab
       key={i}
