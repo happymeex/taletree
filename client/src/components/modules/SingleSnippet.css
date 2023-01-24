@@ -1,6 +1,6 @@
 .SingleSnippet-container {
   border: var(--darkgrey) 1px solid;
-  border-radius: var(--xs);
+  border-radius: var(--m);
   margin-top: var(--m);
   padding: var(--s);
 }

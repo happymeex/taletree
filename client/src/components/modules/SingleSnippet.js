@@ -4,7 +4,6 @@ import { navigate } from "@reach/router";
 import "./SingleSnippet.css";
 import Icon from "./Icons.js";
 import menuUp from "../../public/menu_up.svg";
-import menuDown from "../../public/menu_down.svg";
 import heart from "../../public/heart.svg";
 import filledHeart from "../../public/filled_heart.svg";
 import "../../utilities.css";

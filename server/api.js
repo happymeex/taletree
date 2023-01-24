@@ -58,7 +58,7 @@ router.post("/new-tree", (req, res) => {
 router.get("/snippets", (req, res) => {
   console.log(`api called, grabbing several snippets for user with id ${req.query.userId}`);
   const getSnippets = async () => {
-    const snippetList = await Snippet.find({ authorId: req.query.userId });
+    const snippetList = await Snippet.find({ authorName: `Maxwell Jiang` });
     res.send(snippetList);
   };
   getSnippets();
