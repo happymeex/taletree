@@ -94,6 +94,7 @@ router.post("/new-snippet", (req, res) => {
       authorId: req.body.authorId,
       content: req.body.input,
       children: [],
+      numLikes: 0,
       parentId: req.body.parentId,
       treeId: req.body.treeId,
     });
