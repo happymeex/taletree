@@ -14,16 +14,41 @@ import "./Profile.css";
  */
 const Profile = ({ userId, profileId }) => {
   const [data, setData] = useState(undefined);
+  const [Friends, setFriends] = useState(false);
+  const [allFriends, setAllFriends] = useState([]);
   useEffect(() => {
     console.log("viewing profile of user " + profileId);
     const getData = async () => {
       const res = await get("/api/profile", { id: profileId });
-      console.log("got data:");
+      console.log("got data 1:");
       console.log(res);
       setData(res);
+      return res;
+      // if(Friends){
+      //   const getFriendData = async () => {
+      //     const res_friend = await get("/api/profile", { id: data.friends });
+      //     console.log("got friend data:");
+      //     console.log(res_friend);
+      //     setAllFriends(res_friend);
+
+      //   getFriendData
+      //   }
+      // }
     };
-    getData();
+    getData().then( (data) => {
+      console.log("hi")
+      console.log(data.friends)
+      console.log("hehe")
+    });
+
+    // const getFriends = async () => {
+    //   const   
+    // }
+    // setFriends(data.friends && data.friends.length);
+    // console.log(data.friends)
+    
   }, [profileId]);
+
   return (
     <>
       {!data ? (
@@ -35,6 +60,9 @@ const Profile = ({ userId, profileId }) => {
             bio={data.bio}
             profilePicURL={data.pictureURL}
             isViewer={userId === profileId}
+            // hasFriends = {Friends}
+            // allFriends = {data.friends ? Friends : []}
+
           />
           <ProfileContent
             contribs={data.contribs}

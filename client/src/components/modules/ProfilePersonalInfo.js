@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "../pages/Profile.css";
 
 /**
@@ -7,15 +7,35 @@ import "../pages/Profile.css";
  * @param {String} name
  * @param {String} bio
  * @param {Boolean} isViewer true if this is the viewer's page
- * @param {String} profilePicURL
  */
-const ProfilePersonalInfo = ({ name, bio, isViewer, profilePicURL }) => {
-  console.log("got picture: " + profilePicURL);
+const ProfilePersonalInfo = (props) => {
+  // const 
+  if (props.friends && props.friends.length) {
+
+    // console.log("yuuu")
+    useEffect(() => {
+      console.log("viewing profile of user " + profileId);
+      const getData = async () => {
+        const res = await get("/api/profile", { id: profileId });
+        console.log("got data:");
+        console.log(res);
+        setData(res);
+        // setFriends('friends' in res)
+        // console.log('friends' in res)
+      };
+      getData();
+      console.log("This is data:" + data);
+    }, []);
+
+  }
+  
   return (
     <div className="Profile-personalInfoContainer u-flexColumn u-flex-alignCenter u-flex-justifyCenter">
-      <img src={profilePicURL} className="Profile-picture" />
-      <div className="Profile-name">{name}</div>
-      <div className="Profile-bio">{bio}</div>
+      <img src={props.profilePicURL} className="Profile-picture" />
+      <div className="Profile-name ProfileLeft-separator">{props.name}</div>
+      <div className="Profile-bio ProfileLeft-separator">{props.bio}</div>
+      <div className="Profile-friendsHeader ProfileLeft-separator"> Friends </div>
+      <div className="Profile-friends">{props.friends}</div>
     </div>
   );
 };
