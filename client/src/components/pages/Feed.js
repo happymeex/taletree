@@ -40,14 +40,19 @@ const Feed = ({ userId, userName, handleLogin, handleLogout }) => {
         authorId={snippet.authorId}
         content={snippet.content}
         _id={snippet._id}
+        isTreeView={false}
+        showAuthor={true}
+        isLiked={false}
+        isBookmarked={false}
+        showIconBar={true}
       />
     ));
   }
 
   return (
-    <div class="Feed-container">
+    <div className="Feed-container">
       <NewFeedSnippet />
-      <div class="Feed-snippets">{snippetList}</div>
+      <div className="Feed-snippets">{snippetList}</div>
     </div>
   );
 };

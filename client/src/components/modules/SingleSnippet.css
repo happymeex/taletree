@@ -2,6 +2,11 @@
   border: var(--darkgrey) 1px solid;
   border-radius: var(--xs);
   margin-top: var(--m);
+  padding: var(--s);
+}
+
+.SingleSnippet-iconBar {
+  gap: var(--s);
 }
 
 .SingleSnippet-container:first-of-type {
@@ -12,21 +17,8 @@
   padding: var(--m) var(--l);
 }
 
-.SingleSnippet-storyUser {
-  font-size: 20px;
-  font-weight: 600;
-}
-
-.SingleSnippet-storyContent {
-  font-size: 40px;
-  margin: var(--s) 0 0;
-}
-
-.SingleSnippet-icons {
-  display: flex;
-  flex-direction: row-reverse;
-  height: 10%;
-  margin: 5%;
+.SingleSnippet-authorName {
+  cursor: pointer;
 }
 
 .SingleSnippet-profilePic {
@@ -34,9 +26,11 @@
   border: 2px solid black;
   height: var(--xxl);
   width: var(--xxl);
-  z-index: 2;
 }
 
 .SingleSnippet-profilePic:hover {
   cursor: pointer;
+}
+
+.SingleSnippet-authorInfo {
 }

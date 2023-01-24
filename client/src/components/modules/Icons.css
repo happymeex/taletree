@@ -1,4 +1,6 @@
-.Icons {
-  height: 80%;
-  width: 10%;
+.Icon {
+  height: var(--l);
+}
+.Icon:hover {
+  cursor: pointer;
 }

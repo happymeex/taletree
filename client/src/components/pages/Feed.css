@@ -7,7 +7,7 @@
 }
 
 .Feed-snippets {
-  flex: 2;
+  width: 50vw;
 }
 
 .Feed-snippets:first-child {
