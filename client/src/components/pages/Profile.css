@@ -56,3 +56,9 @@
   color: var(--lightgrey);
   margin: 0;
 }
+
+.Profile-picture {
+  border-radius: 50%;
+  width: 30vh;
+  height: 30vh;
+}

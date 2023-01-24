@@ -33,7 +33,7 @@ const ProfileContentSnippetViewer = ({ snippetList }) => {
     .map((obj, i) => (
       <>
         <hr className="ProfileContent-separator" />
-        <ProfileSnippet key={i} content={obj.content} />
+        <ProfileSnippet content={obj.content} />
       </>
     ));
   snippets.push(<hr className="ProfileContent-separator" />);

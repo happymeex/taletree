@@ -30,7 +30,12 @@ const Profile = ({ userId, profileId }) => {
         <div className="Loading">Loading</div>
       ) : (
         <div className="Profile-container">
-          <ProfilePersonalInfo name={data.name} bio={data.bio} isViewer={userId === profileId} />
+          <ProfilePersonalInfo
+            name={data.name}
+            bio={data.bio}
+            profilePicURL={data.pictureURL}
+            isViewer={userId === profileId}
+          />
           <ProfileContent
             contribs={data.contribs}
             favorites={data.favorites}
