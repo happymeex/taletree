@@ -162,6 +162,7 @@ const TreeView = (props) => {
         authorName={s.authorName}
         authorId={s.authorId}
         content={s.content}
+        _id={s._id}
         highlight={highlight}
         isTarget={id === target}
         inTargetThread={thread.has(id)}

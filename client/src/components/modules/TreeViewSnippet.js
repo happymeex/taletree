@@ -1,6 +1,7 @@
 import React from "react";
 import "./TreeViewSnippet.css";
 import { assembleStyle } from "../../utils/treeview.utils";
+import SingleSnippet from "./SingleSnippet.js";
 
 /**
  * proptypes
@@ -8,6 +9,7 @@ import { assembleStyle } from "../../utils/treeview.utils";
  * @param {String} authorName
  * @param {String} authorId
  * @param {String} content
+ * @param {String} _id
  * @param {Boolean} highlight
  * @param {Object} line object containing all position/sizing data for lines
  * @param {Boolean} inTargetThread
@@ -39,8 +41,17 @@ const TreeViewSnippet = (props) => {
       )}
       {props.line.toChild ? <div style={lineToChildStyle}></div> : <></>}
       <div className="TreeViewSnippet-container" style={containerStyle} onClick={props.onClick}>
-        <div className="TreeViewSnippet-author">{props.authorName}</div>
-        <div className="TreeViewSnippet-content">{props.content}</div>
+        <SingleSnippet
+          authorName={props.authorName}
+          authorId={props.authorId}
+          content={props.content}
+          _id={props._id}
+          isTreeView={true}
+          showAuthor={true}
+          isLiked={false}
+          isBookmarked={false}
+          showIconBar={true}
+        />
       </div>
     </>
   );

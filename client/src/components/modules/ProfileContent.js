@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { get } from "../../utilities";
-import ProfileSnippet from "./ProfileSnippet";
+import SingleSnippet from "./SingleSnippet.js";
+import "../pages/Profile.css";
 
 /**
  * clickable tab to toggle viewable snippets: contribs, favs, or bookmarks
  */
 const ProfileContentTab = ({ text, onClick, isSelected }) => {
+  console.log(`here`);
   return (
     <div
       className="ProfileContent-tab"
@@ -26,14 +28,23 @@ const ProfileContentTab = ({ text, onClick, isSelected }) => {
  * we might want to display something fun if there aren't any
  * snippets to display
  */
-const ProfileContentSnippetViewer = ({ snippetList }) => {
+const ProfileContentSnippetViewer = ({ snippetList, liked, bookmarked }) => {
   const snippets = snippetList
     .slice() //clone array so that it isn't mutated by reverse
     .reverse()
-    .map((obj, i) => (
+    .map((snippet, i) => (
       <>
-        <hr className="ProfileContent-separator" />
-        <ProfileSnippet content={obj.content} />
+        <SingleSnippet
+          authorName={snippet.authorName}
+          authorId={snippet.authorId}
+          content={snippet.content}
+          _id={snippet._id}
+          isTreeView={false}
+          showAuthor={true}
+          isLiked={liked.has(snippet)}
+          isBookmarked={bookmarked.has(snippet)}
+          showIconBar={true}
+        />
       </>
     ));
   return (
@@ -82,13 +93,19 @@ const ProfileContent = (props) => {
       isSelected={currTab === i}
     />
   ));
+  //let liked = new Set(data[1]);
+  //let bookmarked = new Set(data[2]);
   return (
     <div className="ProfileContent-container">
       <div className="ProfileContent-tabBar u-flex">{tabList}</div>
       {!data ? (
         <div className="Loading">Loading...</div>
       ) : (
-        <ProfileContentSnippetViewer snippetList={data[currTab]} />
+        <ProfileContentSnippetViewer
+          snippetList={data[currTab]}
+          liked={new Set(data[1])}
+          bookmarked={new Set(data[2])}
+        />
       )}
     </div>
   );
