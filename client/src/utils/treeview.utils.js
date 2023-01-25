@@ -7,6 +7,8 @@ const DEFAULT_BORDER = 1; //in pixels
 const BORDER_HIGHLIGHT_MULTIPLIER = 5;
 const DEFAULT_LINE_WIDTH = 0.01;
 const LINE_HIGHLIGHT_MULTIPLIER = 2;
+const ZOOM_SENSITIVITY = 0.05;
+const DEFAULT_PADDING = 8; //in pixels
 
 const ROOT = "63d04ff67f9ad37d137f7750";
 let rootId = undefined;
@@ -128,31 +130,44 @@ const getCoords = (tree, targetId) => {
   return coords;
 };
 
-const convertToPosition = (coords, delta) => ({
-  x:
-    delta.x +
-    0.5 * window.innerWidth +
-    (HORIZONTAL_SPACING * coords.x - 0.5 * DEFAULT_LENGTH) * DEFAULT_SCALE,
-  y:
+const convertToPosition = (coords, delta, scale) => {
+  console.log(
     delta.y +
-    0.5 * window.innerHeight +
-    ((2 * DEFAULT_LINE_HEIGHT + DEFAULT_HEIGHT) * coords.y - 0.5 * DEFAULT_HEIGHT) * DEFAULT_SCALE,
-});
+      0.5 * window.innerHeight +
+      ((2 * DEFAULT_LINE_HEIGHT + DEFAULT_HEIGHT) * coords.y - 0.5 * DEFAULT_HEIGHT) *
+        DEFAULT_SCALE *
+        scale
+  );
+  return {
+    x:
+      delta.x +
+      0.5 * window.innerWidth +
+      (HORIZONTAL_SPACING * coords.x - 0.5 * DEFAULT_LENGTH) * DEFAULT_SCALE * scale,
+    y:
+      delta.y +
+      0.5 * window.innerHeight +
+      ((2 * DEFAULT_LINE_HEIGHT + DEFAULT_HEIGHT) * coords.y - 0.5 * DEFAULT_HEIGHT) *
+        DEFAULT_SCALE *
+        scale,
+  };
+};
 
-const getDimensions = (scale, stretchHeight = 1) => {
+const getDimensions = (scale) => {
   const trueScale = DEFAULT_SCALE * scale;
   return {
     x: DEFAULT_LENGTH * trueScale,
-    y: DEFAULT_HEIGHT * trueScale * stretchHeight,
+    y: DEFAULT_HEIGHT * trueScale,
     border: DEFAULT_BORDER * scale,
   };
 };
 
-const getOutgoingLine = (pos, size, scale = 1) => ({
-  pos: { x: pos.x + 0.5 * size.x, y: pos.y + size.y },
-  size: { x: 0, y: DEFAULT_LINE_HEIGHT * DEFAULT_SCALE * scale },
-  thickness: DEFAULT_LINE_WIDTH * DEFAULT_SCALE * scale,
-});
+const getOutgoingLine = (pos, size, scale = 1) => {
+  return {
+    pos: { x: pos.x + 0.5 * size.x, y: pos.y + size.y },
+    size: { x: 0, y: DEFAULT_LINE_HEIGHT * DEFAULT_SCALE * scale },
+    thickness: DEFAULT_LINE_WIDTH * DEFAULT_SCALE * scale,
+  };
+};
 
 const getIncomingLine = (pos, size, xdiff, scale = 1) => {
   const trueScale = DEFAULT_SCALE * scale;
@@ -179,22 +194,42 @@ const getIncomingLine = (pos, size, xdiff, scale = 1) => {
   };
 };
 
-const assembleStyle = (obj, highlight, isLine = false) => {
-  return {
+const SIDES = [
+  ["borderTop", "borderBottom"],
+  ["borderLeft", "borderRight"],
+];
+
+const assembleStyle = (obj, highlight, lineOrientation = undefined, scale) => {
+  let ret = {
     position: `absolute`,
     left: `${obj.pos.x}px`,
     top: `${obj.pos.y}px`,
     width: `${obj.size.x}px`,
     height: `${obj.size.y}px`,
-    border: `${
-      isLine
-        ? obj.thickness * (highlight ? LINE_HIGHLIGHT_MULTIPLIER : 1)
-        : obj.size.border * (highlight ? BORDER_HIGHLIGHT_MULTIPLIER : 1)
-    }px solid`,
+    margin: `0`,
+  };
+  if (lineOrientation === undefined) {
+    ret["border"] = `${obj.size.border * (highlight ? BORDER_HIGHLIGHT_MULTIPLIER : 1)}px solid`;
+    ret["backgroundColor"] = "var(--white)";
+    ret["padding"] = `${DEFAULT_PADDING * scale}px`;
+  } else {
+    for (const side of SIDES[lineOrientation])
+      ret[side] = `${obj.thickness * (highlight ? LINE_HIGHLIGHT_MULTIPLIER : 1)}px solid`;
+  }
+
+  return ret;
+};
+
+const getScaledDelta = (delta, zoomOrigin, scale) => {
+  return {
+    x: scale * delta.x + (1 - scale) * (zoomOrigin.x - 0.5 * window.innerWidth),
+    y: scale * delta.y + (1 - scale) * (zoomOrigin.y - 0.5 * window.innerHeight),
   };
 };
+
 export {
   ROOT,
+  ZOOM_SENSITIVITY,
   getCoords,
   getThread,
   convertToPosition,
@@ -202,4 +237,5 @@ export {
   getOutgoingLine,
   getIncomingLine,
   assembleStyle,
+  getScaledDelta,
 };

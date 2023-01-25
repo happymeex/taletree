@@ -1,4 +1,4 @@
 .TreeViewSnippet-container {
-  background-color: white;
-  position: absolute;
+  -mox-box-sizing: border-box;
+  box-sizing: border-box;
 }

@@ -8,7 +8,9 @@ import {
   getDimensions,
   getIncomingLine,
   getOutgoingLine,
+  getScaledDelta,
   ROOT,
+  ZOOM_SENSITIVITY,
 } from "../../utils/treeview.utils";
 import TreeViewSnippet from "../modules/TreeViewSnippet";
 import GenericButton from "../modules/GenericButton";
@@ -83,7 +85,7 @@ const TreeView = (props) => {
   }, [pos]);
 
   const handleMouseDown = (e) => {
-    console.log(e.target.className);
+    console.log("pos: " + pos.x + " " + pos.y);
     if (!ALLOW_HIGHLIGHT(e.target.className)) e.preventDefault();
     if (ALLOW_DRAG(e.target.className)) {
       setIsDrag(true);
@@ -139,10 +141,17 @@ const TreeView = (props) => {
     setViewTarget(target);
   };
 
+  const handleWheel = (e) => {
+    const scaleRatio = 1 - Math.sign(e.deltaY) * ZOOM_SENSITIVITY;
+    console.log("scale ratio: " + scaleRatio);
+    setDelta((d) => getScaledDelta(d, pos, scaleRatio));
+    setScale((x) => scaleRatio * x);
+  };
+
   let snippetList = [];
   for (const id in snippets) {
     const s = snippets[id];
-    const pos = convertToPosition(coords[id], delta);
+    const pos = convertToPosition(coords[id], delta, scale);
     const size = getDimensions(scale);
     const line = {
       fromParent:
@@ -169,6 +178,7 @@ const TreeView = (props) => {
         onClick={() => {
           handleSnippetClick(id);
         }}
+        scale={scale}
       />
     );
   }
@@ -179,6 +189,7 @@ const TreeView = (props) => {
       className="TreeView-container u-flex-end"
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
+      onWheel={handleWheel}
     >
       <TreeViewMenu>
         {useMemo(

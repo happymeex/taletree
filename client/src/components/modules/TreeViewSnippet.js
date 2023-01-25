@@ -15,22 +15,41 @@ import SingleSnippet from "./SingleSnippet.js";
  * @param {Boolean} inTargetThread
  * @param {Boolean} isTarget
  * @param {Function} onClick
+ * @param {Number} scale
  */
 const TreeViewSnippet = (props) => {
   const { highlight, inTargetThread, isTarget } = props;
-  const containerStyle = assembleStyle(props.container, highlight && inTargetThread);
+  const containerStyle = assembleStyle(
+    props.container,
+    highlight && inTargetThread,
+    undefined,
+    props.scale
+  );
   const upLineFromParentStyle = props.line.fromParent
-    ? assembleStyle(props.line.fromParent.up, highlight && inTargetThread, true)
+    ? assembleStyle(props.line.fromParent.up, highlight && inTargetThread, 1)
     : undefined;
   const horizontalLineFromParentStyle = props.line.fromParent
-    ? assembleStyle(props.line.fromParent.horizontal, highlight && inTargetThread, true)
+    ? assembleStyle(props.line.fromParent.horizontal, highlight && inTargetThread, 0)
     : undefined;
   const lineToChildStyle = props.line.toChild
-    ? assembleStyle(props.line.toChild, highlight && inTargetThread && !isTarget, true)
+    ? assembleStyle(props.line.toChild, highlight && inTargetThread && !isTarget, 1)
     : undefined;
 
   return (
     <>
+      <SingleSnippet
+        authorName={props.authorName}
+        authorId={props.authorId}
+        content={props.content}
+        _id={props._id}
+        isTreeView={true}
+        showAuthor={true}
+        isLiked={false}
+        isBookmarked={false}
+        showIconBar={true}
+        style={containerStyle}
+        onClick={props.onClick}
+      />
       {props.line.fromParent ? (
         <>
           <div style={upLineFromParentStyle}></div>
@@ -40,20 +59,6 @@ const TreeViewSnippet = (props) => {
         <></>
       )}
       {props.line.toChild ? <div style={lineToChildStyle}></div> : <></>}
-      <div className="TreeViewSnippet-wrapper" onClick={props.onClick}>
-        <SingleSnippet
-          authorName={props.authorName}
-          authorId={props.authorId}
-          content={props.content}
-          _id={props._id}
-          isTreeView={true}
-          showAuthor={true}
-          isLiked={false}
-          isBookmarked={false}
-          showIconBar={true}
-          style={containerStyle}
-        />
-      </div>
     </>
   );
 };

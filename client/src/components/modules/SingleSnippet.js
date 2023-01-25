@@ -27,29 +27,33 @@ const NO_REDIRECT_TO_TREEVIEW = new Set(["SingleSnippet-author", "SingleSnippet-
  *    isTreeView, but I'm including this as a parameter in case we want extra control.
  * @param {Boolean} showAuthor used to conditionally render author name/picture
  * @param {Object} style used only for treeview
+ * @param {Object} onClick used only for treeview
  */
 const SingleSnippet = (props) => {
   const [isHover, setIsHover] = useState(false);
   const [isToTree, setIsToTree] = useState(false); //if true, then clicking redirects to treeview
+
+  const style = props.isTreeView
+    ? props.style
+    : isToTree
+    ? { backgroundColor: `rgba(0,0,0,0.15)`, cursor: `pointer` }
+    : {};
+  const clickHandler = props.isTreeView
+    ? props.onClick
+    : isToTree
+    ? () => {
+        navigate(`/treeview/${props._id}`);
+      }
+    : () => null;
+  if (props.isTreeView)
+    console.log("box height: " + props.style.height + " box width: " + props.style.width);
   return (
     <div
       className={
         props.isTreeView ? "TreeViewSnippet-container" : "SingleSnippet-container u-flexColumn"
       }
-      style={
-        isToTree && !props.isTreeView
-          ? { backgroundColor: `rgba(0,0,0,0.15)`, cursor: `pointer` }
-          : props.isTreeView
-          ? props.style
-          : {}
-      }
-      onClick={
-        isToTree
-          ? () => {
-              navigate(`/treeview/${props._id}`);
-            }
-          : () => null
-      }
+      style={style}
+      onClick={clickHandler}
       onMouseOver={(e) => {
         setIsHover(true);
         //things that shouldn't redirect to treeview (i.e. profile, icons) are suffixed with "else" in className
