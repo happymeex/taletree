@@ -9,8 +9,13 @@ const DEFAULT_LINE_WIDTH = 0.01;
 const LINE_HIGHLIGHT_MULTIPLIER = 2;
 const ZOOM_SENSITIVITY = 0.05;
 const DEFAULT_PADDING = 8; //in pixels
+const DEFAULT_PROFILE_PICTURE_SIZE = 48; //in pixels
+const DEFAULT_AUTHOR_NAME_FONT_SIZE = 16;
+const DEFAULT_ICON_SIZE = 24; //in pixels
+const DEFAULT_CONTENT_FONT_SIZE = 16;
 
 const ROOT = "63d04ff67f9ad37d137f7750";
+
 let rootId = undefined;
 const getThread = (tree, targetId) => {
   let thread = new Set([targetId]);
@@ -230,6 +235,10 @@ const getScaledDelta = (delta, zoomOrigin, scale) => {
 export {
   ROOT,
   ZOOM_SENSITIVITY,
+  DEFAULT_PROFILE_PICTURE_SIZE,
+  DEFAULT_AUTHOR_NAME_FONT_SIZE,
+  DEFAULT_ICON_SIZE,
+  DEFAULT_CONTENT_FONT_SIZE,
   getCoords,
   getThread,
   convertToPosition,
