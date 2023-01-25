@@ -84,7 +84,7 @@ const Feed = ({ userId, userName, handleLogin, handleLogout }) => {
         />
       )}
       <div className="Feed-snippets">{snippetList}</div>
-      <WriteNewSnippetButton onClick={toggleSnippetWriter} />
+      {userId && <WriteNewSnippetButton onClick={toggleSnippetWriter} />}
     </div>
   );
 };
