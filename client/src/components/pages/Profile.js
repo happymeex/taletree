@@ -23,22 +23,24 @@ const Profile = ({ userId, profileId }) => {
       console.log("got data 1:");
       console.log(res);
       setData(res);
-      return res;
+      //return res;
      
     };
-    getData().then( (data) => {
-      console.log(data.friends)
-      console.log(data.friends[0])
+    getData()
+    
+    // getData().then( (data) => {
+    //   console.log(data.friends)
+    //   console.log(data.friends[0])
 
 
-      const getfriends = async () => {
-        const responses = new Array();
-        if(data.friends && data.friends.length){
-          for (const id of data.friends) {
-            const res = await get("/api/profile", { id: id });
-            console.log("got data 2:");
-            responses.push(res)
-          };
+    //   const getfriends = async () => {
+    //     const responses = new Array();
+    //     if(data.friends && data.friends.length){
+    //       for (const id of data.friends) {
+    //         const res = await get("/api/profile", { id: id });
+    //         console.log("got data 2:");
+    //         responses.push(res)
+    //       };
           // let responses_new = []
           // responses_new = responses.map(friend => ({
           //                                 id: friend._id,
@@ -49,22 +51,22 @@ const Profile = ({ userId, profileId }) => {
           // console.log("first peep")
           // setAllFriends(responses_new)
           // console.log(typeof(responses_new[0]))
-          console.log("hehe")
+          // console.log("hehe")
 
-          let listOfProfiles = new Array();
-          responses.map(object => {
-            let propertyList = [object._id, object.name, object.pictureURL];
-            listOfProfiles.push(propertyList);
-          });
-          console.log(listOfProfiles)
-          console.log("sdfgh")
-          setAllFriends(listOfProfiles)
+          // let listOfProfiles = new Array();
+          // responses.map(object => {
+          //   let propertyList = [object._id, object.name, object.pictureURL];
+          //   listOfProfiles.push(propertyList);
+          // });
+          // console.log(listOfProfiles)
+          // console.log("sdfgh")
+          // setAllFriends(listOfProfiles)
   
-        }
-      };
-    getfriends()
+    //     }
+    //   };
+    // getfriends()
 
-    });
+    // });
 
   }, [profileId]);
 
@@ -83,7 +85,7 @@ const Profile = ({ userId, profileId }) => {
             bio={data.bio}
             profilePicURL={data.pictureURL}
             isViewer={userId === profileId}
-            allfriends = {allFriends}
+            allfriends={data.friends}
           />
           <ProfileContent
             contribs={data.contribs}
