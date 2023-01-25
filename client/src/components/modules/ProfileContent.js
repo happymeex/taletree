@@ -36,7 +36,6 @@ const ProfileContentSnippetViewer = ({ snippetList }) => {
         <ProfileSnippet content={obj.content} />
       </>
     ));
-  snippets.push(<hr className="ProfileContent-separator" />);
   return (
     <div className="ProfileContentSnippetViewer-container">
       {snippetList.length === 0 ? <></> : snippets}
