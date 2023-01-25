@@ -8,8 +8,56 @@ import heart from "../../public/heart.svg";
 import filledHeart from "../../public/filled_heart.svg";
 import "../../utilities.css";
 import "../pages/Profile.css";
+import {
+  DEFAULT_PROFILE_PICTURE_SIZE,
+  DEFAULT_AUTHOR_NAME_FONT_SIZE,
+  DEFAULT_CONTENT_FONT_SIZE,
+} from "../../utils/treeview.utils";
 
 const NO_REDIRECT_TO_TREEVIEW = new Set(["SingleSnippet-author", "SingleSnippet-iconBar"]);
+
+/**
+ *
+ * @param {String} authorId
+ * @param {String} authorName
+ * @param {String} userId
+ * @param {Number} scale
+ */
+const SingleSnippetAuthorInfo = (props) => {
+  const imgStyle = props.scale
+    ? {
+        height: `${DEFAULT_PROFILE_PICTURE_SIZE * props.scale}px`,
+        width: `${DEFAULT_PROFILE_PICTURE_SIZE * props.scale}px`,
+        borderRadius: `50%`,
+      }
+    : {};
+  const authorNameStyle = props.scale
+    ? {
+        fontSize: `${DEFAULT_AUTHOR_NAME_FONT_SIZE * props.scale}px`,
+      }
+    : {};
+  return (
+    <div
+      className="SingleSnippet-authorInfo u-flexColumn u-flex-alignCenter"
+      onClick={() => {
+        navigate(`/profile/${props.authorId}`, { state: { userId: props.userId } });
+      }}
+    >
+      <img className="SingleSnippet-profilePic else" src={menuUp} style={imgStyle} />
+      <div className="SingleSnippet-authorName u-bold else" style={authorNameStyle}>
+        {props.authorName}
+      </div>
+    </div>
+  );
+};
+
+const SingleSnippetContentBox = ({ content, scale }) => {
+  const contentStyle = {
+    fontSize: `${DEFAULT_CONTENT_FONT_SIZE * (scale ? scale : 1)}px`,
+  };
+  //TODO: fade styling for overflow
+  return <div style={contentStyle}>content</div>;
+};
 
 /**
  * Story is a component that renders creator and content of a story
@@ -26,6 +74,7 @@ const NO_REDIRECT_TO_TREEVIEW = new Set(["SingleSnippet-author", "SingleSnippet-
  * @param {Boolean} showIconBar if true, then always shows icon bar regardless of hover status. we might want to just deduce this from
  *    isTreeView, but I'm including this as a parameter in case we want extra control.
  * @param {Boolean} showAuthor used to conditionally render author name/picture
+ * @param {Number} scale only used for treeview
  * @param {Object} style used only for treeview
  * @param {Object} onClick used only for treeview
  */
@@ -70,27 +119,24 @@ const SingleSnippet = (props) => {
           imgOn={filledHeart}
           imgOff={heart}
           initialActive={false}
+          scale={props.scale}
           toggleActive={(currState) => {
             console.log("heart clicked");
           }}
         />
-        <div>Bookmark</div>
       </div>
       <div className="SingleSnippet-displayBox u-flex">
         {props.showAuthor ? (
-          <div
-            className="SingleSnippet-authorInfo u-flexColumn u-flex-alignCenter"
-            onClick={() => {
-              navigate(`/profile/${props.authorId}`, { state: { userId: props.userId } });
-            }}
-          >
-            <img className="SingleSnippet-profilePic else" src={menuUp} />
-            <div className="SingleSnippet-authorName u-bold else">{props.authorName}</div>
-          </div>
+          <SingleSnippetAuthorInfo
+            authorId={props.authorId}
+            authorName={props.authorName}
+            userId={props.userId}
+            scale={props.scale}
+          />
         ) : (
           <></>
         )}
-        <div className="SingleSnippet-contentBox">{props.content}</div>
+        <SingleSnippetContentBox content={props.content} scale={props.scale} />
       </div>
     </div>
   );

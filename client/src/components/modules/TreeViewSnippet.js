@@ -49,6 +49,7 @@ const TreeViewSnippet = (props) => {
         showIconBar={true}
         style={containerStyle}
         onClick={props.onClick}
+        scale={props.scale}
       />
       {props.line.fromParent ? (
         <>
