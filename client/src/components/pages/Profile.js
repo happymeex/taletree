@@ -14,7 +14,7 @@ import "./Profile.css";
  */
 const Profile = ({ userId, profileId }) => {
   const [data, setData] = useState(undefined);
-  const [Friends, setFriends] = useState(false);
+  // const [Friends, setFriends] = useState(false);
   const [allFriends, setAllFriends] = useState([]);
   useEffect(() => {
     console.log("viewing profile of user " + profileId);
@@ -24,30 +24,47 @@ const Profile = ({ userId, profileId }) => {
       console.log(res);
       setData(res);
       return res;
-      // if(Friends){
-      //   const getFriendData = async () => {
-      //     const res_friend = await get("/api/profile", { id: data.friends });
-      //     console.log("got friend data:");
-      //     console.log(res_friend);
-      //     setAllFriends(res_friend);
-
-      //   getFriendData
-      //   }
-      // }
+     
     };
     getData().then( (data) => {
-      console.log("hi")
       console.log(data.friends)
-      console.log("hehe")
+      console.log(data.friends[0])
+
+
+      const getfriends = async () => {
+        const responses = [];
+        if(data.friends && data.friends.length){
+          for (const id of data.friends) {
+            const res = await get("/api/profile", { id: id });
+            console.log("got data 2:");
+            responses.push(res)
+          };
+          // let responses_new = []
+          // responses_new = responses.map(friend => ({
+          //                                 id: friend._id,
+          //                                 name: friend.name,
+          //                                 profilePicURL: friend.pictureURL
+          //                                 }));
+          // console.log(responses_new[0])
+          // console.log("first peep")
+          // setAllFriends(responses_new)
+          // console.log(typeof(responses_new[0]))
+          console.log("hehe")
+          setAllFriends(responses)
+
+        }// } else {
+        //   setAllFriends([])
+        // }
+      };
+
+      getfriends()
     });
 
-    // const getFriends = async () => {
-    //   const   
-    // }
-    // setFriends(data.friends && data.friends.length);
-    // console.log(data.friends)
-    
   }, [profileId]);
+
+  // let friend_1 = allFriends[0]
+  // console.log(friend_1.name)
+  // console.log("oihguyk")
 
   return (
     <>
@@ -60,9 +77,7 @@ const Profile = ({ userId, profileId }) => {
             bio={data.bio}
             profilePicURL={data.pictureURL}
             isViewer={userId === profileId}
-            // hasFriends = {Friends}
-            // allFriends = {data.friends ? Friends : []}
-
+            allfriends = {allFriends}
           />
           <ProfileContent
             contribs={data.contribs}
@@ -75,5 +90,11 @@ const Profile = ({ userId, profileId }) => {
     </>
   );
 };
+
+// const friendsData = allFriends.map(friend => ({
+//   name: friend.name,
+//   bio: friend.bio,
+//   profilePicURL: friend.pictureURL
+// }));
 
 export default Profile;
