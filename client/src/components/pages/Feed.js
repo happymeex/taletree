@@ -22,17 +22,6 @@ const WriteNewSnippetButton = ({ onClick }) => {
   );
 };
 
-const WriteNewSnippetButton = ({ onClick }) => {
-  return (
-    <div
-      className="FeedWriteNewSnippetButton-container u-flex-justifyCenter u-flex-alignCenter"
-      onClick={onClick}
-    >
-      <img className="FeedWriteNewSnippetButton-icon" src={leaf}></img>
-    </div>
-  );
-};
-
 const Feed = ({ userId, userName, userBookmarks, userFavorites }) => {
   const [snippets, setSnippets] = useState([]);
   const [writer, setWriter] = useState(false); //whether new snippet popup is open
@@ -73,8 +62,8 @@ const Feed = ({ userId, userName, userBookmarks, userFavorites }) => {
         _id={snippet._id}
         isTreeView={false}
         showAuthor={true}
-        isFavorite={userFavorites.has(snippet._id)}
-        isBookmarked={userBookmarks.has(snippet._id)}
+        userFavorites={userFavorites}
+        userBookmarks={userBookmarks}
         showIconBar={true}
       />
     ));

@@ -46,8 +46,8 @@ const TreeViewSnippet = (props) => {
         _id={props._id}
         isTreeView={true}
         showAuthor={true}
-        isFavorite={props.userFavorites.has(props._id)}
-        isBookmarked={props.userBookmarked.has(props._id)}
+        userFavorites={props.userFavorites}
+        userBookmarks={props.userBookmarks}
         showIconBar={true}
         style={containerStyle}
         onClick={props.onClick}

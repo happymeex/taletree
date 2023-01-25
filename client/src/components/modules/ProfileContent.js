@@ -41,8 +41,8 @@ const ProfileContentSnippetViewer = ({ snippetList, userFavorites, userBookmarks
           _id={snippet._id}
           isTreeView={false}
           showAuthor={true}
-          isFavorite={userFavorites.has(snippet._id)}
-          isBookmarked={userBookmarks.has(snippet._id)}
+          userFavorites={userFavorites}
+          userBookmarks={userBookmarks}
           showIconBar={true}
         />
       </>

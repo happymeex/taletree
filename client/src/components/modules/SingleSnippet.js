@@ -24,6 +24,8 @@ const NO_REDIRECT_TO_TREEVIEW = new Set(["SingleSnippet-author", "SingleSnippet-
  * @param {String} authorName
  * @param {String} userId
  * @param {Number} scale
+ * @param {[String]} userBookmarks
+ * @param {[String]} userFavorites
  */
 const SingleSnippetAuthorInfo = (props) => {
   const imgStyle = props.scale
@@ -42,7 +44,13 @@ const SingleSnippetAuthorInfo = (props) => {
     <div
       className="SingleSnippet-authorInfo u-flexColumn u-flex-alignCenter"
       onClick={() => {
-        navigate(`/profile/${props.authorId}`, { state: { userId: props.userId } });
+        navigate(`/profile/${props.authorId}`, {
+          state: {
+            userId: props.userId,
+            userFavorites: props.userFavorites,
+            userBookmarks: props.userBookmarks,
+          },
+        });
       }}
     >
       <img className="SingleSnippet-profilePic else" src={menuUp} style={imgStyle} />
@@ -70,8 +78,8 @@ const SingleSnippetContentBox = ({ content, scale }) => {
  * @param {String} authorId
  * @param {String} userId viewer's id
  * @param {String} content of the story
- * @param {Boolean} isFavorite used to determine "heart" button's initial render state
- * @param {Boolean} isBookmarked used to determine "bookmark" button's initial render state
+ * @param {[String]} userFavorites used to determine "heart" button's initial render state
+ * @param {[String]} userBookmarks used to determine "bookmark" button's initial render state
  * @param {Boolean} isTreeView used to conditionally render "read" button and determine whether snippet is clickable
  * @param {Boolean} showIconBar if true, then always shows icon bar regardless of hover status. we might want to just deduce this from
  *    isTreeView, but I'm including this as a parameter in case we want extra control.
@@ -83,6 +91,8 @@ const SingleSnippetContentBox = ({ content, scale }) => {
 const SingleSnippet = (props) => {
   const [isHover, setIsHover] = useState(false);
   const [isToTree, setIsToTree] = useState(false); //if true, then clicking redirects to treeview
+  const isFavorite = props.userFavorites.has(props._id);
+  const isBookmarked = props.userBookmarks.has(props._id);
 
   const style = props.isTreeView
     ? props.style
@@ -93,7 +103,9 @@ const SingleSnippet = (props) => {
     ? props.onClick
     : isToTree
     ? () => {
-        navigate(`/treeview/${props._id}`);
+        navigate(`/treeview/${props._id}`, {
+          state: { userBookmarks: props.userBookmarks, userFavorites: props.userFavorites },
+        });
       }
     : () => null;
   if (props.isTreeView)
@@ -143,6 +155,8 @@ const SingleSnippet = (props) => {
             authorName={props.authorName}
             userId={props.userId}
             scale={props.scale}
+            userBookmarks={props.userBookmarks}
+            userFavorites={props.userFavorites}
           />
         ) : (
           <></>

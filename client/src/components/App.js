@@ -22,8 +22,8 @@ const App = () => {
   const [userId, setUserId] = useState(undefined);
   const [userName, setUserName] = useState(undefined);
   const [profilePicURL, setProfilePicURL] = useState(undefined);
-  const [userBookmarks, setBookmarks] = useState(undefined);
-  const [userFavorites, setFavorites] = useState(undefined);
+  const [userBookmarks, setBookmarks] = useState(new Set());
+  const [userFavorites, setFavorites] = useState(new Set());
 
   useEffect(() => {
     get("/api/whoami")
@@ -58,7 +58,9 @@ const App = () => {
       .then(() =>
         get("/api/profile", { id: userId }).then((user) => {
           setBookmarks(new Set(user.bookmarks));
+          console.log({ userBookmarks });
           setFavorites(new Set(user.favorites));
+          console.log({ userFavorites });
         })
       );
   };
@@ -77,6 +79,8 @@ const App = () => {
         userId={userId}
         userName={userName}
         profilePicURL={profilePicURL}
+        userBookmarks={userBookmarks}
+        userFavorites={userFavorites}
       />
       {gotUser ? (
         <Router>
