@@ -9,7 +9,7 @@ import { get, post } from "../../utilities";
 
 const ROOT = "63d04ff67f9ad37d137f7750";
 
-const Feed = ({ userId, userName, handleLogin, handleLogout }) => {
+const Feed = ({ userId, userName, userBookmarks, userFavorites }) => {
   const [snippets, setSnippets] = useState([]);
 
   useEffect(() => {
@@ -52,8 +52,8 @@ const Feed = ({ userId, userName, handleLogin, handleLogout }) => {
         _id={snippet._id}
         isTreeView={false}
         showAuthor={true}
-        isLiked={false}
-        isBookmarked={false}
+        isFavorite={userFavorites.has(snippet._id)}
+        isBookmarked={userBookmarks.has(snippet._id)}
         showIconBar={true}
       />
     ));

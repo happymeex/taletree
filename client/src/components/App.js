@@ -22,6 +22,8 @@ const App = () => {
   const [userId, setUserId] = useState(undefined);
   const [userName, setUserName] = useState(undefined);
   const [profilePicURL, setProfilePicURL] = useState(undefined);
+  const [userBookmarks, setBookmarks] = useState(undefined);
+  const [userFavorites, setFavorites] = useState(undefined);
 
   useEffect(() => {
     get("/api/whoami")
@@ -45,13 +47,20 @@ const App = () => {
     console.log(decodedCredential);
     const name = `${decodedCredential.name}`;
     console.log(`Logged in as ${decodedCredential.name}`);
-    post("/api/login", { token: userToken }).then((user) => {
-      setUserId(user._id);
-      setUserName(name);
-      setProfilePicURL(user.pictureURL);
-      post("/api/initsocket", { socketid: socket.id });
-      window.location.reload();
-    });
+    post("/api/login", { token: userToken })
+      .then((user) => {
+        setUserId(user._id);
+        setUserName(name);
+        setProfilePicURL(user.pictureURL);
+        post("/api/initsocket", { socketid: socket.id });
+        window.location.reload();
+      })
+      .then(() =>
+        get("/api/profile", { id: userId }).then((user) => {
+          setBookmarks(new Set(user.bookmarks));
+          setFavorites(new Set(user.favorites));
+        })
+      );
   };
 
   const handleLogout = () => {
@@ -77,9 +86,22 @@ const App = () => {
             handleLogout={handleLogout}
             userId={userId}
             userName={userName}
+            userBookmarks={userBookmarks}
+            userFavorites={userFavorites}
           />
-          <TreeView path="/treeview/:snippetId" userId={userId} userName={userName} />
-          <Profile path="/profile/:profileId" userId={userId} />
+          <TreeView
+            path="/treeview/:snippetId"
+            userId={userId}
+            userName={userName}
+            userBookmarks={userBookmarks}
+            userFavorites={userFavorites}
+          />
+          <Profile
+            path="/profile/:profileId"
+            userId={userId}
+            userBookmarks={userBookmarks}
+            userFavorites={userFavorites}
+          />
           <NotFound default />
         </Router>
       ) : (

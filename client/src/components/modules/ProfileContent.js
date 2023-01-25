@@ -28,7 +28,7 @@ const ProfileContentTab = ({ text, onClick, isSelected }) => {
  * we might want to display something fun if there aren't any
  * snippets to display
  */
-const ProfileContentSnippetViewer = ({ snippetList, liked, bookmarked }) => {
+const ProfileContentSnippetViewer = ({ snippetList, userFavorites, userBookmarks }) => {
   const snippets = snippetList
     .slice() //clone array so that it isn't mutated by reverse
     .reverse()
@@ -41,8 +41,8 @@ const ProfileContentSnippetViewer = ({ snippetList, liked, bookmarked }) => {
           _id={snippet._id}
           isTreeView={false}
           showAuthor={true}
-          isLiked={liked.has(snippet)}
-          isBookmarked={bookmarked.has(snippet)}
+          isFavorite={userFavorites.has(snippet._id)}
+          isBookmarked={userBookmarks.has(snippet._id)}
           showIconBar={true}
         />
       </>
@@ -62,6 +62,8 @@ const ProfileContentSnippetViewer = ({ snippetList, liked, bookmarked }) => {
  * @param {[String]} favorites
  * @param {[String]} bookmarks
  * @param {Boolean} isViewer
+ * @param {[String]} userFavorites
+ * @param {[String]} userBookmarks
  * @returns
  */
 const ProfileContent = (props) => {
@@ -103,8 +105,8 @@ const ProfileContent = (props) => {
       ) : (
         <ProfileContentSnippetViewer
           snippetList={data[currTab]}
-          liked={new Set(data[1])}
-          bookmarked={new Set(data[2])}
+          userFavorites={props.userFavorites}
+          userBookmarks={props.userBookmarks}
         />
       )}
     </div>

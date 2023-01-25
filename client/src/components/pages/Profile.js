@@ -11,8 +11,10 @@ import "./Profile.css";
  * proptypes
  * @param {String} userId the viewer's id
  * @param {String} profileId the profile's id
+ * @param {[String]} userBookmarks the viewer's bookmarks
+ * @param {[String]} userFavorites the viewer's favorites
  */
-const Profile = ({ userId, profileId }) => {
+const Profile = ({ userId, profileId, userBookmarks, userFavorites }) => {
   const [data, setData] = useState(undefined);
   useEffect(() => {
     console.log("viewing profile of user " + profileId);
@@ -41,6 +43,8 @@ const Profile = ({ userId, profileId }) => {
             favorites={data.favorites}
             bookmarks={data.bookmarks}
             isViewer={userId === profileId}
+            userFavorites={userFavorites}
+            userBookmarks={userBookmarks}
           />
         </div>
       )}

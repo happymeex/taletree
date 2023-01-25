@@ -5,6 +5,8 @@ import "./SingleSnippet.css";
 import Icon from "./Icons.js";
 import menuUp from "../../public/menu_up.svg";
 import heart from "../../public/heart.svg";
+import bookmark from "../../public/bookmark_unmarked.svg";
+import filledBookmark from "../../public/bookmark_marked.svg";
 import filledHeart from "../../public/filled_heart.svg";
 import "../../utilities.css";
 import "../pages/Profile.css";
@@ -20,7 +22,7 @@ const NO_REDIRECT_TO_TREEVIEW = new Set(["SingleSnippet-author", "SingleSnippet-
  * @param {String} authorId
  * @param {String} userId viewer's id
  * @param {String} content of the story
- * @param {Boolean} isLiked used to determine "heart" button's initial render state
+ * @param {Boolean} isFavorite used to determine "heart" button's initial render state
  * @param {Boolean} isBookmarked used to determine "bookmark" button's initial render state
  * @param {Boolean} isTreeView used to conditionally render "read" button and determine whether snippet is clickable
  * @param {Boolean} showIconBar if true, then always shows icon bar regardless of hover status. we might want to just deduce this from
@@ -69,12 +71,20 @@ const SingleSnippet = (props) => {
           showByDefault={isHover || props.showIconBar}
           imgOn={filledHeart}
           imgOff={heart}
-          initialActive={false}
+          initialActive={isFavorite}
           toggleActive={(currState) => {
             console.log("heart clicked");
           }}
         />
-        <div>Bookmark</div>
+        <Icon
+          showByDefault={isHover || props.showIconBar}
+          imgOn={filledBookmark}
+          imgOff={bookmark}
+          initialActive={isBookmarked}
+          toggleActive={(currState) => {
+            console.log("bookmark clicked");
+          }}
+        />
       </div>
       <div className="SingleSnippet-displayBox u-flex">
         {props.showAuthor ? (
