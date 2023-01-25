@@ -56,7 +56,7 @@ const SingleSnippetContentBox = ({ content, scale }) => {
     fontSize: `${DEFAULT_CONTENT_FONT_SIZE * (scale ? scale : 1)}px`,
   };
   //TODO: fade styling for overflow
-  return <div style={contentStyle}>content</div>;
+  return <div style={contentStyle}>{content}</div>;
 };
 
 /**
