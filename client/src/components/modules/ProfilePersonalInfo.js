@@ -8,21 +8,28 @@ import "../pages/Profile.css";
  * @param {String} bio
  * @param {Boolean} isViewer true if this is the viewer's page
  */
-const ProfilePersonalInfo = (props) => {
-  const [d, setD] = useState(undefined);
-  setD(props.allfriends[0])
-  console.log("yooooooo")
-  console.log(props.allfriends)
-  //console.log(props.allfriends[0])
-  console.log(d["name"])
+const ProfilePersonalInfo = ({profilePicURL, name, bio, isViewer, allfriends}) => {
+  console.log(allfriends);
+  console.log(typeof(allfriends));
+  console.log(allfriends[0]);
+  console.log(typeof(allfriends[0]));
+  let p1 = allfriends[0];
+  console.log('p1 =')
+  console.log(p1);
+  console.log(p1[1]);
+ // for (p in p1){
+ //   console.log(p);
+ // }
+
+  
 
   return (
     <div className="Profile-personalInfoContainer u-flexColumn u-flex-alignCenter u-flex-justifyCenter">
-      <img src={props.profilePicURL} className="Profile-picture" />
-      <div className="Profile-name ProfileLeft-separator">{props.name}</div>
-      <div className="Profile-bio ProfileLeft-separator">{props.bio}</div>
+      <img src={profilePicURL} className="Profile-picture" />
+      <div className="Profile-name ProfileLeft-separator">{name}</div>
+      <div className="Profile-bio ProfileLeft-separator">{bio}</div>
       <div className="Profile-friendsHeader ProfileLeft-separator"> Friends </div>
-      {/* <div className="Profile-friends">{props.allfriends[0].name}</div> */}
+      <div className="Profile-friends">{allfriends[0]}</div>
     </div>
   );
 };

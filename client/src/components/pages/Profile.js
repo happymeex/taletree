@@ -32,7 +32,7 @@ const Profile = ({ userId, profileId }) => {
 
 
       const getfriends = async () => {
-        const responses = [];
+        const responses = new Array();
         if(data.friends && data.friends.length){
           for (const id of data.friends) {
             const res = await get("/api/profile", { id: id });
@@ -50,14 +50,20 @@ const Profile = ({ userId, profileId }) => {
           // setAllFriends(responses_new)
           // console.log(typeof(responses_new[0]))
           console.log("hehe")
-          setAllFriends(responses)
 
-        }// } else {
-        //   setAllFriends([])
-        // }
+          let listOfProfiles = new Array();
+          responses.map(object => {
+            let propertyList = [object._id, object.name, object.pictureURL];
+            listOfProfiles.push(propertyList);
+          });
+          console.log(listOfProfiles)
+          console.log("sdfgh")
+          setAllFriends(listOfProfiles)
+  
+        }
       };
+    getfriends()
 
-      getfriends()
     });
 
   }, [profileId]);
