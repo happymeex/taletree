@@ -68,9 +68,6 @@ const TreeView = (props) => {
       setPos({ x: e.x, y: e.y });
     };
     window.addEventListener("mousemove", updatePos);
-    window.addEventListener("click", (e) => {
-      if (e.target.id === "ModalBackground") setWriter(false);
-    });
   }, []);
 
   useEffect(() => {
