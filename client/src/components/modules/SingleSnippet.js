@@ -26,20 +26,25 @@ const NO_REDIRECT_TO_TREEVIEW = new Set(["SingleSnippet-author", "SingleSnippet-
  * @param {Boolean} showIconBar if true, then always shows icon bar regardless of hover status. we might want to just deduce this from
  *    isTreeView, but I'm including this as a parameter in case we want extra control.
  * @param {Boolean} showAuthor used to conditionally render author name/picture
+ * @param {Object} style used only for treeview
  */
 const SingleSnippet = (props) => {
   const [isHover, setIsHover] = useState(false);
   const [isToTree, setIsToTree] = useState(false); //if true, then clicking redirects to treeview
   return (
     <div
-      className="SingleSnippet-container u-flexColumn"
+      className={
+        props.isTreeView ? "TreeViewSnippet-container" : "SingleSnippet-container u-flexColumn"
+      }
       style={
         isToTree && !props.isTreeView
           ? { backgroundColor: `rgba(0,0,0,0.15)`, cursor: `pointer` }
+          : props.isTreeView
+          ? props.style
           : {}
       }
       onClick={
-        isToTree && !props.isTreeView
+        isToTree
           ? () => {
               navigate(`/treeview/${props._id}`);
             }

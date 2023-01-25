@@ -32,5 +32,12 @@
   cursor: pointer;
 }
 
+.TreeViewSnippet-container {
+  background-color: white;
+  position: absolute;
+  border-radius: var(--m);
+  padding: var(--s);
+}
+
 .SingleSnippet-authorInfo {
 }
