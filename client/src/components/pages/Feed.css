@@ -13,3 +13,21 @@
 .Feed-snippets:first-child {
   margin-right: 20px;
 }
+
+.FeedWriteNewSnippetButton-container {
+  position: fixed;
+  background-color: var(--primary--dark);
+  height: 10vh;
+  width: 10vh;
+  bottom: 5vh;
+  right: 5vh;
+  border-radius: 50%;
+}
+
+.FeedWriteNewSnippetButton-container:hover {
+  cursor: pointer;
+}
+
+.FeedWriteNewSnippetButton-icon {
+  height: 60%;
+}

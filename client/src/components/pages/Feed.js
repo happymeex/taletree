@@ -3,14 +3,39 @@ import { navigate } from "@reach/router";
 import { GoogleOAuthProvider, GoogleLogin, googleLogout } from "@react-oauth/google";
 import SingleSnippet from "../modules/SingleSnippet";
 import WriteNewSnippet from "../modules/WriteNewSnippet";
+import ModalBackground from "../modules/ModalBackground";
 import "../../utilities.css";
 import "./Feed.css";
 import { get, post } from "../../utilities";
+import leaf from "../../public/leaf.svg";
 
 const ROOT = "63d04ff67f9ad37d137f7750";
 
+const WriteNewSnippetButton = ({ onClick }) => {
+  return (
+    <div
+      className="FeedWriteNewSnippetButton-container u-flex-justifyCenter u-flex-alignCenter"
+      onClick={onClick}
+    >
+      <img className="FeedWriteNewSnippetButton-icon" src={leaf}></img>
+    </div>
+  );
+};
+
+const WriteNewSnippetButton = ({ onClick }) => {
+  return (
+    <div
+      className="FeedWriteNewSnippetButton-container u-flex-justifyCenter u-flex-alignCenter"
+      onClick={onClick}
+    >
+      <img className="FeedWriteNewSnippetButton-icon" src={leaf}></img>
+    </div>
+  );
+};
+
 const Feed = ({ userId, userName, userBookmarks, userFavorites }) => {
   const [snippets, setSnippets] = useState([]);
+  const [writer, setWriter] = useState(false); //whether new snippet popup is open
 
   useEffect(() => {
     get("/api/snippets", { userId: userId }).then((snippets) => {
@@ -18,26 +43,22 @@ const Feed = ({ userId, userName, userBookmarks, userFavorites }) => {
     });
   }, []);
 
-  const NewFeedSnippet = () => {
-    const addPost = (input) => {
-      console.log("posting snippet as " + userName + " with input:");
-      console.log(input);
-      const writeToDB = async () => {
-        const treeId = await post("/api/new-tree");
-        console.log("browser got treeId: " + treeId);
-        if (treeId)
-          post("/api/new-snippet", {
-            authorName: userName,
-            authorId: userId,
-            input: input,
-            parentId: ROOT,
-            treeId: treeId,
-          });
-      };
-      writeToDB();
+  const addPost = (input) => {
+    console.log("posting snippet as " + userName + " with input:");
+    console.log(input);
+    const writeToDB = async () => {
+      const treeId = await post("/api/new-tree");
+      console.log("browser got treeId: " + treeId);
+      if (treeId)
+        post("/api/new-snippet", {
+          authorName: userName,
+          authorId: userId,
+          input: input,
+          parentId: ROOT,
+          treeId: treeId,
+        });
     };
-    //returned snippet object
-    return <WriteNewSnippet onPost={addPost} onClose={() => {}} />;
+    writeToDB();
   };
 
   let snippetList = null;
@@ -59,10 +80,22 @@ const Feed = ({ userId, userName, userBookmarks, userFavorites }) => {
     ));
   }
 
+  const toggleSnippetWriter = () => {
+    setWriter((s) => !s);
+  };
+
   return (
     <div className="Feed-container">
-      <NewFeedSnippet />
+      {writer && (
+        <ModalBackground
+          onClose={() => {
+            setWriter(false);
+          }}
+          children={<WriteNewSnippet onPost={addPost} onClose={toggleSnippetWriter} />}
+        />
+      )}
       <div className="Feed-snippets">{snippetList}</div>
+      {userId && <WriteNewSnippetButton onClick={toggleSnippetWriter} />}
     </div>
   );
 };
