@@ -26,8 +26,8 @@ const ALLOW_DRAG = (classname) => {
 };
 const ALLOW_HIGHLIGHT = (classname) => {
   return (
-    classname === "TreeViewSnippet-content" ||
-    classname === "TreeViewSnippet-author" ||
+    classname.startsWith("SingleSnippet-contentBox") ||
+    classname.startsWith("SingleSnippet-authorName") ||
     classname === "WriteNewSnippet-textbox"
   );
 };

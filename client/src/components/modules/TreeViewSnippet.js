@@ -40,18 +40,20 @@ const TreeViewSnippet = (props) => {
         <></>
       )}
       {props.line.toChild ? <div style={lineToChildStyle}></div> : <></>}
-      <SingleSnippet
-        authorName={props.authorName}
-        authorId={props.authorId}
-        content={props.content}
-        _id={props._id}
-        isTreeView={true}
-        showAuthor={true}
-        isLiked={false}
-        isBookmarked={false}
-        showIconBar={true}
-        style={containerStyle}
-      />
+      <div className="TreeViewSnippet-wrapper" onClick={props.onClick}>
+        <SingleSnippet
+          authorName={props.authorName}
+          authorId={props.authorId}
+          content={props.content}
+          _id={props._id}
+          isTreeView={true}
+          showAuthor={true}
+          isLiked={false}
+          isBookmarked={false}
+          showIconBar={true}
+          style={containerStyle}
+        />
+      </div>
     </>
   );
 };
