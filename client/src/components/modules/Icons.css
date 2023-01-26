@@ -1,6 +1,3 @@
-.Icon {
-  height: var(--l);
-}
 .Icon:hover {
   cursor: pointer;
 }

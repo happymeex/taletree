@@ -21,7 +21,7 @@ const Icon = ({ showByDefault, imgOn, imgOff, initialActive, toggleActive, scale
     <img
       src={active ? imgOn : imgOff}
       style={iconStyle}
-      className="else"
+      className="Icon else"
       onClick={() => {
         toggleActive(active);
         setActive((s) => !s);
