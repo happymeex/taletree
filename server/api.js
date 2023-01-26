@@ -152,6 +152,19 @@ router.get("/profile-snippet-data", (req, res) => {
   queryDB();
 });
 
+router.post("/snippet-attribs", (req, res) => {
+  console.log("changing user's favorites/bookmarks");
+  auth.ensureLoggedIn(req, res, () => {
+    console.log("from post: user is indeed logged in");
+    User.findById(snippet.authorId).then((user) => {
+      let attrib = req.query.attrib === "favorite" ? user.favorites : user.contribs;
+      if (req.query.currState) attrib.push(req.query._id);
+      else attrib = attrib.filter((s) => s != req.query._id);
+      user.save();
+    });
+  });
+});
+
 // anything else falls to this "not found" case
 router.all("*", (req, res) => {
   console.log(`API route not found: ${req.method} ${req.url}`);

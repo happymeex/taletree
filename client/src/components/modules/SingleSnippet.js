@@ -134,7 +134,12 @@ const SingleSnippet = (props) => {
           imgOff={heart}
           initialActive={isFavorite}
           scale={props.scale}
-          toggleActive={(currState) => {
+          toggleActive={async (currState) => {
+            await post("/api/snippet-attribs", {
+              _id: props._id,
+              state: !currState,
+              attrib: "favorite",
+            });
             console.log("heart clicked");
           }}
         />
@@ -143,7 +148,12 @@ const SingleSnippet = (props) => {
           imgOn={filledBookmark}
           imgOff={bookmark}
           initialActive={isBookmarked}
-          toggleActive={(currState) => {
+          toggleActive={async (currState) => {
+            await post("/api/snippet-attribs", {
+              _id: props._id,
+              state: !currState,
+              attrib: "bookmark",
+            });
             console.log("bookmark clicked");
           }}
         />
