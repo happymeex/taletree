@@ -9,6 +9,7 @@
   resize: none;
   height: 30vh;
   font-family: inherit;
+  font-weight: inherit;
   font-size: var(--l);
   padding: 0;
   border: none;
