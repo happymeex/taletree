@@ -33,19 +33,18 @@ const ProfileContentSnippetViewer = ({ snippetList, userFavorites, userBookmarks
     .slice() //clone array so that it isn't mutated by reverse
     .reverse()
     .map((snippet, i) => (
-      <>
-        <SingleSnippet
-          authorName={snippet.authorName}
-          authorId={snippet.authorId}
-          content={snippet.content}
-          _id={snippet._id}
-          isTreeView={false}
-          showAuthor={true}
-          userFavorites={userFavorites}
-          userBookmarks={userBookmarks}
-          showIconBar={true}
-        />
-      </>
+      <SingleSnippet
+        key={i}
+        authorName={snippet.authorName}
+        authorId={snippet.authorId}
+        content={snippet.content}
+        _id={snippet._id}
+        isTreeView={false}
+        showAuthor={true}
+        userFavorites={userFavorites}
+        userBookmarks={userBookmarks}
+        showIconBar={true}
+      />
     ));
   return (
     <div className="ProfileContentSnippetViewer-container">

@@ -26,11 +26,8 @@ const Profile = ({ userId, profileId, userBookmarks, userFavorites }) => {
       console.log(res);
       setData(res);
       //return res;
-     
     };
-    getData()
-    
-
+    getData();
   }, [profileId]);
 
   return (
@@ -43,8 +40,9 @@ const Profile = ({ userId, profileId, userBookmarks, userFavorites }) => {
             name={data.name}
             bio={data.bio}
             profilePicURL={data.pictureURL}
+            userId={userId}
             isViewer={userId === profileId}
-            allfriends={data.friends}
+            allFriends={data.friends}
           />
           <ProfileContent
             contribs={data.contribs}
@@ -59,6 +57,5 @@ const Profile = ({ userId, profileId, userBookmarks, userFavorites }) => {
     </>
   );
 };
-
 
 export default Profile;

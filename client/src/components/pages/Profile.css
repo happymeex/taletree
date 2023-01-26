@@ -7,6 +7,7 @@
 .Profile-personalInfoContainer {
   width: 30vw;
   height: 100%;
+  gap: 1%;
 }
 
 .Profile-name {
@@ -15,7 +16,7 @@
 
 .Profile-bio {
   font-size: var(--m);
-  color: var(--medgrey);
+  color: var(--darkgrey);
 }
 
 .ProfileContent-container {
@@ -63,26 +64,42 @@
   height: 30vh;
 }
 
-
-.ProfileLeft-separator {
-  margin-bottom: 16px;
+.Profile-friendsDisplayBox {
+  width: 100%;
+  border: 1px solid black;
+  flex-wrap: wrap;
+  overflow-y: hidden;
+  box-sizing: border-box;
+  padding-left: 10%;
 }
 
 .Profile-friendsHeader {
   font-size: var(--m);
-  font-size: var(--xxl);
+  margin-bottom: var(--m);
+}
+
+.Profile-friendsHeader:hover {
+  cursor: pointer;
+  text-decoration: underline;
 }
 
 .Profile-friends {
   font-size: var(--m);
   color: var(--medgrey);
-  font-size: var(--m);
 }
-
 
 .ProfileSideHeader {
   position: relative;
   color: red;
   /* top: 200px;
   width: 60vw; */
+}
+
+.Profile-smallProfilePic {
+  border-radius: 50%;
+  object-fit: contain;
+}
+
+.Profile-smallProfilePic:hover {
+  cursor: pointer;
 }

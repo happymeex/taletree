@@ -130,6 +130,17 @@ router.get("/profile", (req, res) => {
     });
 });
 
+router.get("/users", (req, res) => {
+  const query = async () => {
+    const ret = await User.find({ _id: { $in: req.query.ids.split(",") } }).catch((err) => {
+      res.status(400).send(err);
+      return;
+    });
+    res.send(ret);
+  };
+  query();
+});
+
 router.get("/profile-snippet-data", (req, res) => {
   console.log("getting snippet data");
   console.log(req.query);
@@ -140,16 +151,23 @@ router.get("/profile-snippet-data", (req, res) => {
       res.status(400).send(err);
     });
   };
-  const queryDB = async () => {
-    ret = {};
-    for (const field in req.query) {
-      const list = await query(field);
-      if (!list) return; //in case error occurred in query
-      ret[field] = list;
+  let promises = [];
+  let fields = [];
+  for (const field in req.query) {
+    const list = query(field);
+    promises.push(list);
+    fields.push(field);
+  }
+  let ret = {};
+  Promise.all(promises).then((values) => {
+    for (let i = 0; i < values.length; i++) {
+      if (!values[i]) return; //in case error occurred in query
+      ret[fields[i]] = values[i];
     }
+    console.log("returning profile snippets: ");
+    console.log(ret);
     res.send(ret);
-  };
-  queryDB();
+  });
 });
 
 router.post("/snippet-attribs", (req, res) => {
