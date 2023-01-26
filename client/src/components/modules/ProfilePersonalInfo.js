@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "../pages/Profile.css";
 import { get } from "../../utilities";
+import ProfileCards from "./ProfileCard"
 
 /**
  * left (or top) portion of profile page with name, bio, friends, groups
@@ -30,7 +31,7 @@ const ProfilePersonalInfo = ({profilePicURL, name, bio, isViewer, allfriends}) =
     };
     getFriendData()
     
-  }, []);
+  }, allfriends);
 
   console.log("fdata length=")
   console.log(fdata.length)
@@ -43,8 +44,13 @@ const ProfilePersonalInfo = ({profilePicURL, name, bio, isViewer, allfriends}) =
       <div className="Profile-name ProfileLeft-separator">{name}</div>
       <div className="Profile-bio ProfileLeft-separator">{bio}</div>
       <div className="Profile-friendsHeader ProfileLeft-separator"> Friends {allfriends.length}</div>
-      <div className="Profile-friends">{fdata.length !==0 ? fdata[0].name : "Loading..."}</div>
-      <div className="Profile-friends">{fdata.length > 1 ? fdata[1].name : "Loading..."}</div> 
+      
+      { fdata.length === allfriends.length ? 
+      <ProfileCards data={fdata}> </ProfileCards> :
+      <div>Loading</div> 
+      }
+
+      
 
     </div>
   );
