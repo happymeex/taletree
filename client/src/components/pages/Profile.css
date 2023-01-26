@@ -66,11 +66,10 @@
 
 .Profile-friendsDisplayBox {
   width: 100%;
-  border: 1px solid black;
   flex-wrap: wrap;
   overflow-y: hidden;
   box-sizing: border-box;
-  padding-left: 10%;
+  padding-left: 20%;
 }
 
 .Profile-friendsHeader {
@@ -83,16 +82,13 @@
   text-decoration: underline;
 }
 
+.Profile-smallProfileDisplayBox {
+  gap: var(--s);
+}
+
 .Profile-friends {
   font-size: var(--m);
   color: var(--medgrey);
-}
-
-.ProfileSideHeader {
-  position: relative;
-  color: red;
-  /* top: 200px;
-  width: 60vw; */
 }
 
 .Profile-smallProfilePic {
