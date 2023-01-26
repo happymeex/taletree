@@ -62,3 +62,27 @@
   width: 30vh;
   height: 30vh;
 }
+
+
+.ProfileLeft-separator {
+  margin-bottom: 16px;
+}
+
+.Profile-friendsHeader {
+  font-size: var(--m);
+  font-size: var(--xxl);
+}
+
+.Profile-friends {
+  font-size: var(--m);
+  color: var(--medgrey);
+  font-size: var(--m);
+}
+
+
+.ProfileSideHeader {
+  position: relative;
+  color: red;
+  /* top: 200px;
+  width: 60vw; */
+}

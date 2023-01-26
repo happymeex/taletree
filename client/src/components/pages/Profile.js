@@ -16,16 +16,23 @@ import "./Profile.css";
  */
 const Profile = ({ userId, profileId, userBookmarks, userFavorites }) => {
   const [data, setData] = useState(undefined);
+  // const [Friends, setFriends] = useState(false);
+  const [allFriends, setAllFriends] = useState([]);
   useEffect(() => {
     console.log("viewing profile of user " + profileId);
     const getData = async () => {
       const res = await get("/api/profile", { id: profileId });
-      console.log("got data:");
+      console.log("got data 1:");
       console.log(res);
       setData(res);
+      //return res;
+     
     };
-    getData();
+    getData()
+    
+
   }, [profileId]);
+
   return (
     <>
       {!data ? (
@@ -37,6 +44,7 @@ const Profile = ({ userId, profileId, userBookmarks, userFavorites }) => {
             bio={data.bio}
             profilePicURL={data.pictureURL}
             isViewer={userId === profileId}
+            allfriends={data.friends}
           />
           <ProfileContent
             contribs={data.contribs}
@@ -51,5 +59,6 @@ const Profile = ({ userId, profileId, userBookmarks, userFavorites }) => {
     </>
   );
 };
+
 
 export default Profile;
