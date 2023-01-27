@@ -15,7 +15,10 @@ import SingleSnippet from "./SingleSnippet.js";
  * @param {Boolean} isTarget
  * @param {Function} onClick
  * @param {Number} scale
- * @param {Object} viewer
+ * @param {String} viewerId
+ * @param {{isFavorite: Boolean, isBookmark: Boolean}} status
+ * @param {Function} updateLocalViewer handler function to update viewer's favs/bookmarks in the parent component's viewer state
+ * @param {Object} goTo navigation functions
  */
 const TreeViewSnippet = (props) => {
   const { highlight, inTargetThread, isTarget } = props;
@@ -44,11 +47,14 @@ const TreeViewSnippet = (props) => {
         _id={props._id}
         isTreeView={true}
         showAuthor={true}
-        viewer={props.viewer}
+        viewerId={props.viewerId}
         showIconBar={true}
         style={containerStyle}
         onClick={props.onClick}
         scale={props.scale}
+        status={props.status}
+        updateLocalViewer={props.updateLocalViewer}
+        goTo={props.goTo}
       />
       {props.line.fromParent ? (
         <>

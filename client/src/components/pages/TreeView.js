@@ -41,6 +41,7 @@ const ALLOW_HIGHLIGHT = (classname) => {
  * @param {String} snippetId
  * @param {String} userName
  * @param {Object} viewer
+ * @param {Object} goTo navigation functions
  */
 const TreeView = (props) => {
   const [pos, setPos] = useState({ x: 0, y: 0 }); //mouse position
@@ -56,6 +57,7 @@ const TreeView = (props) => {
   const [writer, setWriter] = useState(false);
   const [reader, setReader] = useState(false);
   const [scale, setScale] = useState(1);
+  const [localViewer, setLocalViewer] = useState(props.viewer);
 
   useEffect(() => {
     get("/api/treeview", { _id: props.snippetId }).then((tree) => {
@@ -82,6 +84,18 @@ const TreeView = (props) => {
       setStartPos(pos);
     }
   }, [pos]);
+
+  const updateLocalViewer = (attrib, id, action) => {
+    console.log("updating!");
+    setLocalViewer((v) => {
+      if (action === "add") {
+        v[attrib].add(id);
+      } else if (action === "delete") {
+        v[attrib].delete(id);
+      }
+      return v;
+    });
+  };
 
   const handleMouseDown = (e) => {
     console.log("pos: " + pos.x + " " + pos.y);
@@ -175,14 +189,20 @@ const TreeView = (props) => {
         authorId={s.authorId}
         content={s.content}
         _id={s._id}
-        viewer={props.viewer}
+        viewerId={props.viewer._id}
         highlight={highlight}
+        status={{
+          isFavorite: localViewer.favorites.has(id),
+          isBookmark: localViewer.bookmarks.has(id),
+        }}
+        updateLocalViewer={updateLocalViewer}
         isTarget={id === target}
         inTargetThread={thread.has(id)}
         onClick={() => {
           handleSnippetClick(id);
         }}
         scale={scale}
+        goTo={props.goTo}
       />
     );
   }
