@@ -118,3 +118,7 @@ form {
 .u-link:hover {
   color: var(--primary--dim);
 }
+
+.u-clickable {
+  cursor: pointer;
+}

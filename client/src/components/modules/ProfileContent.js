@@ -33,11 +33,12 @@ const PageBar = ({ page, totalPages, onClick }) => {
           onClick={() => {
             onClick(-1);
           }}
+          className="u-clickable"
         >
           Prev
         </span>
       )}
-      {page > 2 && <span>{page - 1}</span>}
+      {page > 1 && <span>{page - 1}</span>}
       <span className="u-bold">{page}</span>
       {page < totalPages && <span>{page + 1}</span>}
       {page < totalPages - 1 && <span>...</span>}
@@ -46,6 +47,7 @@ const PageBar = ({ page, totalPages, onClick }) => {
           onClick={() => {
             onClick(1);
           }}
+          className="u-clickable"
         >
           Next
         </span>
@@ -67,19 +69,17 @@ const ProfileContentSnippetViewer = ({ snippetList, viewer }) => {
     .reverse()
     .slice(page * MAX_SNIPPETS_PER_PAGE, (page + 1) * MAX_SNIPPETS_PER_PAGE)
     .map((snippet, i) => (
-      <>
-        <SingleSnippet
-          key={i}
-          authorName={snippet.authorName}
-          authorId={snippet.authorId}
-          content={snippet.content}
-          _id={snippet._id}
-          isTreeView={false}
-          showAuthor={true}
-          viewer={viewer}
-          showIconBar={true}
-        />
-      </>
+      <SingleSnippet
+        key={i}
+        authorName={snippet.authorName}
+        authorId={snippet.authorId}
+        content={snippet.content}
+        _id={snippet._id}
+        isTreeView={false}
+        showAuthor={true}
+        viewer={viewer}
+        showIconBar={true}
+      />
     ));
   return (
     <>
@@ -90,8 +90,8 @@ const ProfileContentSnippetViewer = ({ snippetList, viewer }) => {
         <PageBar
           page={page + 1}
           totalPages={totalPages}
-          onClick={(n) => {
-            console.log("clicked page " + n);
+          onClick={(delta) => {
+            setPage((x) => x + delta);
           }}
         />
       )}
