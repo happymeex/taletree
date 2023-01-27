@@ -198,7 +198,8 @@ const TreeView = (props) => {
         updateLocalViewer={updateLocalViewer}
         isTarget={id === target}
         inTargetThread={thread.has(id)}
-        onClick={() => {
+        onClick={(e) => {
+          if (e.target.className.startsWith("Icon")) return;
           handleSnippetClick(id);
         }}
         scale={scale}
