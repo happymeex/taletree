@@ -3,7 +3,7 @@ import { get } from "../../utilities";
 import SingleSnippet from "./SingleSnippet.js";
 import "../pages/Profile.css";
 
-const MAX_SNIPPETS_PER_PAGE = 3;
+const MAX_SNIPPETS_PER_PAGE = 6;
 
 /**
  * clickable tab to toggle viewable snippets: contribs, favs, or bookmarks
@@ -100,35 +100,14 @@ const ProfileContentSnippetViewer = ({ snippetList, viewer }) => {
 };
 
 /**
- * right portion of profile page (bottom portion on mobile, underneath ProfilPersonalInfo)
- * viewer can see contributions, favs, and (if isViewer, i.e. own profile) bookmarks
- *
- * @param {[String]} contribs
- * @param {[String]} favorites
- * @param {[String]} bookmarks
- * @param {Boolean} isViewer
+ * @param {Object} snippets
  * @param {Object} viewer
  * @returns
  */
-const ProfileContent = (props) => {
-  const [data, setData] = useState(undefined);
+const FeedContent = ({ snippets, viewer }) => {
   const [currTab, setCurrTab] = useState(0);
+  const tabs = ["New", "Most Popular"];
 
-  useEffect(() => {
-    const getData = async () => {
-      const res = await get("/api/profile-snippet-data", {
-        0: props.contribs,
-        1: props.favorites,
-        2: props.bookmarks,
-      });
-      console.log("got data: ");
-      console.log(res);
-      setData(res);
-    };
-    getData();
-  }, [props]);
-
-  const tabs = ["Contributions", "Favorites"].concat(props.isViewer ? ["Bookmarks"] : []);
   let tabList = tabs.map((t, i) => (
     <ProfileContentTab
       key={i}
@@ -143,13 +122,13 @@ const ProfileContent = (props) => {
   return (
     <div className="ProfileContent-container">
       <div className="ProfileContent-tabBar u-flex">{tabList}</div>
-      {!data ? (
+      {!snippets ? (
         <div className="Loading">Loading...</div>
       ) : (
-        <ProfileContentSnippetViewer snippetList={data[currTab]} viewer={props.viewer} />
+        <ProfileContentSnippetViewer snippetList={snippets[currTab]} viewer={viewer} />
       )}
     </div>
   );
 };
 
-export default ProfileContent;
+export default FeedContent;
