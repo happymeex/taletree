@@ -72,13 +72,11 @@ const SingleSnippetContentBox = ({ content, scale }) => {
  * @param {String} viewerId
  * @param {String} content of the story
  * @param {{isFavorite: Boolean, isBookmark: Boolean}} status
- * @param {Boolean} isTreeView used to conditionally render "read" button and determine whether snippet is clickable
  * @param {Boolean} showIconBar if true, then always shows icon bar regardless of hover status. we might want to just deduce this from
  *    isTreeView, but I'm including this as a parameter in case we want extra control.
  * @param {Boolean} showAuthor used to conditionally render author name/picture
- * @param {Number} scale only used for treeview
- * @param {Object} style used only for treeview
- * @param {Object} onClick used only for treeview
+ * @param {{scale: Number, containerStyle: Object, iconBarStyle: Object, onClick: Function}} treeStyle?
+ *    specified for TreeView snippets. Contains all style, sizing data
  * @param {Function} updateLocalViewer handler function passed in to update the viewer's favs/bookmarks in whatever parent component
  * @param {Object} goTo
  */
@@ -86,24 +84,26 @@ const SingleSnippet = (props) => {
   const [isHover, setIsHover] = useState(false);
   const [isToTree, setIsToTree] = useState(false); //if true, then clicking redirects to treeview
 
-  const style = props.isTreeView
-    ? props.style
+  const style = props.treeStyle
+    ? props.treeStyle.containerStyle
     : isToTree
     ? { backgroundColor: `rgba(0,0,0,0.15)`, cursor: `pointer` }
     : {};
-  const clickHandler = props.isTreeView
-    ? props.onClick
+  const iconBarStyle = props.treeStyle ? props.treeStyle.iconBarStyle : {};
+  const clickHandler = props.treeStyle
+    ? props.treeStyle.onClick
     : isToTree
     ? () => {
         props.goTo.treeView(props._id);
       }
     : () => null;
-  if (props.isTreeView)
-    console.log("box height: " + props.style.height + " box width: " + props.style.width);
+
+  const scale = props.treeStyle ? props.treeStyle.scale : null;
+
   return (
     <div
       className={
-        props.isTreeView ? "TreeViewSnippet-container" : "SingleSnippet-container u-flexColumn"
+        props.treeStyle ? "TreeViewSnippet-container" : "SingleSnippet-container u-flexColumn"
       }
       style={style}
       onClick={clickHandler}
@@ -117,13 +117,13 @@ const SingleSnippet = (props) => {
         setIsToTree(false);
       }}
     >
-      <div className="SingleSnippet-iconBar u-flex-end">
+      <div className="SingleSnippet-iconBar u-flex-end" style={iconBarStyle}>
         <Icon
           showByDefault={isHover || props.showIconBar}
           imgOn={filledHeart}
           imgOff={heart}
           isActive={props.status.isFavorite}
-          scale={props.scale}
+          scale={scale}
           toggleActive={(currState) => {
             props.updateLocalViewer("favorites", props._id, currState ? "delete" : "add");
             post("/api/snippet-attribs", {
@@ -139,6 +139,7 @@ const SingleSnippet = (props) => {
           imgOn={filledBookmark}
           imgOff={bookmark}
           isActive={props.status.isBookmark}
+          scale={scale}
           toggleActive={(currState) => {
             props.updateLocalViewer("bookmarks", props._id, currState ? "delete" : "add");
             post("/api/snippet-attribs", {
@@ -155,13 +156,13 @@ const SingleSnippet = (props) => {
           <SingleSnippetAuthorInfo
             authorId={props.authorId}
             authorName={props.authorName}
-            scale={props.scale}
+            scale={scale}
             goToProfile={props.goTo.profile}
           />
         ) : (
           <></>
         )}
-        <SingleSnippetContentBox content={props.content} scale={props.scale} />
+        <SingleSnippetContentBox content={props.content} scale={scale} />
       </div>
     </div>
   );

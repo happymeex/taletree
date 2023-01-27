@@ -1,6 +1,6 @@
 import React from "react";
 import "./TreeViewSnippet.css";
-import { assembleStyle } from "../../utils/treeview.utils";
+import { assembleStyle, getIconBarStyle } from "../../utils/treeview.utils";
 import SingleSnippet from "./SingleSnippet.js";
 
 /**
@@ -38,6 +38,12 @@ const TreeViewSnippet = (props) => {
     ? assembleStyle(props.line.toChild, highlight && inTargetThread && !isTarget, 1)
     : undefined;
 
+  const snippetStyle = {
+    scale: props.scale,
+    containerStyle: containerStyle,
+    iconBarStyle: getIconBarStyle(props.scale),
+    onClick: props.onClick,
+  };
   return (
     <>
       <SingleSnippet
@@ -45,13 +51,10 @@ const TreeViewSnippet = (props) => {
         authorId={props.authorId}
         content={props.content}
         _id={props._id}
-        isTreeView={true}
         showAuthor={true}
         viewerId={props.viewerId}
         showIconBar={true}
-        style={containerStyle}
-        onClick={props.onClick}
-        scale={props.scale}
+        treeStyle={snippetStyle}
         status={props.status}
         updateLocalViewer={props.updateLocalViewer}
         goTo={props.goTo}

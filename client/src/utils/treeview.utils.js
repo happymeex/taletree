@@ -13,6 +13,8 @@ const DEFAULT_PROFILE_PICTURE_SIZE = 48; //in pixels
 const DEFAULT_AUTHOR_NAME_FONT_SIZE = 16;
 const DEFAULT_ICON_SIZE = 24; //in pixels
 const DEFAULT_CONTENT_FONT_SIZE = 16;
+const DEFAULT_BORDER_RADIUS = 12;
+const DEFAULT_ICON_BAR_GAP = 8;
 
 const ROOT = "63d04ff67f9ad37d137f7750";
 
@@ -136,13 +138,6 @@ const getCoords = (tree, targetId) => {
 };
 
 const convertToPosition = (coords, delta, scale) => {
-  console.log(
-    delta.y +
-      0.5 * window.innerHeight +
-      ((2 * DEFAULT_LINE_HEIGHT + DEFAULT_HEIGHT) * coords.y - 0.5 * DEFAULT_HEIGHT) *
-        DEFAULT_SCALE *
-        scale
-  );
   return {
     x:
       delta.x +
@@ -217,12 +212,19 @@ const assembleStyle = (obj, highlight, lineOrientation = undefined, scale) => {
     ret["border"] = `${obj.size.border * (highlight ? BORDER_HIGHLIGHT_MULTIPLIER : 1)}px solid`;
     ret["backgroundColor"] = "var(--white)";
     ret["padding"] = `${DEFAULT_PADDING * scale}px`;
+    ret["borderRadius"] = `${DEFAULT_BORDER_RADIUS * scale}px`;
   } else {
     for (const side of SIDES[lineOrientation])
       ret[side] = `${obj.thickness * (highlight ? LINE_HIGHLIGHT_MULTIPLIER : 1)}px solid`;
   }
 
   return ret;
+};
+
+const getIconBarStyle = (scale) => {
+  return {
+    gap: `${DEFAULT_ICON_BAR_GAP * scale}px`,
+  };
 };
 
 const getScaledDelta = (delta, zoomOrigin, scale) => {
@@ -247,4 +249,5 @@ export {
   getIncomingLine,
   assembleStyle,
   getScaledDelta,
+  getIconBarStyle,
 };

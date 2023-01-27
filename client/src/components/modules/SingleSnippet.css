@@ -23,21 +23,10 @@
 
 .SingleSnippet-profilePic {
   border-radius: 50%;
-  border: 2px solid black;
   height: var(--xxl);
   width: var(--xxl);
 }
 
 .SingleSnippet-profilePic:hover {
   cursor: pointer;
-}
-
-.TreeViewSnippet-container {
-  background-color: white;
-  position: absolute;
-  border-radius: var(--m);
-  padding: var(--s);
-}
-
-.SingleSnippet-authorInfo {
 }
