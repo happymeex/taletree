@@ -48,25 +48,32 @@ const TreeView = (props) => {
   const [startPos, setStartPos] = useState({ x: 0, y: 0 });
   const [isDrag, setIsDrag] = useState(false);
   const [delta, setDelta] = useState({ x: 0, y: 0 });
-  const [coords, setCoords] = useState({});
-  const [snippets, setSnippets] = useState();
+  const [coords, setCoords] = useState(undefined);
+  const [snippets, setSnippets] = useState(undefined);
   const [target, setTarget] = useState(props.snippetId); //the leaf snippet in the currently highlighted thread
   const [viewTarget, setViewTarget] = useState(props.snippetId); //the snippet assigned coordinates (0,0)
-  const [thread, setThread] = useState();
+  const [thread, setThread] = useState(undefined);
   const [highlight, setHighlight] = useState(true);
   const [writer, setWriter] = useState(false);
   const [reader, setReader] = useState(false);
   const [scale, setScale] = useState(1);
   const [localViewer, setLocalViewer] = useState(props.viewer);
+  const [authorToPic, setAuthorToPic] = useState(undefined);
 
   useEffect(() => {
-    get("/api/treeview", { _id: props.snippetId }).then((tree) => {
-      console.log("Treeview got: " + props.userName);
+    const getSnippetData = async () => {
+      const tree = await get("/api/treeview", { _id: props.snippetId });
+      console.log("Tree received from server: ");
       console.log(tree);
+      let userIds = [];
+      for (const id in tree) userIds.push(tree[id].authorId);
+      const atp = await get("/api/profile-pictures", { userIds: userIds });
+      setAuthorToPic(atp);
       setCoords(getCoords(tree, props.snippetId));
       setThread(getThread(tree, props.snippetId));
       setSnippets(tree);
-    });
+    };
+    getSnippetData();
 
     const updatePos = (e) => {
       setPos({ x: e.x, y: e.y });
@@ -177,6 +184,11 @@ const TreeView = (props) => {
           : getIncomingLine(pos, size, coords[id].x - coords[s.parentId].x, scale),
       toChild: s.children.length === 0 ? undefined : getOutgoingLine(pos, size, scale),
     };
+    const author = {
+      name: s.authorName,
+      id: s.authorId,
+      pictureURL: authorToPic[s.authorId],
+    };
     snippetList.push(
       <TreeViewSnippet
         key={id}
@@ -185,6 +197,7 @@ const TreeView = (props) => {
           size: size,
         }}
         line={line}
+        author={author}
         authorName={s.authorName}
         authorId={s.authorId}
         content={s.content}

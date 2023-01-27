@@ -6,6 +6,7 @@ import SingleSnippet from "./SingleSnippet.js";
 /**
  * proptypes
  * @param {pos: Object, size: Object} container
+ * @param {{name: String, id: String, pictureURL: String}} author
  * @param {String} authorName
  * @param {String} content
  * @param {String} _id
@@ -47,6 +48,7 @@ const TreeViewSnippet = (props) => {
   return (
     <>
       <SingleSnippet
+        author={props.author}
         authorName={props.authorName}
         authorId={props.authorId}
         content={props.content}

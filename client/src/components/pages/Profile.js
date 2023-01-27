@@ -18,6 +18,7 @@ const MAX_SNIPPETS_PER_PAGE = 10;
 const Profile = ({ profileId, viewer, goTo }) => {
   const [data, setData] = useState(undefined);
   const [snippetData, setSnippetData] = useState(undefined);
+  const [authorToPic, setAuthorToPic] = useState(undefined);
 
   useEffect(() => {
     console.log("viewing profile of user " + profileId);
@@ -41,6 +42,11 @@ const Profile = ({ profileId, viewer, goTo }) => {
           { tabName: "Favorites", tabData: res.Favorites },
         ].concat(profileId === viewer._id ? [{ tabName: "Bookmarks", tabData: res.Bookmarks }] : [])
       );
+      let userIds = [];
+      for (const field in res) {
+        for (const snippetObj of res[field]) userIds.push(snippetObj.authorId);
+      }
+      setAuthorToPic(await get("/api/profile-pictures", { userIds: userIds }));
     };
     getProfileData().then((res) => {
       getProfileSnippetData(res);
@@ -49,7 +55,7 @@ const Profile = ({ profileId, viewer, goTo }) => {
 
   return (
     <>
-      {!snippetData ? (
+      {!snippetData || !authorToPic ? (
         <div className="Loading">Loading</div>
       ) : (
         <div className="Profile-container">
@@ -65,6 +71,7 @@ const Profile = ({ profileId, viewer, goTo }) => {
             viewer={viewer}
             goTo={goTo}
             snippets={snippetData}
+            authorToPic={authorToPic}
             maxPerPage={MAX_SNIPPETS_PER_PAGE}
           />
         </div>

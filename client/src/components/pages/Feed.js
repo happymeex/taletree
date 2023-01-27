@@ -24,12 +24,20 @@ const WriteNewSnippetButton = ({ onClick }) => {
 
 const Feed = ({ userName, viewer, goTo }) => {
   const [snippets, setSnippets] = useState(undefined);
+  const [authorToPic, setAuthorToPic] = useState(undefined);
   const [writer, setWriter] = useState(false); //whether new snippet popup is open
 
   useEffect(() => {
-    get("/api/snippets", { userId: viewer._id }).then((snippets) => {
-      setSnippets(snippets);
-    });
+    const queryDB = async () => {
+      const res = await get("/api/snippets", { userId: viewer._id });
+      setSnippets(res);
+      let authorIds = [];
+      for (const { tabName, tabData } of res) {
+        for (const snippet of tabData) authorIds.push(snippet.authorId);
+      }
+      setAuthorToPic(await get("/api/profile-pictures", { userIds: authorIds }));
+    };
+    queryDB();
   }, []);
 
   const addPost = (input) => {
@@ -64,11 +72,12 @@ const Feed = ({ userName, viewer, goTo }) => {
         />
       )}
       <div className="Feed-snippets">
-        {snippets ? (
+        {snippets && authorToPic ? (
           <SnippetDisplay
             viewer={viewer}
             goTo={goTo}
             snippets={snippets}
+            authorToPic={authorToPic}
             maxPerPage={MAX_SNIPPETS_PER_PAGE}
           />
         ) : (

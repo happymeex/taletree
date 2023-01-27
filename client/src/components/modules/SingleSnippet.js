@@ -21,6 +21,7 @@ const NO_REDIRECT_TO_TREEVIEW = new Set(["SingleSnippet-author", "SingleSnippet-
 
 /**
  *
+ * @param {{name: String, id: String, pictureURL: String}} author
  * @param {String} authorId
  * @param {String} authorName
  * @param {Number} scale
@@ -43,12 +44,16 @@ const SingleSnippetAuthorInfo = (props) => {
     <div
       className="SingleSnippet-authorInfo u-flexColumn u-flex-alignCenter"
       onClick={() => {
-        props.goToProfile(props.authorId);
+        props.goToProfile(props.author.id);
       }}
     >
-      <img className="SingleSnippet-profilePic else" src={menuUp} style={imgStyle} />
+      <img
+        className="SingleSnippet-profilePic else"
+        src={props.author.pictureURL}
+        style={imgStyle}
+      />
       <div className="SingleSnippet-authorName u-bold else" style={authorNameStyle}>
-        {props.authorName}
+        {props.author.name}
       </div>
     </div>
   );
@@ -67,6 +72,7 @@ const SingleSnippetContentBox = ({ content, scale }) => {
  *
  * Proptypes
  * @param {String} _id of the story
+ * @param {{name: String, id: String, pictureURL: String}} author
  * @param {String} authorName
  * @param {String} authorId
  * @param {String} viewerId
@@ -154,6 +160,7 @@ const SingleSnippet = (props) => {
       <div className="SingleSnippet-displayBox u-flex">
         {props.showAuthor ? (
           <SingleSnippetAuthorInfo
+            author={props.author}
             authorId={props.authorId}
             authorName={props.authorName}
             scale={scale}

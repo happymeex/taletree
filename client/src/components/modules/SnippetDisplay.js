@@ -61,7 +61,14 @@ const PageBar = ({ page, totalPages, onClick }) => {
  * we might want to display something fun if there aren't any
  * snippets to display
  */
-const SnippetDisplayContent = ({ viewerId, snippetList, updateLocalViewer, goTo, maxPerPage }) => {
+const SnippetDisplayContent = ({
+  viewerId,
+  snippetList,
+  updateLocalViewer,
+  goTo,
+  maxPerPage,
+  authorToPic,
+}) => {
   const [page, setPage] = useState(0);
   console.log("rendering page with snippet list");
   console.log(snippetList);
@@ -79,6 +86,11 @@ const SnippetDisplayContent = ({ viewerId, snippetList, updateLocalViewer, goTo,
     .map((snippet, i) => (
       <SingleSnippet
         key={snippet._id}
+        author={{
+          name: snippet.authorName,
+          id: snippet.authorId,
+          pictureURL: authorToPic[snippet.authorId],
+        }}
         authorName={snippet.authorName}
         authorId={snippet.authorId}
         viewerId={viewerId}
@@ -118,6 +130,7 @@ const SnippetDisplayContent = ({ viewerId, snippetList, updateLocalViewer, goTo,
  * @param {Object} goTo navigation functions
  * @param {[Object]} snippets an array of objects of the form
  *  {tabName: String, tabData: [Object]} where the value of the second field is a list of snippet objects
+ * @param {Object} authorToPic an object mapping user ids to profile picture URLs
  * @param {Number} maxPerPage
  */
 const SnippetDisplay = (props) => {
@@ -187,6 +200,7 @@ const SnippetDisplay = (props) => {
         <SnippetDisplayContent
           viewerId={props.viewer._id}
           snippetList={snippetList}
+          authorToPic={props.authorToPic}
           updateLocalViewer={updateLocalViewer}
           goTo={props.goTo}
           maxPerPage={props.maxPerPage}

@@ -45,6 +45,25 @@ router.post("/initsocket", (req, res) => {
 // | write your API methods below!|
 // |------------------------------|
 
+//returns an object mapping user ids to profile picture URLs
+router.get("/profile-pictures", (req, res) => {
+  const queryDB = async () => {
+    if (req.query.userIds === "") {
+      res.send({});
+      return;
+    }
+    const users = await User.find({ _id: { $in: req.query.userIds.split(",") } }).lean();
+
+    res.send(
+      users.reduce((acc, curr) => {
+        acc[curr._id] = curr.pictureURL;
+        return acc;
+      })
+    );
+  };
+  queryDB();
+});
+
 router.post("/new-tree", (req, res) => {
   console.log("making new tree");
   auth.ensureLoggedIn(req, res, () => {
@@ -72,14 +91,14 @@ router.get("/snippets", (req, res) => {
 router.get("/treeview", (req, res) => {
   console.log("api called, finding snippet with id " + req.query._id);
   const getTree = async () => {
-    const snippet = await Snippet.findById(req.query._id);
+    const snippet = await Snippet.findById(req.query._id).lean();
     if (!snippet) {
       res.status(404).send("Snippet not found");
       return;
     }
     const tree = await Tree.findById(snippet.treeId);
     console.log("Got treeid " + tree._id);
-    const snippetList = await Snippet.find({ _id: { $in: tree.snippets } });
+    const snippetList = await Snippet.find({ _id: { $in: tree.snippets } }).lean();
     res.send(
       snippetList.reduce((acc, curr) => {
         acc[curr._id] = curr;
@@ -137,6 +156,10 @@ router.get("/profile", (req, res) => {
 
 router.get("/users", (req, res) => {
   const query = async () => {
+    if (req.query.ids === "") {
+      res.send([]);
+      return;
+    }
     const ret = await User.find({ _id: { $in: req.query.ids.split(",") } }).catch((err) => {
       res.status(400).send(err);
       return;
@@ -169,8 +192,6 @@ router.get("/profile-snippet-data", (req, res) => {
       if (!values[i]) return; //in case error occurred in query
       ret[fields[i]] = values[i];
     }
-    console.log("returning profile snippets: ");
-    console.log(ret);
     res.send(ret);
   });
 });
