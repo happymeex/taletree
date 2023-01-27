@@ -16,7 +16,7 @@ const Icon = ({ showByDefault, imgOn, imgOff, isActive, toggleActive, scale }) =
   let iconStyle = { height: `${DEFAULT_ICON_SIZE * (scale ? scale : 1)}px` };
   if (isHover && !isActive) iconStyle["filter"] = `brightness(0.5)`;
 
-  return showByDefault || active ? (
+  return showByDefault || isActive ? (
     <img
       src={isActive ? imgOn : imgOff}
       style={iconStyle}
