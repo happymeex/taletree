@@ -17,6 +17,7 @@ import GenericButton from "../modules/GenericButton";
 import WriteNewSnippet from "../modules/WriteNewSnippet";
 import ModalBackground from "../modules/ModalBackground";
 import TreeViewMenu from "../modules/TreeViewMenu";
+import ThreadReader from "../modules/ThreadReader";
 import "./TreeView.css";
 
 const ALLOW_DRAG = (classname) => {
@@ -53,6 +54,7 @@ const TreeView = (props) => {
   const [thread, setThread] = useState();
   const [highlight, setHighlight] = useState(true);
   const [writer, setWriter] = useState(false);
+  const [reader, setReader] = useState(false);
   const [scale, setScale] = useState(1);
 
   useEffect(() => {
@@ -101,7 +103,11 @@ const TreeView = (props) => {
   };
 
   const toggleSnippetWriter = () => {
-    setWriter((state) => !state);
+    setWriter((s) => !s);
+  };
+
+  const toggleThreadReader = () => {
+    setReader((s) => !s);
   };
 
   const handlePost = (input) => {
@@ -182,25 +188,28 @@ const TreeView = (props) => {
   }
 
   return (
-    <div
-      id="TreeViewContainer"
-      className="TreeView-container u-flex-end"
-      onMouseDown={handleMouseDown}
-      onMouseUp={handleMouseUp}
-      onWheel={handleWheel}
-    >
-      <TreeViewMenu>
-        {useMemo(
-          () => (
-            <>
-              <GenericButton text="Write" onClick={toggleSnippetWriter} />
-              <GenericButton text="Align" onClick={alignCurrentThread} />
-            </>
-          ),
-          [snippets, target]
-        )}
-      </TreeViewMenu>
-      <>{snippetList}</>
+    <>
+      <div
+        id="TreeViewContainer"
+        className="TreeView-container u-flex-end"
+        onMouseDown={handleMouseDown}
+        onMouseUp={handleMouseUp}
+        onWheel={handleWheel}
+      >
+        <TreeViewMenu>
+          {useMemo(
+            () => (
+              <>
+                <GenericButton text="Write" onClick={toggleSnippetWriter} />
+                <GenericButton text="Align" onClick={alignCurrentThread} />
+                <GenericButton text="Read" onClick={toggleThreadReader} />
+              </>
+            ),
+            [snippets, target]
+          )}
+        </TreeViewMenu>
+        <>{snippetList}</>
+      </div>
       {writer && (
         <ModalBackground
           onClose={() => {
@@ -209,7 +218,23 @@ const TreeView = (props) => {
           children={<WriteNewSnippet onPost={handlePost} onClose={toggleSnippetWriter} />}
         />
       )}
-    </div>
+      {reader && (
+        <ModalBackground
+          onClose={() => {
+            setReader(false);
+          }}
+          children={
+            <ThreadReader
+              generateContent={() => {
+                return getThread(snippets, target, false)
+                  .reverse()
+                  .map((id) => snippets[id].content);
+              }}
+            />
+          }
+        />
+      )}
+    </>
   );
 };
 

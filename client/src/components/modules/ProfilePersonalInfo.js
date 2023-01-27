@@ -2,54 +2,147 @@ import React, { useEffect, useState } from "react";
 import "../pages/Profile.css";
 import { get } from "../../utilities";
 import ProfileCards from "./ProfileCard";
+import { navigate } from "@reach/router";
+import ModalBackground from "../modules/ModalBackground";
+
+/**
+ * Small profile picture that appears in a profile's friendslist
+ *
+ * @param {String} imgURL
+ * @param {Function} onClick handler function to navigate to the corresponding profile
+ * @param {String} size? optional parameter to control size
+ */
+const SmallProfilePic = ({ imgURL, onClick, size }) => {
+  console.log("rendering small");
+  console.log("friend URL: " + imgURL);
+  return (
+    <img
+      className="Profile-smallProfilePic"
+      src={imgURL}
+      onClick={onClick}
+      style={size ? { width: size, height: size } : {}}
+    ></img>
+  );
+};
+
+const ProfileCard = ({ imgURL, userName, onClick }) => {
+  return (
+    <div className="ProfileCard-container u-flex-alignCenter">
+      <SmallProfilePic imgURL={imgURL} onClick={onClick} size={`var(--xxl)`} />
+      <div className="ProfileCard-friendName" onClick={onClick}>
+        {userName}
+      </div>
+    </div>
+  );
+};
+
+/**
+ * Generic popup viewer
+ *
+ * @param {JSX} children JSX elements to be rendered
+ */
+const PopupViewer = (props) => {
+  return <div className="PopupViewer-container u-flexColumn">{props.children}</div>;
+};
 
 /**
  * left (or top) portion of profile page with name, bio, friends, groups
  *
+ * @param {String} userId id of the viewer
  * @param {String} name
  * @param {String} bio
  * @param {Boolean} isViewer true if this is the viewer's page
+ * @param {[String]} allFriends array of friends' ids
+ *
  */
-const ProfilePersonalInfo = ({ profilePicURL, name, bio, isViewer, allfriends }) => {
-  const [fdata, fsetData] = useState([]);
-  console.log(allfriends);
+const ProfilePersonalInfo = (props) => {
+  const [friendsData, setFriendsData] = useState([]);
+  const [friendsViewer, setPopupViewer] = useState(false);
+  console.log(props.allFriends);
 
   useEffect(() => {
-    console.log("getting friend info");
-    console.log(allfriends);
-
-    let responses = new Array();
-    const getFriendData = async () => {
-      for (const profileId of allfriends) {
-        console.log("profileid=" + profileId);
-        const resp = await get("/api/profile", { id: profileId });
-        responses.push(resp);
-        fsetData([...fdata, ...responses]);
-        //fsetData([...fdata, resp])
-      }
+    setFriendsData([]);
+    setPopupViewer(false);
+    const getFriends = async () => {
+      const res = await get("/api/users", { ids: props.allFriends });
+      console.log("got friends: ");
+      console.log(res);
+      setFriendsData(res);
     };
-    getFriendData();
-  }, allfriends);
+    getFriends();
+  }, [props]);
 
-  console.log("fdata length=");
-  console.log(fdata.length);
+  const togglePopupViewer = () => {
+    setPopupViewer((s) => !s);
+  };
+
+  const goToProfile = (friend) => {
+    navigate(`/profile/${friend._id}`, {
+      state: {
+        userId: props.userId,
+        userBookmarks: new Set(), //todo: sebastian's stuff
+        userFavorites: new Set(),
+      },
+    });
+  };
+
+  const picList = friendsData.map((friend, i) => {
+    return (
+      <SmallProfilePic
+        key={i}
+        imgURL={friend.pictureURL}
+        onClick={() => {
+          goToProfile(friend);
+        }}
+      />
+    );
+  });
+
+  const cardList = friendsData.map((friend, i) => {
+    return (
+      <ProfileCard
+        key={i}
+        imgURL={friend.pictureURL}
+        userName={friend.name}
+        onClick={() => {
+          goToProfile(friend);
+        }}
+      />
+    );
+  });
 
   return (
-    <div className="Profile-personalInfoContainer u-flexColumn u-flex-alignCenter u-flex-justifyCenter">
-      <img src={profilePicURL} className="Profile-picture" />
-      <div className="Profile-name ProfileLeft-separator">{name}</div>
-      <div className="Profile-bio ProfileLeft-separator">{bio}</div>
-      <div className="Profile-friendsHeader ProfileLeft-separator">
-        {" "}
-        Friends {allfriends.length}
+    <>
+      <div className="Profile-personalInfoContainer u-flexColumn u-flex-alignCenter u-flex-justifyCenter">
+        <img src={props.profilePicURL} className="Profile-picture" />
+        <div className="Profile-name ProfileLeft-separator">{props.name}</div>
+        <div className="Profile-bio ProfileLeft-separator">{props.bio}</div>
+        <div className="Profile-friendsDisplayBox u-flexColumn">
+          <div
+            className="Profile-friendsHeader ProfileLeft-separator u-flex u-bold"
+            onClick={togglePopupViewer}
+          >
+            Friends ({props.allFriends.length})
+          </div>
+          <div className="Profile-smallProfileDisplayBox u-flex">{picList}</div>
+        </div>
       </div>
 
-      {fdata.length === allfriends.length ? (
-        <ProfileCards data={fdata}> </ProfileCards>
-      ) : (
-        <div>Loading</div>
+      {friendsViewer && (
+        <ModalBackground
+          onClose={togglePopupViewer}
+          children={
+            <PopupViewer>
+              {" "}
+              <div className="FriendsViewer-header u-flex-justifyCenter u-flex-alignCenter">
+                Friends
+              </div>
+              {cardList}
+            </PopupViewer>
+          }
+        />
       )}
-    </div>
+    </>
   );
 };
 

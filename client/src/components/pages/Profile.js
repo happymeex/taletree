@@ -39,7 +39,7 @@ const Profile = ({ profileId, viewer }) => {
             bio={data.bio}
             profilePicURL={data.pictureURL}
             isViewer={viewer._id === profileId}
-            allfriends={data.friends}
+            allFriends={data.friends}
           />
           <ProfileContent
             contribs={data.contribs}

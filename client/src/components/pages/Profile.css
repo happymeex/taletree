@@ -7,6 +7,7 @@
 .Profile-personalInfoContainer {
   width: 30vw;
   height: 100%;
+  gap: 1%;
 }
 
 .Profile-name {
@@ -15,7 +16,7 @@
 
 .Profile-bio {
   font-size: var(--m);
-  color: var(--medgrey);
+  color: var(--darkgrey);
 }
 
 .ProfileContent-container {
@@ -63,26 +64,61 @@
   height: 30vh;
 }
 
-
-.ProfileLeft-separator {
-  margin-bottom: 16px;
+.Profile-friendsDisplayBox {
+  width: 100%;
+  flex-wrap: wrap;
+  overflow-y: hidden;
+  box-sizing: border-box;
+  padding-left: 20%;
 }
 
 .Profile-friendsHeader {
   font-size: var(--m);
-  font-size: var(--xxl);
+  margin-bottom: var(--m);
+}
+
+.Profile-friendsHeader:hover {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.Profile-smallProfileDisplayBox {
+  gap: var(--s);
 }
 
 .Profile-friends {
   font-size: var(--m);
   color: var(--medgrey);
-  font-size: var(--m);
 }
 
+.Profile-smallProfilePic {
+  border-radius: 50%;
+  width: var(--xl);
+  height: var(--xl);
+}
 
-.ProfileSideHeader {
-  position: relative;
-  color: red;
-  /* top: 200px;
-  width: 60vw; */
+.Profile-smallProfilePic:hover {
+  cursor: pointer;
+}
+
+.PopupViewer-container {
+  background-color: white;
+  max-height: 60vh;
+  overflow-y: scroll;
+  border-radius: var(--s);
+  padding: var(--m);
+  gap: var(--s);
+}
+
+.ProfileCard-container {
+  gap: var(--m);
+}
+
+.ProfileCard-friendName:hover {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.FriendsViewer-header {
+  font-size: var(--xl);
 }

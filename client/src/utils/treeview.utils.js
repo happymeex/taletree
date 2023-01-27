@@ -17,15 +17,15 @@ const DEFAULT_CONTENT_FONT_SIZE = 16;
 const ROOT = "63d04ff67f9ad37d137f7750";
 
 let rootId = undefined;
-const getThread = (tree, targetId) => {
-  let thread = new Set([targetId]);
+const getThread = (tree, targetId, asSet = true) => {
+  let thread = [targetId];
   let curr = targetId;
   while (tree[curr].parentId !== ROOT) {
     curr = tree[curr].parentId;
-    thread.add(curr);
+    thread.push(curr);
   }
   rootId = curr;
-  return thread;
+  return asSet ? new Set(thread) : thread;
 };
 /**
  * Calculates the positioning of all snippets in a tree, given

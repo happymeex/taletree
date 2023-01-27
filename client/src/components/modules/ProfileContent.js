@@ -35,6 +35,7 @@ const ProfileContentSnippetViewer = ({ snippetList, viewer }) => {
     .map((snippet, i) => (
       <>
         <SingleSnippet
+          key={i}
           authorName={snippet.authorName}
           authorId={snippet.authorId}
           content={snippet.content}

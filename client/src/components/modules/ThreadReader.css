@@ -1,0 +1,13 @@
+.ThreadReader-container {
+  width: 50vw;
+  height: 70vh;
+  position: fixed;
+  background-color: white;
+  z-index: 5;
+  font-size: var(--l);
+  box-sizing: border-box;
+  padding: var(--m);
+  gap: var(--xl);
+  overflow: scroll;
+  border-radius: var(--xs);
+}
