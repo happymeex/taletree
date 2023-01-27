@@ -3,6 +3,7 @@ import { get } from "../../utilities";
 import SingleSnippet from "./SingleSnippet.js";
 import "../pages/Profile.css";
 
+const TAB_ORDER = ["contribs", "favorites", "bookmarks"];
 const MAX_SNIPPETS_PER_PAGE = 3;
 
 /**
@@ -61,8 +62,16 @@ const PageBar = ({ page, totalPages, onClick }) => {
  * we might want to display something fun if there aren't any
  * snippets to display
  */
-const ProfileContentSnippetViewer = ({ snippetList, viewer }) => {
+const ProfileContentSnippetViewer = ({ viewerId, snippetList, updateLocalViewer, goTo }) => {
   const [page, setPage] = useState(0);
+  console.log("rendering page with snippet list");
+  console.log(snippetList);
+
+  useEffect(() => {
+    console.log("resetting page");
+    setPage(0);
+  }, [snippetList]);
+
   const totalPages = Math.ceil(snippetList.length / MAX_SNIPPETS_PER_PAGE);
   const snippets = snippetList
     .slice() //clone array so that it isn't mutated by reverse
@@ -70,15 +79,18 @@ const ProfileContentSnippetViewer = ({ snippetList, viewer }) => {
     .slice(page * MAX_SNIPPETS_PER_PAGE, (page + 1) * MAX_SNIPPETS_PER_PAGE)
     .map((snippet, i) => (
       <SingleSnippet
-        key={i}
+        key={snippet._id}
         authorName={snippet.authorName}
         authorId={snippet.authorId}
+        viewerId={viewerId}
         content={snippet.content}
         _id={snippet._id}
         isTreeView={false}
         showAuthor={true}
-        viewer={viewer}
+        status={snippet.status}
         showIconBar={true}
+        goTo={goTo}
+        updateLocalViewer={updateLocalViewer}
       />
     ));
   return (
@@ -108,13 +120,23 @@ const ProfileContentSnippetViewer = ({ snippetList, viewer }) => {
  * @param {[String]} bookmarks
  * @param {Boolean} isViewer
  * @param {Object} viewer
+ * @param {Object} goTo navigation functions
  * @returns
  */
 const ProfileContent = (props) => {
   const [data, setData] = useState(undefined);
   const [currTab, setCurrTab] = useState(0);
+  const [localViewer, setLocalViewer] = useState(props.viewer);
+
+  console.log("local viewer: ");
+  console.log(localViewer.favorites);
+  console.log(localViewer.bookmarks);
 
   useEffect(() => {
+    console.log("data lists");
+    console.log(props.contribs);
+    console.log(props.favorites);
+    console.log(props.bookmarks);
     const getData = async () => {
       const res = await get("/api/profile-snippet-data", {
         0: props.contribs,
@@ -128,6 +150,18 @@ const ProfileContent = (props) => {
     getData();
   }, [props]);
 
+  const updateLocalViewer = (attrib, id, action) => {
+    console.log("updating!");
+    setLocalViewer((v) => {
+      if (action === "add") {
+        v[attrib].add(id);
+      } else if (action === "delete") {
+        v[attrib].delete(id);
+      }
+      return v;
+    });
+  };
+
   const tabs = ["Contributions", "Favorites"].concat(props.isViewer ? ["Bookmarks"] : []);
   let tabList = tabs.map((t, i) => (
     <ProfileContentTab
@@ -139,15 +173,35 @@ const ProfileContent = (props) => {
       isSelected={currTab === i}
     />
   ));
-  //let liked = new Set(data[1]);
-  //let bookmarked = new Set(data[2]);
+
+  let snippetList = undefined;
+  if (data) {
+    snippetList = data[currTab].map((snippet) => {
+      snippet.status = {
+        isFavorite: localViewer.favorites.has(snippet._id),
+        isBookmark: localViewer.bookmarks.has(snippet._id),
+      };
+      return snippet;
+    });
+    //Let's not try to update as we change tabs -- only update on refresh.
+    //if (props.isViewer && currTab === 1)
+    //  snippetList = snippetList.filter((snippet) => snippet.status.isFavorite);
+    //else if (props.isViewer && currTab === 2)
+    //  snippetList = snippetList.filter((snippet) => snippet.status.isBookmark);
+  }
+
   return (
     <div className="ProfileContent-container">
       <div className="ProfileContent-tabBar u-flex">{tabList}</div>
-      {!data ? (
+      {!snippetList ? (
         <div className="Loading">Loading...</div>
       ) : (
-        <ProfileContentSnippetViewer snippetList={data[currTab]} viewer={props.viewer} />
+        <ProfileContentSnippetViewer
+          viewerId={props.viewer._id}
+          snippetList={snippetList}
+          updateLocalViewer={updateLocalViewer}
+          goTo={props.goTo}
+        />
       )}
     </div>
   );

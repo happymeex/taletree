@@ -170,31 +170,44 @@ router.get("/profile-snippet-data", (req, res) => {
   });
 });
 
+//router.post("/snippet-attribs", (req, res) => {
+//  console.log("changing user's favorites/bookmarks");
+//  auth.ensureLoggedIn(req, res, () => {
+//    console.log("from post: user is indeed logged in");
+//    favorite = req.body.attrib === "favorite";
+//    let guy = undefined;
+//    User.findById(req.body.viewer)
+//      .then((user) => {
+//        guy = user;
+//        return favorite ? user.favorites : user.bookmarks;
+//      })
+//      .then((attrib) => {
+//        console.log(attrib);
+//        if (req.body.state) attrib.push(req.body._id);
+//        else attrib = attrib.filter((s) => s != req.body._id);
+//        return favorite
+//          ? Object.assign(guy, { favorites: attrib })
+//          : Object.assign(guy, { bookmarks: attrib });
+//      })
+//      .then((user) => {
+//        return user.save();
+//      })
+//      .then((updatedUser) => {
+//        res.json({ msg: "user updated", updatedUser });
+//      });
+//  });
+//});
+
 router.post("/snippet-attribs", (req, res) => {
   console.log("changing user's favorites/bookmarks");
   auth.ensureLoggedIn(req, res, () => {
-    console.log("from post: user is indeed logged in");
-    favorite = req.body.attrib === "favorite";
-    let guy = undefined;
-    User.findById(req.body.viewer)
-      .then((user) => {
-        guy = user;
-        return favorite ? user.favorites : user.bookmarks;
-      })
-      .then((attrib) => {
-        console.log(attrib);
-        if (req.body.state) attrib.push(req.body._id);
-        else attrib = attrib.filter((s) => s != req.body._id);
-        return favorite
-          ? Object.assign(guy, { favorites: attrib })
-          : Object.assign(guy, { bookmarks: attrib });
-      })
-      .then((user) => {
-        return user.save();
-      })
-      .then((updatedUser) => {
-        res.json({ msg: "user updated", updatedUser });
-      });
+    const updateDB = async () => {
+      const user = await User.findById(req.body.viewerId);
+      if (req.body.state) user[req.body.attrib].push(req.body._id);
+      else user[req.body.attrib] = user[req.body.attrib].filter((s) => s !== req.body._id);
+      return user.save();
+    };
+    updateDB();
   });
 });
 

@@ -53,6 +53,7 @@ const PopupViewer = (props) => {
  * @param {String} bio
  * @param {Boolean} isViewer true if this is the viewer's page
  * @param {[String]} allFriends array of friends' ids
+ * @param {Function} goTo
  *
  */
 const ProfilePersonalInfo = (props) => {
@@ -76,23 +77,13 @@ const ProfilePersonalInfo = (props) => {
     setPopupViewer((s) => !s);
   };
 
-  const goToProfile = (friend) => {
-    navigate(`/profile/${friend._id}`, {
-      state: {
-        userId: props.userId,
-        userBookmarks: new Set(), //todo: sebastian's stuff
-        userFavorites: new Set(),
-      },
-    });
-  };
-
   const picList = friendsData.map((friend, i) => {
     return (
       <SmallProfilePic
         key={i}
         imgURL={friend.pictureURL}
         onClick={() => {
-          goToProfile(friend);
+          props.goTo.profile(friend._id);
         }}
       />
     );
@@ -105,7 +96,7 @@ const ProfilePersonalInfo = (props) => {
         imgURL={friend.pictureURL}
         userName={friend.name}
         onClick={() => {
-          goToProfile(friend);
+          props.goTo.profile(friend._id);
         }}
       />
     );

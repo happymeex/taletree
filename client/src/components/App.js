@@ -13,6 +13,7 @@ import "../utilities.css";
 import { socket } from "../client-socket.js";
 
 import { get, post } from "../utilities";
+import { navigate } from "@reach/router";
 
 /**
  * Define the "App" component
@@ -75,6 +76,23 @@ const App = () => {
     post("/api/logout");
   };
 
+  const goToProfile = (id) => {
+    navigate(`/profile/${id}`, {
+      state: { viewer: viewer },
+    });
+  };
+
+  const goToTreeView = (id) => {
+    navigate(`/treeview/${id}`, {
+      state: { viewer: viewer, userName: userName },
+    });
+  };
+
+  const goTo = {
+    profile: goToProfile,
+    treeView: goToTreeView,
+  };
+
   return (
     <>
       <NavBar
@@ -93,8 +111,8 @@ const App = () => {
             userName={userName}
             viewer={viewer}
           />
-          <TreeView path="/treeview/:snippetId" userName={userName} viewer={viewer} />
-          <Profile path="/profile/:profileId" viewer={viewer} />
+          <TreeView path="/treeview/:snippetId" userName={userName} viewer={viewer} goTo={goTo} />
+          <Profile path="/profile/:profileId" viewer={viewer} goTo={goTo} />
           <NotFound default />
         </Router>
       ) : (

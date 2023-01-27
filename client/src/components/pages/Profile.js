@@ -12,7 +12,7 @@ import "./Profile.css";
  * @param {String} profileId the profile's id
  * @param {Object} viewer the viewer
  */
-const Profile = ({ profileId, viewer }) => {
+const Profile = ({ profileId, viewer, goTo }) => {
   const [data, setData] = useState(undefined);
   // const [Friends, setFriends] = useState(false);
   const [allFriends, setAllFriends] = useState([]);
@@ -40,6 +40,7 @@ const Profile = ({ profileId, viewer }) => {
             profilePicURL={data.pictureURL}
             isViewer={viewer._id === profileId}
             allFriends={data.friends}
+            goTo={goTo}
           />
           <ProfileContent
             contribs={data.contribs}
@@ -47,6 +48,7 @@ const Profile = ({ profileId, viewer }) => {
             bookmarks={data.bookmarks}
             isViewer={viewer._id === profileId}
             viewer={viewer}
+            goTo={goTo}
           />
         </div>
       )}

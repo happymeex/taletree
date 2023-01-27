@@ -8,24 +8,27 @@ import "./Icons.css";
  * @param {String} imgOn URL to the icon's active display state (e.g. red filled heart)
  * @param {String} imgOff URL to the icon's inactive display state (e.g. empty grey heart, like mine)
  * @param {Boolean} initialActive active/inactive state upon initial render
- * @param {Function} toggleActive handler for (in)activation (i.e. updates DB). takes current active/inactive state as param
+ * @param {Function} toggleActive handler for (in)activation (i.e. updates DB). takes current state (pre-click) as a parameter
  * @param {Number} scale? only used for treeview
  */
 const Icon = ({ showByDefault, imgOn, imgOff, isActive, toggleActive, scale }) => {
   const [isHover, setIsHover] = useState(false);
+  const [active, setActive] = useState(isActive);
   let iconStyle = { height: `${DEFAULT_ICON_SIZE * (scale ? scale : 1)}px` };
-  if (isHover && !isActive) iconStyle["filter"] = `brightness(0.5)`;
+  if (isHover && !active) iconStyle["filter"] = `brightness(0.5)`;
 
-  return showByDefault || isActive ? (
+  return showByDefault || active ? (
     <img
-      src={isActive ? imgOn : imgOff}
+      src={active ? imgOn : imgOff}
       style={iconStyle}
       className="Icon else"
       onClick={() => {
-        toggleActive(isActive);
+        console.log("click?");
+        toggleActive(active);
+        setActive((s) => !s);
       }}
       onMouseOver={() => {
-        if (!isActive) setIsHover(true);
+        if (!active) setIsHover(true);
       }}
       onMouseOut={() => {
         setIsHover(false);
