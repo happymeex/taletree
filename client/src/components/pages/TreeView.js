@@ -40,9 +40,7 @@ const ALLOW_HIGHLIGHT = (classname) => {
  * Proptypes
  * @param {String} snippetId
  * @param {String} userName
- * @param {String} userId
- * @param {[String]} userBookmarks
- * @param {[String]} userFavorites
+ * @param {Object} viewer
  */
 const TreeView = (props) => {
   const [pos, setPos] = useState({ x: 0, y: 0 }); //mouse position
@@ -117,7 +115,7 @@ const TreeView = (props) => {
     console.log(input);
     post("/api/new-snippet", {
       authorName: props.userName,
-      authorId: props.userId,
+      authorId: props.viewer._id,
       parentId: target,
       input: input,
       treeId: snippets[target].treeId,
@@ -177,8 +175,7 @@ const TreeView = (props) => {
         authorId={s.authorId}
         content={s.content}
         _id={s._id}
-        userBookmarks={props.userBookmarks}
-        userFavorites={props.userFavorites}
+        viewer={props.viewer}
         highlight={highlight}
         isTarget={id === target}
         inTargetThread={thread.has(id)}

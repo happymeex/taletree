@@ -59,27 +59,27 @@ const PageBar = ({ page, totalPages, onClick }) => {
  * we might want to display something fun if there aren't any
  * snippets to display
  */
-const ProfileContentSnippetViewer = ({ snippetList, userFavorites, userBookmarks }) => {
+const ProfileContentSnippetViewer = ({ snippetList, viewer }) => {
   const [page, setPage] = useState(0);
-
   const totalPages = Math.ceil(snippetList.length / MAX_SNIPPETS_PER_PAGE);
   const snippets = snippetList
     .slice() //clone array so that it isn't mutated by reverse
     .reverse()
     .slice(page * MAX_SNIPPETS_PER_PAGE, (page + 1) * MAX_SNIPPETS_PER_PAGE)
     .map((snippet, i) => (
-      <SingleSnippet
-        key={i}
-        authorName={snippet.authorName}
-        authorId={snippet.authorId}
-        content={snippet.content}
-        _id={snippet._id}
-        isTreeView={false}
-        showAuthor={true}
-        userFavorites={userFavorites}
-        userBookmarks={userBookmarks}
-        showIconBar={true}
-      />
+      <>
+        <SingleSnippet
+          key={i}
+          authorName={snippet.authorName}
+          authorId={snippet.authorId}
+          content={snippet.content}
+          _id={snippet._id}
+          isTreeView={false}
+          showAuthor={true}
+          viewer={viewer}
+          showIconBar={true}
+        />
+      </>
     ));
   return (
     <>
@@ -107,8 +107,7 @@ const ProfileContentSnippetViewer = ({ snippetList, userFavorites, userBookmarks
  * @param {[String]} favorites
  * @param {[String]} bookmarks
  * @param {Boolean} isViewer
- * @param {[String]} userFavorites
- * @param {[String]} userBookmarks
+ * @param {Object} viewer
  * @returns
  */
 const ProfileContent = (props) => {
@@ -148,11 +147,7 @@ const ProfileContent = (props) => {
       {!data ? (
         <div className="Loading">Loading...</div>
       ) : (
-        <ProfileContentSnippetViewer
-          snippetList={data[currTab]}
-          userFavorites={props.userFavorites}
-          userBookmarks={props.userBookmarks}
-        />
+        <ProfileContentSnippetViewer snippetList={data[currTab]} viewer={props.viewer} />
       )}
     </div>
   );

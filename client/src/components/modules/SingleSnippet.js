@@ -10,6 +10,7 @@ import filledBookmark from "../../public/bookmark_marked.svg";
 import filledHeart from "../../public/filled_heart.svg";
 import "../../utilities.css";
 import "../pages/Profile.css";
+import { post } from "../../utilities.js";
 import {
   DEFAULT_PROFILE_PICTURE_SIZE,
   DEFAULT_AUTHOR_NAME_FONT_SIZE,
@@ -22,10 +23,8 @@ const NO_REDIRECT_TO_TREEVIEW = new Set(["SingleSnippet-author", "SingleSnippet-
  *
  * @param {String} authorId
  * @param {String} authorName
- * @param {String} userId
  * @param {Number} scale
- * @param {[String]} userBookmarks
- * @param {[String]} userFavorites
+ * @param {Object} viewer
  */
 const SingleSnippetAuthorInfo = (props) => {
   const imgStyle = props.scale
@@ -46,9 +45,7 @@ const SingleSnippetAuthorInfo = (props) => {
       onClick={() => {
         navigate(`/profile/${props.authorId}`, {
           state: {
-            userId: props.userId,
-            userFavorites: props.userFavorites,
-            userBookmarks: props.userBookmarks,
+            viewer: props.viewer,
           },
         });
       }}
@@ -76,10 +73,8 @@ const SingleSnippetContentBox = ({ content, scale }) => {
  * @param {String} _id of the story
  * @param {String} authorName
  * @param {String} authorId
- * @param {String} userId viewer's id
  * @param {String} content of the story
- * @param {[String]} userFavorites used to determine "heart" button's initial render state
- * @param {[String]} userBookmarks used to determine "bookmark" button's initial render state
+ * @param {Object} viewer the viewer
  * @param {Boolean} isTreeView used to conditionally render "read" button and determine whether snippet is clickable
  * @param {Boolean} showIconBar if true, then always shows icon bar regardless of hover status. we might want to just deduce this from
  *    isTreeView, but I'm including this as a parameter in case we want extra control.
@@ -91,8 +86,8 @@ const SingleSnippetContentBox = ({ content, scale }) => {
 const SingleSnippet = (props) => {
   const [isHover, setIsHover] = useState(false);
   const [isToTree, setIsToTree] = useState(false); //if true, then clicking redirects to treeview
-  const isFavorite = props.userFavorites.has(props._id);
-  const isBookmarked = props.userBookmarks.has(props._id);
+  const [isFavorite, setFavorite] = useState(props.viewer.favorites.has(props._id));
+  const [isBookmarked, setBookmarked] = useState(props.viewer.bookmarks.has(props._id));
 
   const style = props.isTreeView
     ? props.style
@@ -104,7 +99,7 @@ const SingleSnippet = (props) => {
     : isToTree
     ? () => {
         navigate(`/treeview/${props._id}`, {
-          state: { userBookmarks: props.userBookmarks, userFavorites: props.userFavorites },
+          state: { viewer: props.viewer },
         });
       }
     : () => null;
@@ -132,29 +127,41 @@ const SingleSnippet = (props) => {
           showByDefault={isHover || props.showIconBar}
           imgOn={filledHeart}
           imgOff={heart}
-          initialActive={isFavorite}
+          isActive={isFavorite}
           scale={props.scale}
-          toggleActive={async (currState) => {
-            await post("/api/snippet-attribs", {
+          toggleActive={(currState) => {
+            post("/api/snippet-attribs", {
               _id: props._id,
               state: !currState,
               attrib: "favorite",
+              viewer: props.viewer._id,
+            }).then(() => {
+              setFavorite(!isFavorite);
+              //console.log(currState);
+              if (isFavorite) props.viewer.favorites.add(props._id);
+              else props.viewer.favorites.delete(props._id);
+              console.log("heart clicked");
             });
-            console.log("heart clicked");
           }}
         />
         <Icon
           showByDefault={isHover || props.showIconBar}
           imgOn={filledBookmark}
           imgOff={bookmark}
-          initialActive={isBookmarked}
-          toggleActive={async (currState) => {
-            await post("/api/snippet-attribs", {
+          isActive={isBookmarked}
+          toggleActive={(currState) => {
+            post("/api/snippet-attribs", {
               _id: props._id,
               state: !currState,
               attrib: "bookmark",
+              viewer: props.viewer._id,
+            }).then(() => {
+              setBookmarked(!isBookmarked);
+              //console.log(currState);
+              if (isBookmarked) props.viewer.bookmarks.add(props._id);
+              else props.viewer.bookmarks.delete(props._id);
+              console.log("bookmark clicked");
             });
-            console.log("bookmark clicked");
           }}
         />
       </div>
@@ -163,10 +170,8 @@ const SingleSnippet = (props) => {
           <SingleSnippetAuthorInfo
             authorId={props.authorId}
             authorName={props.authorName}
-            userId={props.userId}
             scale={props.scale}
-            userBookmarks={props.userBookmarks}
-            userFavorites={props.userFavorites}
+            viewer={props.viewer}
           />
         ) : (
           <></>

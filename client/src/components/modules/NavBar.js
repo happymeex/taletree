@@ -7,10 +7,10 @@ import "./NavBar.css";
 
 const GOOGLE_CLIENT_ID = "614278991840-38k97pg151j5p5vp8is590n9fom48eko.apps.googleusercontent.com";
 
-const NavBarDropdown = ({ userId, logout, userBookmarks, userFavorites }) => {
+const NavBarDropdown = ({ logout, viewer }) => {
   const navigateToProfile = () => {
-    navigate(`/profile/${userId}`, {
-      state: { userId: userId, userBookmarks: userBookmarks, userFavorites: userFavorites },
+    navigate(`/profile/${viewer._id}`, {
+      state: { viewer: viewer },
     });
   };
   const openSettings = () => {
@@ -25,7 +25,7 @@ const NavBarDropdown = ({ userId, logout, userBookmarks, userFavorites }) => {
   );
 };
 
-const NavBarButton = ({ userId, profilePicURL, logout, userBookmarks, userFavorites }) => {
+const NavBarButton = ({ profilePicURL, logout, viewer }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   useEffect(() => {
     window.addEventListener("click", (e) => {
@@ -39,27 +39,12 @@ const NavBarButton = ({ userId, profilePicURL, logout, userBookmarks, userFavori
         src={profilePicURL}
         onClick={() => setDropdownOpen((s) => !s)}
       ></img>
-      {dropdownOpen && (
-        <NavBarDropdown
-          userId={userId}
-          logout={logout}
-          userBookmarks={userBookmarks}
-          userFavorites={userFavorites}
-        />
-      )}
+      {dropdownOpen && <NavBarDropdown logout={logout} viewer={viewer} />}
     </>
   );
 };
 
-const NavBar = ({
-  handleLogin,
-  handleLogout,
-  userId,
-  userName,
-  profilePicURL,
-  userBookmarks,
-  userFavorites,
-}) => {
+const NavBar = ({ handleLogin, handleLogout, userName, profilePicURL, viewer }) => {
   console.log("ProfilePicURL: " + profilePicURL);
   return (
     <div className="NavBar-container u-flex-spaceBetween">
@@ -70,10 +55,8 @@ const NavBar = ({
             state: {
               handleLogin: handleLogin,
               handleLogout: handleLogout,
-              userId: userId,
               userName: userName,
-              userBookmarks: userBookmarks,
-              userFavorites: userFavorites,
+              viewer: viewer,
             },
           });
         }}
@@ -82,17 +65,15 @@ const NavBar = ({
       </div>
       <div className="NavBar-buttonWrapper">
         <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
-          {userId ? (
+          {viewer._id ? (
             <NavBarButton
-              userId={userId}
               profilePicURL={profilePicURL}
               logout={() => {
                 googleLogout();
                 handleLogout();
                 window.location.reload();
               }}
-              userBookmarks={userBookmarks}
-              userFavorites={userFavorites}
+              viewer={viewer}
             />
           ) : (
             <GoogleLogin onSuccess={handleLogin} onError={(err) => console.log(err)} />

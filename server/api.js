@@ -174,12 +174,27 @@ router.post("/snippet-attribs", (req, res) => {
   console.log("changing user's favorites/bookmarks");
   auth.ensureLoggedIn(req, res, () => {
     console.log("from post: user is indeed logged in");
-    User.findById(snippet.authorId).then((user) => {
-      let attrib = req.query.attrib === "favorite" ? user.favorites : user.contribs;
-      if (req.query.currState) attrib.push(req.query._id);
-      else attrib = attrib.filter((s) => s != req.query._id);
-      user.save();
-    });
+    favorite = req.body.attrib === "favorite";
+    let guy = undefined;
+    User.findById(req.body.viewer)
+      .then((user) => {
+        guy = user;
+        return favorite ? user.favorites : user.bookmarks;
+      })
+      .then((attrib) => {
+        console.log(attrib);
+        if (req.body.state) attrib.push(req.body._id);
+        else attrib = attrib.filter((s) => s != req.body._id);
+        return favorite
+          ? Object.assign(guy, { favorites: attrib })
+          : Object.assign(guy, { bookmarks: attrib });
+      })
+      .then((user) => {
+        return user.save();
+      })
+      .then((updatedUser) => {
+        res.json({ msg: "user updated", updatedUser });
+      });
   });
 });
 
