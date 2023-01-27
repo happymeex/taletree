@@ -11,23 +11,21 @@ import "./Icons.css";
  * @param {Function} toggleActive handler for (in)activation (i.e. updates DB). takes current active/inactive state as param
  * @param {Number} scale? only used for treeview
  */
-const Icon = ({ showByDefault, imgOn, imgOff, initialActive, toggleActive, scale }) => {
-  const [active, setActive] = useState(initialActive);
+const Icon = ({ showByDefault, imgOn, imgOff, isActive, toggleActive, scale }) => {
   const [isHover, setIsHover] = useState(false);
   let iconStyle = { height: `${DEFAULT_ICON_SIZE * (scale ? scale : 1)}px` };
-  if (isHover && !active) iconStyle["filter"] = `brightness(0.5)`;
+  if (isHover && !isActive) iconStyle["filter"] = `brightness(0.5)`;
 
   return showByDefault || active ? (
     <img
-      src={active ? imgOn : imgOff}
+      src={isActive ? imgOn : imgOff}
       style={iconStyle}
       className="Icon else"
       onClick={() => {
-        toggleActive(active);
-        setActive((s) => !s);
+        toggleActive(isActive);
       }}
       onMouseOver={() => {
-        if (!active) setIsHover(true);
+        if (!isActive) setIsHover(true);
       }}
       onMouseOut={() => {
         setIsHover(false);

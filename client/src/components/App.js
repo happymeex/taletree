@@ -22,15 +22,27 @@ const App = () => {
   const [userId, setUserId] = useState(undefined);
   const [userName, setUserName] = useState(undefined);
   const [profilePicURL, setProfilePicURL] = useState(undefined);
-  const [userBookmarks, setBookmarks] = useState(new Set());
-  const [userFavorites, setFavorites] = useState(new Set());
+  const [viewer, setViewer] = useState({
+    _id: undefined,
+    bookmarks: new Set(),
+    favorites: new Set(),
+    setter: undefined,
+  });
 
   useEffect(() => {
     get("/api/whoami")
-      .then((user) => {
+      .then(async (user) => {
         if (user._id) {
           // they are registed in the database, and currently logged in.
           setUserId(user._id);
+          await get("/api/profile", { id: user._id }).then((user) => {
+            setViewer({
+              _id: user._id,
+              bookmarks: new Set(user.bookmarks),
+              favorites: new Set(user.favorites),
+              setter: setViewer,
+            });
+          });
           setUserName(user.name);
           setProfilePicURL(user.pictureURL);
         }
@@ -47,22 +59,14 @@ const App = () => {
     console.log(decodedCredential);
     const name = `${decodedCredential.name}`;
     console.log(`Logged in as ${decodedCredential.name}`);
-    post("/api/login", { token: userToken })
-      .then((user) => {
-        setUserId(user._id);
-        setUserName(name);
-        setProfilePicURL(user.pictureURL);
-        post("/api/initsocket", { socketid: socket.id });
-        window.location.reload();
-      })
-      .then(() =>
-        get("/api/profile", { id: userId }).then((user) => {
-          setBookmarks(new Set(user.bookmarks));
-          console.log({ userBookmarks });
-          setFavorites(new Set(user.favorites));
-          console.log({ userFavorites });
-        })
-      );
+
+    post("/api/login", { token: userToken }).then((user) => {
+      setUserId(user._id);
+      setUserName(name);
+      setProfilePicURL(user.pictureURL);
+      post("/api/initsocket", { socketid: socket.id });
+      window.location.reload();
+    });
   };
 
   const handleLogout = () => {
@@ -76,11 +80,9 @@ const App = () => {
       <NavBar
         handleLogin={handleLogin}
         handleLogout={handleLogout}
-        userId={userId}
         userName={userName}
         profilePicURL={profilePicURL}
-        userBookmarks={userBookmarks}
-        userFavorites={userFavorites}
+        viewer={viewer}
       />
       {gotUser ? (
         <Router>
@@ -88,24 +90,11 @@ const App = () => {
             path="/"
             handleLogin={handleLogin}
             handleLogout={handleLogout}
-            userId={userId}
             userName={userName}
-            userBookmarks={userBookmarks}
-            userFavorites={userFavorites}
+            viewer={viewer}
           />
-          <TreeView
-            path="/treeview/:snippetId"
-            userId={userId}
-            userName={userName}
-            userBookmarks={userBookmarks}
-            userFavorites={userFavorites}
-          />
-          <Profile
-            path="/profile/:profileId"
-            userId={userId}
-            userBookmarks={userBookmarks}
-            userFavorites={userFavorites}
-          />
+          <TreeView path="/treeview/:snippetId" userName={userName} viewer={viewer} />
+          <Profile path="/profile/:profileId" viewer={viewer} />
           <NotFound default />
         </Router>
       ) : (

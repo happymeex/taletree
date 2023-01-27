@@ -9,12 +9,10 @@ import "./Profile.css";
  * Profile page. NOTE: CURRENTLY MISSING NAVBAR.
  *
  * proptypes
- * @param {String} userId the viewer's id
  * @param {String} profileId the profile's id
- * @param {[String]} userBookmarks the viewer's bookmarks
- * @param {[String]} userFavorites the viewer's favorites
+ * @param {Object} viewer the viewer
  */
-const Profile = ({ userId, profileId, userBookmarks, userFavorites }) => {
+const Profile = ({ profileId, viewer }) => {
   const [data, setData] = useState(undefined);
   // const [Friends, setFriends] = useState(false);
   const [allFriends, setAllFriends] = useState([]);
@@ -26,11 +24,8 @@ const Profile = ({ userId, profileId, userBookmarks, userFavorites }) => {
       console.log(res);
       setData(res);
       //return res;
-     
     };
-    getData()
-    
-
+    getData();
   }, [profileId]);
 
   return (
@@ -43,22 +38,20 @@ const Profile = ({ userId, profileId, userBookmarks, userFavorites }) => {
             name={data.name}
             bio={data.bio}
             profilePicURL={data.pictureURL}
-            isViewer={userId === profileId}
+            isViewer={viewer._id === profileId}
             allfriends={data.friends}
           />
           <ProfileContent
             contribs={data.contribs}
             favorites={data.favorites}
             bookmarks={data.bookmarks}
-            isViewer={userId === profileId}
-            userFavorites={userFavorites}
-            userBookmarks={userBookmarks}
+            isViewer={viewer._id === profileId}
+            viewer={viewer}
           />
         </div>
       )}
     </>
   );
 };
-
 
 export default Profile;

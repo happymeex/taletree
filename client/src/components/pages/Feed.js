@@ -22,12 +22,12 @@ const WriteNewSnippetButton = ({ onClick }) => {
   );
 };
 
-const Feed = ({ userId, userName, userBookmarks, userFavorites }) => {
+const Feed = ({ userName, viewer }) => {
   const [snippets, setSnippets] = useState([]);
   const [writer, setWriter] = useState(false); //whether new snippet popup is open
 
   useEffect(() => {
-    get("/api/snippets", { userId: userId }).then((snippets) => {
+    get("/api/snippets", { userId: viewer._id }).then((snippets) => {
       setSnippets(snippets);
     });
   }, []);
@@ -41,7 +41,7 @@ const Feed = ({ userId, userName, userBookmarks, userFavorites }) => {
       if (treeId)
         post("/api/new-snippet", {
           authorName: userName,
-          authorId: userId,
+          authorId: viewer._id,
           input: input,
           parentId: ROOT,
           treeId: treeId,
@@ -62,8 +62,7 @@ const Feed = ({ userId, userName, userBookmarks, userFavorites }) => {
         _id={snippet._id}
         isTreeView={false}
         showAuthor={true}
-        userFavorites={userFavorites}
-        userBookmarks={userBookmarks}
+        viewer={viewer}
         showIconBar={true}
       />
     ));
@@ -72,7 +71,6 @@ const Feed = ({ userId, userName, userBookmarks, userFavorites }) => {
   const toggleSnippetWriter = () => {
     setWriter((s) => !s);
   };
-
   return (
     <div className="Feed-container">
       {writer && (
@@ -84,7 +82,7 @@ const Feed = ({ userId, userName, userBookmarks, userFavorites }) => {
         />
       )}
       <div className="Feed-snippets">{snippetList}</div>
-      {userId && <WriteNewSnippetButton onClick={toggleSnippetWriter} />}
+      {viewer._id && <WriteNewSnippetButton onClick={toggleSnippetWriter} />}
     </div>
   );
 };

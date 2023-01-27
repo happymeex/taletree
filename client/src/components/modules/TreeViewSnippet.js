@@ -7,7 +7,6 @@ import SingleSnippet from "./SingleSnippet.js";
  * proptypes
  * @param {pos: Object, size: Object} container
  * @param {String} authorName
- * @param {String} authorId
  * @param {String} content
  * @param {String} _id
  * @param {Boolean} highlight
@@ -16,8 +15,7 @@ import SingleSnippet from "./SingleSnippet.js";
  * @param {Boolean} isTarget
  * @param {Function} onClick
  * @param {Number} scale
- * @param {[String]} userBookmarks
- * @param {[String]} userFavorites
+ * @param {Object} viewer
  */
 const TreeViewSnippet = (props) => {
   const { highlight, inTargetThread, isTarget } = props;
@@ -46,8 +44,7 @@ const TreeViewSnippet = (props) => {
         _id={props._id}
         isTreeView={true}
         showAuthor={true}
-        userFavorites={props.userFavorites}
-        userBookmarks={props.userBookmarks}
+        viewer={props.viewer}
         showIconBar={true}
         style={containerStyle}
         onClick={props.onClick}
