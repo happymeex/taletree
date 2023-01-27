@@ -110,6 +110,7 @@ const App = () => {
             handleLogout={handleLogout}
             userName={userName}
             viewer={viewer}
+            goTo={goTo}
           />
           <TreeView path="/treeview/:snippetId" userName={userName} viewer={viewer} goTo={goTo} />
           <Profile path="/profile/:profileId" viewer={viewer} goTo={goTo} />

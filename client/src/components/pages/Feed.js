@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { navigate } from "@reach/router";
-import { GoogleOAuthProvider, GoogleLogin, googleLogout } from "@react-oauth/google";
-import SingleSnippet from "../modules/SingleSnippet";
 import WriteNewSnippet from "../modules/WriteNewSnippet";
 import ModalBackground from "../modules/ModalBackground";
 import "../../utilities.css";
 import "./Feed.css";
 import { get, post } from "../../utilities";
 import leaf from "../../public/leaf.svg";
+import "./Profile.css";
+import SnippetDisplay from "../modules/SnippetDisplay";
 
 const ROOT = "63d04ff67f9ad37d137f7750";
+const MAX_SNIPPETS_PER_PAGE = 6;
 
 const WriteNewSnippetButton = ({ onClick }) => {
   return (
@@ -22,8 +22,8 @@ const WriteNewSnippetButton = ({ onClick }) => {
   );
 };
 
-const Feed = ({ userName, viewer }) => {
-  const [snippets, setSnippets] = useState([]);
+const Feed = ({ userName, viewer, goTo }) => {
+  const [snippets, setSnippets] = useState(undefined);
   const [writer, setWriter] = useState(false); //whether new snippet popup is open
 
   useEffect(() => {
@@ -50,24 +50,6 @@ const Feed = ({ userName, viewer }) => {
     writeToDB();
   };
 
-  let snippetList = null;
-  if (snippets.length === 0) {
-    snippetList = <div> No snippets, log in and write one! </div>;
-  } else {
-    snippetList = snippets.map((snippet) => (
-      <SingleSnippet
-        authorName={snippet.authorName}
-        authorId={snippet.authorId}
-        content={snippet.content}
-        _id={snippet._id}
-        isTreeView={false}
-        showAuthor={true}
-        viewer={viewer}
-        showIconBar={true}
-      />
-    ));
-  }
-
   const toggleSnippetWriter = () => {
     setWriter((s) => !s);
   };
@@ -81,7 +63,18 @@ const Feed = ({ userName, viewer }) => {
           children={<WriteNewSnippet onPost={addPost} onClose={toggleSnippetWriter} />}
         />
       )}
-      <div className="Feed-snippets">{snippetList}</div>
+      <div className="Feed-snippets">
+        {snippets ? (
+          <SnippetDisplay
+            viewer={viewer}
+            goTo={goTo}
+            snippets={snippets}
+            maxPerPage={MAX_SNIPPETS_PER_PAGE}
+          />
+        ) : (
+          <div className="Loading">Loading...</div>
+        )}
+      </div>
       {viewer._id && <WriteNewSnippetButton onClick={toggleSnippetWriter} />}
     </div>
   );

@@ -1,36 +1,55 @@
 import React, { useEffect, useState } from "react";
 import { get } from "../../utilities";
 import ProfilePersonalInfo from "../modules/ProfilePersonalInfo";
-import ProfileContent from "../modules/ProfileContent";
+import SnippetDisplay from "../modules/SnippetDisplay";
 
 import "./Profile.css";
 
+const MAX_SNIPPETS_PER_PAGE = 10;
+
 /**
- * Profile page. NOTE: CURRENTLY MISSING NAVBAR.
+ * Profile page.
  *
  * proptypes
  * @param {String} profileId the profile's id
  * @param {Object} viewer the viewer
+ * @param {Object} goTo navigation functions
  */
 const Profile = ({ profileId, viewer, goTo }) => {
   const [data, setData] = useState(undefined);
-  // const [Friends, setFriends] = useState(false);
-  const [allFriends, setAllFriends] = useState([]);
+  const [snippetData, setSnippetData] = useState(undefined);
+
   useEffect(() => {
     console.log("viewing profile of user " + profileId);
-    const getData = async () => {
+    const getProfileData = async () => {
       const res = await get("/api/profile", { id: profileId });
-      console.log("got data 1:");
+      console.log("got profile data:");
       console.log(res);
       setData(res);
-      //return res;
+      return res;
     };
-    getData();
+    const getProfileSnippetData = async (profileData) => {
+      let params = {
+        Contributions: profileData.contribs,
+        Favorites: profileData.favorites,
+      };
+      if (profileId === viewer._id) params.Bookmarks = profileData.bookmarks;
+      const res = await get("/api/profile-snippet-data", params);
+      setSnippetData(
+        [
+          { tabName: "Contributions", tabData: res.Contributions },
+          { tabName: "Favorites", tabData: res.Favorites },
+        ].concat(profileId === viewer._id ? [{ tabName: "Bookmarks", tabData: res.Bookmarks }] : [])
+      );
+    };
+    getProfileData().then((res) => {
+      getProfileSnippetData(res);
+    });
   }, [profileId]);
 
   return (
     <>
-      {!data ? (
+      {!snippetData ? (
         <div className="Loading">Loading</div>
       ) : (
         <div className="Profile-container">
@@ -42,13 +61,11 @@ const Profile = ({ profileId, viewer, goTo }) => {
             allFriends={data.friends}
             goTo={goTo}
           />
-          <ProfileContent
-            contribs={data.contribs}
-            favorites={data.favorites}
-            bookmarks={data.bookmarks}
-            isViewer={viewer._id === profileId}
+          <SnippetDisplay
             viewer={viewer}
             goTo={goTo}
+            snippets={snippetData}
+            maxPerPage={MAX_SNIPPETS_PER_PAGE}
           />
         </div>
       )}
