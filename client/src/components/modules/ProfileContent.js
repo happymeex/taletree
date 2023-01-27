@@ -3,6 +3,8 @@ import { get } from "../../utilities";
 import SingleSnippet from "./SingleSnippet.js";
 import "../pages/Profile.css";
 
+const MAX_SNIPPETS_PER_PAGE = 3;
+
 /**
  * clickable tab to toggle viewable snippets: contribs, favs, or bookmarks
  */
@@ -23,15 +25,48 @@ const ProfileContentTab = ({ text, onClick, isSelected }) => {
   );
 };
 
+const PageBar = ({ page, totalPages, onClick }) => {
+  return (
+    <div className="ProfileContentSnippetViewer-pageBar u-flex-end">
+      {page > 1 && (
+        <span
+          onClick={() => {
+            onClick(-1);
+          }}
+        >
+          Prev
+        </span>
+      )}
+      {page > 2 && <span>{page - 1}</span>}
+      <span className="u-bold">{page}</span>
+      {page < totalPages && <span>{page + 1}</span>}
+      {page < totalPages - 1 && <span>...</span>}
+      {page < totalPages && (
+        <span
+          onClick={() => {
+            onClick(1);
+          }}
+        >
+          Next
+        </span>
+      )}
+    </div>
+  );
+};
+
 /**
  * box for displaying the snippets, reverse chronologically.
  * we might want to display something fun if there aren't any
  * snippets to display
  */
 const ProfileContentSnippetViewer = ({ snippetList, userFavorites, userBookmarks }) => {
+  const [page, setPage] = useState(0);
+
+  const totalPages = Math.ceil(snippetList.length / MAX_SNIPPETS_PER_PAGE);
   const snippets = snippetList
     .slice() //clone array so that it isn't mutated by reverse
     .reverse()
+    .slice(page * MAX_SNIPPETS_PER_PAGE, (page + 1) * MAX_SNIPPETS_PER_PAGE)
     .map((snippet, i) => (
       <SingleSnippet
         key={i}
@@ -47,9 +82,20 @@ const ProfileContentSnippetViewer = ({ snippetList, userFavorites, userBookmarks
       />
     ));
   return (
-    <div className="ProfileContentSnippetViewer-container">
-      {snippetList.length === 0 ? <></> : snippets}
-    </div>
+    <>
+      <div className="ProfileContentSnippetViewer-container">
+        {snippetList.length === 0 ? <></> : snippets}
+      </div>
+      {snippetList.length > MAX_SNIPPETS_PER_PAGE && (
+        <PageBar
+          page={page + 1}
+          totalPages={totalPages}
+          onClick={(n) => {
+            console.log("clicked page " + n);
+          }}
+        />
+      )}
+    </>
   );
 };
 
