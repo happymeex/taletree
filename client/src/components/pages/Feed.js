@@ -7,15 +7,14 @@ import { get, post } from "../../utilities";
 import leaf from "../../public/leaf.svg";
 import "./Profile.css";
 import SnippetDisplay from "../modules/SnippetDisplay";
-import SearchBar from "../modules/SearchBar.js";
 
 const ROOT = "63d04ff67f9ad37d137f7750";
-const MAX_SNIPPETS_PER_PAGE = 6;
+const MAX_SNIPPETS_PER_PAGE = 10;
 
 const WriteNewSnippetButton = ({ onClick }) => {
   return (
     <div
-      className="FeedWriteNewSnippetButton-container u-flex-justifyCenter u-flex-alignCenter"
+      className="FeedWriteNewSnippetButton-container u-flex-justifyCenter u-flex-alignCenter u-grow u-clickable"
       onClick={onClick}
     >
       <img className="FeedWriteNewSnippetButton-icon" src={leaf}></img>
@@ -23,10 +22,9 @@ const WriteNewSnippetButton = ({ onClick }) => {
   );
 };
 
-const Feed = ({ userName, viewer, goTo }) => {
+const Feed = ({ userName, viewer, goTo, popupHandlers }) => {
   const [snippets, setSnippets] = useState(undefined);
   const [authorToPic, setAuthorToPic] = useState(undefined);
-  const [writer, setWriter] = useState(false); //whether new snippet popup is open
 
   useEffect(() => {
     const queryDB = async () => {
@@ -58,19 +56,15 @@ const Feed = ({ userName, viewer, goTo }) => {
   };
 
   const toggleSnippetWriter = () => {
-    setWriter((s) => !s);
+    //setWriter((s) => !s);
+    popupHandlers.toggle("writer");
+    popupHandlers.setWriteHandler((input) => {
+      addPost(input);
+    });
   };
   return (
-    <div className="Feed-container u-flexColumn">
-      {writer && (
-        <ModalBackground
-          onClose={() => {
-            setWriter(false);
-          }}
-          children={<WriteNewSnippet onPost={addPost} onClose={toggleSnippetWriter} />}
-        />
-      )}
-      <div className="Feed-snippets">
+    <div className="Feed-container u-flex-justifyCenter">
+      <div className="Feed-snippetDisplayWrapper">
         {snippets && authorToPic ? (
           <SnippetDisplay
             viewer={viewer}
@@ -78,6 +72,7 @@ const Feed = ({ userName, viewer, goTo }) => {
             snippets={snippets}
             authorToPic={authorToPic}
             maxPerPage={MAX_SNIPPETS_PER_PAGE}
+            popupHandlers={popupHandlers}
           />
         ) : (
           <div className="Loading">Loading...</div>

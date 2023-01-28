@@ -14,8 +14,9 @@ const MAX_SNIPPETS_PER_PAGE = 10;
  * @param {String} profileId the profile's id
  * @param {Object} viewer the viewer
  * @param {Object} goTo navigation functions
+ * @param {Object} popupHandlers
  */
-const Profile = ({ profileId, viewer, goTo }) => {
+const Profile = ({ profileId, viewer, goTo, popupHandlers }) => {
   const [data, setData] = useState(undefined);
   const [snippetData, setSnippetData] = useState(undefined);
   const [authorToPic, setAuthorToPic] = useState(undefined);
@@ -73,6 +74,7 @@ const Profile = ({ profileId, viewer, goTo }) => {
             snippets={snippetData}
             authorToPic={authorToPic}
             maxPerPage={MAX_SNIPPETS_PER_PAGE}
+            popupHandlers={popupHandlers}
           />
         </div>
       )}

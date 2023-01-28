@@ -3,6 +3,8 @@ import { Link } from "@reach/router";
 import { navigate } from "@reach/router";
 import "./SingleSnippet.css";
 import Icon from "./Icons.js";
+import ModalBackground from "./ModalBackground";
+import ThreadReader from "./ThreadReader";
 import menuUp from "../../public/menu_up.svg";
 import heart from "../../public/heart.svg";
 import bookmark from "../../public/bookmark_unmarked.svg";
@@ -81,10 +83,12 @@ const SingleSnippetContentBox = ({ content, scale }) => {
  *    specified for TreeView snippets. Contains all style, sizing data
  * @param {Function} updateLocalViewer handler function passed in to update the viewer's favs/bookmarks in whatever parent component
  * @param {Object} goTo
+ * @param {{toggle: Function, setContentGenerator: Function}} popupHandlers
  */
 const SingleSnippet = (props) => {
   const [isHover, setIsHover] = useState(false);
   const [isToTree, setIsToTree] = useState(false); //if true, then clicking redirects to treeview
+  const [reader, setReader] = useState(false);
 
   const style = props.treeStyle
     ? props.treeStyle.containerStyle
@@ -103,71 +107,84 @@ const SingleSnippet = (props) => {
   const scale = props.treeStyle ? props.treeStyle.scale : null;
 
   return (
-    <div
-      className={
-        props.treeStyle ? "TreeViewSnippet-container" : "SingleSnippet-container u-flexColumn"
-      }
-      style={style}
-      onClick={clickHandler}
-      onMouseOver={(e) => {
-        setIsHover(true);
-        //things that shouldn't redirect to treeview (i.e. profile, icons) are suffixed with "else" in className
-        if (!e.target.className.endsWith("else")) setIsToTree(true);
-      }}
-      onMouseOut={() => {
-        setIsHover(false);
-        setIsToTree(false);
-      }}
-    >
-      {props.viewerId && (
-        <div className="SingleSnippet-iconBar u-flex-end" style={iconBarStyle}>
-          <Icon
-            showByDefault={isHover || props.showIconBar}
-            imgOn={filledHeart}
-            imgOff={heart}
-            isActive={props.status.isFavorite}
-            scale={scale}
-            toggleActive={(currState) => {
-              props.updateLocalViewer("favorites", props._id, currState ? "delete" : "add");
-              post("/api/snippet-attribs", {
-                _id: props._id,
-                state: !currState,
-                attrib: "favorites",
-                viewerId: props.viewerId,
-              });
-            }}
-          />
-          <Icon
-            showByDefault={isHover || props.showIconBar}
-            imgOn={filledBookmark}
-            imgOff={bookmark}
-            isActive={props.status.isBookmark}
-            scale={scale}
-            toggleActive={(currState) => {
-              props.updateLocalViewer("bookmarks", props._id, currState ? "delete" : "add");
-              post("/api/snippet-attribs", {
-                _id: props._id,
-                state: !currState,
-                attrib: "bookmarks",
-                viewerId: props.viewerId,
-              });
-            }}
-          />
-        </div>
-      )}
-      <div className="SingleSnippet-displayBox u-flex">
-        {props.showAuthor ? (
-          <SingleSnippetAuthorInfo
-            author={props.author}
-            scale={scale}
-            goToProfile={props.goTo.profile}
-          />
-        ) : (
-          <></>
+    <>
+      <div
+        className={
+          props.treeStyle ? "TreeViewSnippet-container" : "SingleSnippet-container u-flexColumn"
+        }
+        style={style}
+        onClick={clickHandler}
+        onMouseOver={(e) => {
+          setIsHover(true);
+          //things that shouldn't redirect to treeview (i.e. profile, icons) are suffixed with "else" in className
+          if (!e.target.className.endsWith("else")) setIsToTree(true);
+        }}
+        onMouseOut={() => {
+          setIsHover(false);
+          setIsToTree(false);
+        }}
+      >
+        {props.viewerId && (
+          <div className="SingleSnippet-iconBar u-flex-end" style={iconBarStyle}>
+            <Icon
+              showByDefault={isHover || props.showIconBar}
+              imgOn={menuUp}
+              imgOff={menuUp}
+              isActive={false}
+              scale={scale}
+              toggleActive={(c) => {
+                props.popupHandlers.setContent([props.content]);
+                props.popupHandlers.toggle("reader");
+              }}
+            />
+            <Icon
+              showByDefault={isHover || props.showIconBar}
+              imgOn={filledHeart}
+              imgOff={heart}
+              isActive={props.status.isFavorite}
+              scale={scale}
+              toggleActive={(currState) => {
+                props.updateLocalViewer("favorites", props._id, currState ? "delete" : "add");
+                post("/api/snippet-attribs", {
+                  _id: props._id,
+                  state: !currState,
+                  attrib: "favorites",
+                  viewerId: props.viewerId,
+                });
+              }}
+            />
+            <Icon
+              showByDefault={isHover || props.showIconBar}
+              imgOn={filledBookmark}
+              imgOff={bookmark}
+              isActive={props.status.isBookmark}
+              scale={scale}
+              toggleActive={(currState) => {
+                props.updateLocalViewer("bookmarks", props._id, currState ? "delete" : "add");
+                post("/api/snippet-attribs", {
+                  _id: props._id,
+                  state: !currState,
+                  attrib: "bookmarks",
+                  viewerId: props.viewerId,
+                });
+              }}
+            />
+          </div>
         )}
-        <SingleSnippetContentBox content={props.content} scale={scale} />
+        <div className="SingleSnippet-displayBox u-flex">
+          {props.showAuthor ? (
+            <SingleSnippetAuthorInfo
+              author={props.author}
+              scale={scale}
+              goToProfile={props.goTo.profile}
+            />
+          ) : (
+            <></>
+          )}
+          <SingleSnippetContentBox content={props.content} scale={scale} />
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

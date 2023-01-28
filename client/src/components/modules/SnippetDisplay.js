@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { get } from "../../utilities";
 import SingleSnippet from "./SingleSnippet.js";
 import "../pages/Profile.css";
 import "./SearchBar.css";
 
 const MAX_SNIPPETS_PER_PAGE = 6;
+import "./SnippetDisplay.css";
 
 /**
- * clickable tab to toggle viewable snippets: contribs, favs, or bookmarks
+ * clickable tab to toggle viewable snippets
  */
 const TabBar = ({ text, onClick, isSelected }) => {
   return (
     <div
-      className="ProfileContent-tab"
+      className="SnippetDisplay-tab u-clickable"
       style={
         isSelected
           ? { backgroundColor: `var(--primary--dim)`, fontWeight: `900`, color: `black` }
@@ -25,41 +25,62 @@ const TabBar = ({ text, onClick, isSelected }) => {
   );
 };
 
-const PageBar = ({ page, totalPages, onClick }) => {
+const PageBarNumber = ({ value, onClick, isSelected }) => {
+  const style = isSelected
+    ? {
+        color: `black`,
+        backgroundColor: `var(--primary--dim)`,
+        outline: `1px solid var(--medgrey)`,
+      }
+    : {};
   return (
-    <div className="ProfileContentSnippetViewer-pageBar u-flex-end">
-      {page > 1 && (
-        <span
-          onClick={() => {
-            onClick(-1);
-          }}
-          className="u-clickable"
-        >
-          Prev
-        </span>
-      )}
-      {page > 2 && <span>...</span>}
-      {page > 1 && <span>{page - 1}</span>}
-      <span className="u-bold">{page}</span>
-      {page < totalPages && <span>{page + 1}</span>}
-      {page < totalPages - 1 && <span>...</span>}
-      {page < totalPages && (
-        <span
-          onClick={() => {
-            onClick(1);
-          }}
-          className="u-clickable"
-        >
-          Next
-        </span>
-      )}
+    <div className="PageBarNumber u-clickable u-darken" onClick={onClick} style={style}>
+      {value}
     </div>
   );
 };
 
+const PageBar = ({ pageTracker, totalPages, tabNumber, onClick }) => {
+  const { page, l, r } = pageTracker;
+  let numList = [];
+  for (let i = l; i <= r; i++) {
+    numList.push(
+      <PageBarNumber
+        key={`${tabNumber},${i}`}
+        value={i}
+        onClick={() => onClick(i)}
+        isSelected={page === i}
+      />
+    );
+  }
+  return (
+    <div className="SnippetDisplay-pageBar u-flex-end">
+      {page > 1 && (
+        <PageBarNumber
+          value="Prev"
+          onClick={() => {
+            onClick(page - 1);
+          }}
+        />
+      )}
+      {l > 1 && <span>...</span>}
+      {numList}
+      {r < totalPages && <span>...</span>}
+      {page < totalPages && <PageBarNumber value="Next" onClick={() => onClick(page + 1)} />}
+    </div>
+  );
+};
+
+//silly helper function
+const initializeTracker = (n, totalPages) => {
+  let obj = {};
+  obj[n] = { page: 1, l: 1, r: Math.min(3, totalPages) };
+  return obj;
+};
+
 /**
- * box for displaying the snippets, reverse chronologically.
- * we might want to display something fun if there aren't any
+ * box for displaying the snippets, reverse chronologically, along with a page bar
+ * for navigation. we might want to display something fun if there aren't any
  * snippets to display
  */
 const SnippetDisplayContent = ({
@@ -69,21 +90,40 @@ const SnippetDisplayContent = ({
   goTo,
   maxPerPage,
   authorToPic,
+  popupHandlers,
+  tabNumber,
 }) => {
-  const [page, setPage] = useState(0);
-  console.log("rendering page with snippet list");
-  console.log(snippetList);
+  const [pageTracker, setPageTracker] = useState(
+    initializeTracker(tabNumber, snippetList.length / maxPerPage)
+  );
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    console.log("resetting page");
-    setPage(0);
-  }, [snippetList]);
+    console.log("initializing page tracker");
+    const totalPages = Math.ceil(snippetList.length / maxPerPage);
+    if (!(tabNumber in pageTracker)) {
+      setPageTracker((obj) => {
+        console.log("setting page tracker");
+        obj[tabNumber] = { page: 1, l: 1, r: Math.min(3, totalPages) };
+        return obj;
+      });
+    }
+  }, [tabNumber]);
+
+  useEffect(() => {
+    setReady(true);
+    console.log("ready!");
+  }, [pageTracker]);
 
   const totalPages = Math.ceil(snippetList.length / maxPerPage);
-  const snippets = snippetList
+  const default_tracker = { page: 1, l: 1, r: Math.min(3, totalPages) };
+  const tracker = pageTracker[tabNumber] ? pageTracker[tabNumber] : default_tracker;
+
+  let snippets = null;
+  snippets = snippetList
     .slice() //clone array so that it isn't mutated by reverse
     .reverse()
-    .slice(page * maxPerPage, (page + 1) * maxPerPage)
+    .slice((tracker.page - 1) * maxPerPage, tracker.page * maxPerPage)
     .map((snippet, i) => (
       <SingleSnippet
         key={snippet._id}
@@ -101,29 +141,45 @@ const SnippetDisplayContent = ({
         showIconBar={true}
         goTo={goTo}
         updateLocalViewer={updateLocalViewer}
+        popupHandlers={popupHandlers}
       />
     ));
+
   return (
-    <>
-      <div className="ProfileContentSnippetViewer-container">
-        {snippetList.length === 0 ? <></> : snippets}
+    <div className="SnippetDisplay-snippetAndPageBarWrapper">
+      <div className="SnippetDisplay-snippetContainer">
+        {ready ? snippets : <div className="Loading">Loading...</div>}
       </div>
-      {snippetList.length > maxPerPage && (
+      {ready && snippetList.length > maxPerPage && (
         <PageBar
-          page={page + 1}
+          pageTracker={tracker}
           totalPages={totalPages}
-          onClick={(delta) => {
-            setPage((x) => x + delta);
+          onClick={(newPage) => {
+            setReady(false);
+            setPageTracker((obj) => {
+              if (newPage > obj[tabNumber].r)
+                obj[tabNumber] = {
+                  l: Math.max(1, newPage - 4),
+                  r: newPage,
+                };
+              if (newPage < obj[tabNumber].l)
+                obj[tabNumber] = {
+                  l: newPage,
+                  r: Math.min(totalPages, newPage + 4),
+                };
+              obj[tabNumber].page = newPage;
+              return Object.assign({}, obj);
+            });
           }}
+          tabNumber={tabNumber}
         />
       )}
-    </>
+    </div>
   );
 };
 
 /**
- * right portion of profile page (bottom portion on mobile, underneath ProfilPersonalInfo)
- * viewer can see contributions, favs, and (if isViewer, i.e. own profile) bookmarks
+ * Tabbed display box for snippets. used for feed and profile
  *
  * @param {Object} viewer
  * @param {Object} goTo navigation functions
@@ -131,6 +187,7 @@ const SnippetDisplayContent = ({
  *  {tabName: String, tabData: [Object]} where the value of the second field is a list of snippet objects
  * @param {Object} authorToPic an object mapping user ids to profile picture URLs
  * @param {Number} maxPerPage
+ * @param {Object} popupHandlers
  */
 const SnippetDisplay = (props) => {
   const [data, setData] = useState(undefined);
@@ -146,10 +203,6 @@ const SnippetDisplay = (props) => {
 
     setData(d);
   }, [props]);
-
-  console.log("local viewer: ");
-  console.log(localViewer.favorites);
-  console.log(localViewer.bookmarks);
 
   const updateLocalViewer = (attrib, id, action) => {
     console.log("updating!");
@@ -199,7 +252,7 @@ const SnippetDisplay = (props) => {
   //  snippetList = snippetList.filter((snippet) => snippet.status.isBookmark);
 
   return (
-    <div className="ProfileContent-container">
+    <div className="SnippetDisplay-container">
       <div className="u-flex">
         <input
           type="text"
@@ -209,7 +262,7 @@ const SnippetDisplay = (props) => {
           onKeyUp={search_snippets()}
         />
       </div>
-      <div className="ProfileContent-tabBar u-flex">{tabList}</div>
+      <div className="SnippetDisplay-tabBar u-flex">{tabList}</div>
       {!snippetList ? (
         <div className="Loading">Loading...</div>
       ) : (
@@ -220,6 +273,8 @@ const SnippetDisplay = (props) => {
           updateLocalViewer={updateLocalViewer}
           goTo={props.goTo}
           maxPerPage={props.maxPerPage}
+          popupHandlers={props.popupHandlers}
+          tabNumber={currTab}
         />
       )}
     </div>

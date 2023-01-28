@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Router } from "@reach/router";
+import { isRedirect, Router } from "@reach/router";
 import jwt_decode from "jwt-decode";
 
 import NotFound from "./pages/NotFound.js";
@@ -7,6 +7,9 @@ import TreeView from "./pages/TreeView";
 import Feed from "./pages/Feed.js";
 import Profile from "./pages/Profile.js";
 import NavBar from "./modules/NavBar";
+import ModalBackground from "./modules/ModalBackground.js";
+import ThreadReader from "./modules/ThreadReader.js";
+import WriteNewSnippet from "./modules/WriteNewSnippet.js";
 
 import "../utilities.css";
 
@@ -15,45 +18,40 @@ import { socket } from "../client-socket.js";
 import { get, post } from "../utilities";
 import { navigate } from "@reach/router";
 
+const ANONYMOUS_VIEWER = {
+  _id: null,
+  name: null,
+  pictureURL: null,
+  bookmarks: new Set(),
+  favorites: new Set(),
+};
+
 /**
  * Define the "App" component
  */
 const App = () => {
-  const [gotUser, setGotUser] = useState(false); //want to wait until we have user data (or lack thereof) before we render router
-  const [userId, setUserId] = useState(undefined);
-  const [userName, setUserName] = useState(undefined);
-  const [profilePicURL, setProfilePicURL] = useState(undefined);
   const [viewer, setViewer] = useState(undefined);
+  const [reader, setReader] = useState(false);
+  const [writer, setWriter] = useState(false);
+  const [readerContent, setReaderContent] = useState(undefined);
+  const [postHandler, setPostHandler] = useState(undefined);
 
   useEffect(() => {
-    get("/api/whoami")
-      .then(async (user) => {
-        if (user._id) {
-          // they are registed in the database, and currently logged in.
-          setUserId(user._id);
-          await get("/api/profile", { id: user._id }).then((user) => {
-            setViewer({
-              _id: user._id,
-              name: user.name,
-              pictureURL: user.pictureURL,
-              bookmarks: new Set(user.bookmarks),
-              favorites: new Set(user.favorites),
-            });
-          });
-          setUserName(user.name);
-          setProfilePicURL(user.pictureURL);
-        } else
+    get("/api/whoami").then(async (user) => {
+      if (user._id) {
+        // they are registed in the database, and currently logged in.
+        //setUserId(user._id);
+        await get("/api/profile", { id: user._id }).then((user) => {
           setViewer({
-            _id: null,
-            name: null,
-            pictureURL: null,
-            bookmarks: new Set(),
-            favorites: new Set(),
+            _id: user._id,
+            name: user.name,
+            pictureURL: user.pictureURL,
+            bookmarks: new Set(user.bookmarks),
+            favorites: new Set(user.favorites),
           });
-      })
-      .then(() => {
-        setGotUser(true);
-      });
+        });
+      } else setViewer(ANONYMOUS_VIEWER);
+    });
   }, []);
 
   const handleLogin = (credentialResponse) => {
@@ -65,17 +63,23 @@ const App = () => {
     console.log(`Logged in as ${decodedCredential.name}`);
 
     post("/api/login", { token: userToken }).then((user) => {
-      setUserId(user._id);
-      setUserName(name);
-      setProfilePicURL(user.pictureURL);
-      post("/api/initsocket", { socketid: socket.id });
+      //setUserId(user._id);
+      //setUserName(name);
+      //setProfilePicURL(user.pictureURL);
       window.location.reload();
+      setViewer({
+        _id: user._id,
+        name: user.name,
+        pictureURL: user.pictureURL,
+        bookmarks: new Set(user.bookmarks),
+        favorites: new Set(user.favorites),
+      });
+      post("/api/initsocket", { socketid: socket.id });
     });
   };
 
   const handleLogout = () => {
-    setUserId(undefined);
-    setUserName(undefined);
+    window.location.reload();
     post("/api/logout");
   };
 
@@ -93,6 +97,26 @@ const App = () => {
     treeView: goToTreeView,
   };
 
+  //passed down as a prop to the various pages, which will call the handlers to set
+  //the appropriate states to open the needed popup
+  const popupHandlers = {
+    toggle: (popup) => {
+      if (popup === "reader") {
+        if (reader) setReaderContent(undefined);
+        setReader((s) => !s);
+      } else if (popup === "writer") {
+        if (writer) setPostHandler(undefined);
+        setWriter((s) => !s);
+      }
+    },
+    setContent: (text) => {
+      setReaderContent(text);
+    },
+    setWriteHandler: (func) => {
+      setPostHandler(() => func);
+    },
+  };
+
   return (
     <>
       {viewer ? (
@@ -105,14 +129,46 @@ const App = () => {
               handleLogout={handleLogout}
               viewer={viewer}
               goTo={goTo}
+              popupHandlers={popupHandlers}
             />
-            <TreeView path="/treeview/:snippetId" viewer={viewer} goTo={goTo} />
-            <Profile path="/profile/:profileId" viewer={viewer} goTo={goTo} />
+            <TreeView
+              path="/treeview/:snippetId"
+              viewer={viewer}
+              goTo={goTo}
+              popupHandlers={popupHandlers}
+            />
+            <Profile
+              path="/profile/:profileId"
+              viewer={viewer}
+              goTo={goTo}
+              popupHandlers={popupHandlers}
+            />
             <NotFound default />
           </Router>
         </>
       ) : (
         <div className="Loading">Loading...</div>
+      )}
+      {(reader || writer) && (
+        <ModalBackground
+          onClose={() => {
+            setReader(false);
+            setWriter(false);
+            setReaderContent(undefined);
+            setPostHandler(undefined);
+          }}
+        >
+          {reader && readerContent && <ThreadReader content={readerContent} />}
+          {writer && postHandler && (
+            <WriteNewSnippet
+              onClose={() => {
+                setWriter(false);
+                setPostHandler(undefined);
+              }}
+              onPost={postHandler}
+            />
+          )}
+        </ModalBackground>
       )}
     </>
   );

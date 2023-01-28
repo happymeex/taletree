@@ -3,7 +3,7 @@
   height: 70vh;
   position: fixed;
   background-color: white;
-  z-index: 5;
+  z-index: 6;
   font-size: var(--l);
   box-sizing: border-box;
   padding: var(--m);

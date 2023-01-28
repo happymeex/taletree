@@ -58,6 +58,7 @@ const TreeViewSnippet = (props) => {
         status={props.status}
         updateLocalViewer={props.updateLocalViewer}
         goTo={props.goTo}
+        popupHandlers={props.popupHandlers}
       />
       {props.line.fromParent ? (
         <>

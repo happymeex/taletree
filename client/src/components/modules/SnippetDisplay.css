@@ -1,0 +1,51 @@
+.SnippetDisplay-pageBar {
+  gap: var(--s);
+}
+
+.SnippetDisplay-snippetContainer {
+  width: 100%;
+  margin-bottom: var(--s);
+}
+.SnippetDisplay-snippetAndPageBarWrapper {
+  padding-right: var(--m);
+  margin-bottom: 15vh;
+}
+
+@media only screen and (max-width: 1000px) {
+  .SnippetDisplay-snippetAndPageBarWrapper {
+    padding: 0;
+  }
+}
+
+.PageBarNumber {
+  padding: var(--xs);
+  background-color: transparent;
+  border-radius: var(--xs);
+}
+
+.PageBarNumber:hover {
+  outline: 1px solid var(--medgrey);
+  background-color: var(--primary);
+}
+
+.SnippetDisplay-tabBar {
+  width: 100%;
+  flex-direction: row;
+  margin-bottom: var(--m);
+}
+
+.SnippetDisplay-tabBar > * {
+  flex: 1 1 0;
+}
+.SnippetDisplay-tab {
+  border-radius: var(--s);
+  background-color: transparent;
+  padding: var(--m);
+  font-size: var(--l);
+  color: var(--darkgrey);
+  text-align: center;
+}
+
+.SnippetDisplay-tab:hover {
+  background-color: var(--primary--dim);
+}

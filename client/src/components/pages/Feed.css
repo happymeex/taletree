@@ -1,17 +1,14 @@
 .Feed-container {
-  display: flex;
+  width: 100vw;
 }
 
-.Feed-write {
-  flex: 1;
+.Feed-snippetDisplayWrapper {
+  flex-basis: 60%;
 }
-
-.Feed-snippets {
-  width: 50vw;
-}
-
-.Feed-snippets:first-child {
-  margin-right: 20px;
+@media only screen and (max-width: 1000px) {
+  .Feed-snippetDisplayWrapper {
+    flex-basis: 100%;
+  }
 }
 
 .FeedWriteNewSnippetButton-container {
@@ -22,10 +19,7 @@
   bottom: 5vh;
   right: 5vh;
   border-radius: 50%;
-}
-
-.FeedWriteNewSnippetButton-container:hover {
-  cursor: pointer;
+  box-shadow: 8px 8px 6px rgba(0, 0, 0, 0.4);
 }
 
 .FeedWriteNewSnippetButton-icon {
