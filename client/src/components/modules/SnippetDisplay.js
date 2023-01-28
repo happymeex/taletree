@@ -91,8 +91,6 @@ const SnippetDisplayContent = ({
           id: snippet.authorId,
           pictureURL: authorToPic[snippet.authorId],
         }}
-        authorName={snippet.authorName}
-        authorId={snippet.authorId}
         viewerId={viewerId}
         content={snippet.content}
         _id={snippet._id}

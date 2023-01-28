@@ -22,8 +22,6 @@ const NO_REDIRECT_TO_TREEVIEW = new Set(["SingleSnippet-author", "SingleSnippet-
 /**
  *
  * @param {{name: String, id: String, pictureURL: String}} author
- * @param {String} authorId
- * @param {String} authorName
  * @param {Number} scale
  * @param {Function} goToProfile
  */
@@ -73,8 +71,6 @@ const SingleSnippetContentBox = ({ content, scale }) => {
  * Proptypes
  * @param {String} _id of the story
  * @param {{name: String, id: String, pictureURL: String}} author
- * @param {String} authorName
- * @param {String} authorId
  * @param {String} viewerId
  * @param {String} content of the story
  * @param {{isFavorite: Boolean, isBookmark: Boolean}} status
@@ -161,8 +157,6 @@ const SingleSnippet = (props) => {
         {props.showAuthor ? (
           <SingleSnippetAuthorInfo
             author={props.author}
-            authorId={props.authorId}
-            authorName={props.authorName}
             scale={scale}
             goToProfile={props.goTo.profile}
           />

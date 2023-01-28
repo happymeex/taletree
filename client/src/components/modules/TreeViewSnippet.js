@@ -49,8 +49,6 @@ const TreeViewSnippet = (props) => {
     <>
       <SingleSnippet
         author={props.author}
-        authorName={props.authorName}
-        authorId={props.authorId}
         content={props.content}
         _id={props._id}
         showAuthor={true}
