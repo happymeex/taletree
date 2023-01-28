@@ -1,0 +1,23 @@
+.SnippetDisplay-pageBar {
+  gap: var(--s);
+}
+
+.SnippetDisplay-snippetContainer {
+  width: 100%;
+  margin-bottom: var(--s);
+}
+.SnippetDisplay-snippetAndPageBarWrapper {
+  padding-right: var(--m);
+  margin-bottom: 15vh;
+}
+
+.PageBarNumber {
+  padding: var(--xs);
+  background-color: transparent;
+  border-radius: var(--xs);
+}
+
+.PageBarNumber:hover {
+  outline: 1px solid var(--medgrey);
+  background-color: var(--primary);
+}

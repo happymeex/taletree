@@ -49,13 +49,6 @@
   background-color: var(--primary--dim);
 }
 
-.ProfileContentSnippetViewer-container {
-  width: 100%;
-}
-
-.ProfileContentSnippetViewer-pageBar {
-  gap: var(--s);
-}
 .ProfileContent-separator {
   color: var(--lightgrey);
   margin: 0;

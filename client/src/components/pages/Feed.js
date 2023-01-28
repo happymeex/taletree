@@ -14,7 +14,7 @@ const MAX_SNIPPETS_PER_PAGE = 6;
 const WriteNewSnippetButton = ({ onClick }) => {
   return (
     <div
-      className="FeedWriteNewSnippetButton-container u-flex-justifyCenter u-flex-alignCenter"
+      className="FeedWriteNewSnippetButton-container u-flex-justifyCenter u-flex-alignCenter u-grow u-clickable"
       onClick={onClick}
     >
       <img className="FeedWriteNewSnippetButton-icon" src={leaf}></img>
@@ -63,8 +63,8 @@ const Feed = ({ userName, viewer, goTo, popupHandlers }) => {
     });
   };
   return (
-    <div className="Feed-container">
-      <div className="Feed-snippets">
+    <div className="Feed-container u-flex-justifyCenter">
+      <div className="Feed-snippetDisplayWrapper">
         {snippets && authorToPic ? (
           <SnippetDisplay
             viewer={viewer}

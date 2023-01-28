@@ -122,3 +122,15 @@ form {
 .u-clickable {
   cursor: pointer;
 }
+
+.u-grow:hover {
+  transform: scale(1.1);
+}
+
+.u-darken {
+  color: var(--darkgrey);
+}
+
+.u-darken:hover {
+  color: black;
+}
