@@ -27,3 +27,25 @@
   outline: 1px solid var(--medgrey);
   background-color: var(--primary);
 }
+
+.SnippetDisplay-tabBar {
+  width: 100%;
+  flex-direction: row;
+  margin-bottom: var(--m);
+}
+
+.SnippetDisplay-tabBar > * {
+  flex: 1 1 0;
+}
+.SnippetDisplay-tab {
+  border-radius: var(--s);
+  background-color: transparent;
+  padding: var(--m);
+  font-size: var(--l);
+  color: var(--darkgrey);
+  text-align: center;
+}
+
+.SnippetDisplay-tab:hover {
+  background-color: var(--primary--dim);
+}

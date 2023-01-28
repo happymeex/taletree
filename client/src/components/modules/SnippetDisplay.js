@@ -1,18 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { get } from "../../utilities";
 import SingleSnippet from "./SingleSnippet.js";
-import "../pages/Profile.css";
 import "./SnippetDisplay.css";
 
-const MAX_SNIPPETS_PER_PAGE = 6;
-
 /**
- * clickable tab to toggle viewable snippets: contribs, favs, or bookmarks
+ * clickable tab to toggle viewable snippets
  */
 const TabBar = ({ text, onClick, isSelected }) => {
   return (
     <div
-      className="ProfileContent-tab"
+      className="SnippetDisplay-tab u-clickable"
       style={
         isSelected
           ? { backgroundColor: `var(--primary--dim)`, fontWeight: `900`, color: `black` }
@@ -79,8 +75,8 @@ const initializeTracker = (n, totalPages) => {
 };
 
 /**
- * box for displaying the snippets, reverse chronologically.
- * we might want to display something fun if there aren't any
+ * box for displaying the snippets, reverse chronologically, along with a page bar
+ * for navigation. we might want to display something fun if there aren't any
  * snippets to display
  */
 const SnippetDisplayContent = ({
@@ -179,8 +175,7 @@ const SnippetDisplayContent = ({
 };
 
 /**
- * right portion of profile page (bottom portion on mobile, underneath ProfilPersonalInfo)
- * viewer can see contributions, favs, and (if isViewer, i.e. own profile) bookmarks
+ * Tabbed display box for snippets. used for feed and profile
  *
  * @param {Object} viewer
  * @param {Object} goTo navigation functions
@@ -246,7 +241,7 @@ const SnippetDisplay = (props) => {
 
   return (
     <div className="SnippetDisplay-container">
-      <div className="ProfileContent-tabBar u-flex">{tabList}</div>
+      <div className="SnippetDisplay-tabBar u-flex">{tabList}</div>
       {!snippetList ? (
         <div className="Loading">Loading...</div>
       ) : (
