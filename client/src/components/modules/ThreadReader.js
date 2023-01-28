@@ -4,10 +4,9 @@ import "./ThreadReader.css";
 /**
  * Popup displaying the content of a thread in plaintext form.
  *
- * @param {[String]} generateContent function returning list of snippet content
+ * @param {[String]} content list of snippet content to display
  */
-const ThreadReader = ({ generateContent }) => {
-  const content = generateContent();
+const ThreadReader = ({ content }) => {
   const contentList = content.map((snippetText, i) => {
     return <div key={i}>{snippetText}</div>;
   });

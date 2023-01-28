@@ -41,6 +41,7 @@ const ALLOW_HIGHLIGHT = (classname) => {
  * @param {String} snippetId
  * @param {Object} viewer
  * @param {Object} goTo navigation functions
+ * @param {{toggle: Function, setContentGenerator: Function}} popupHandlers
  */
 const TreeView = (props) => {
   const [pos, setPos] = useState({ x: 0, y: 0 }); //mouse position
@@ -123,11 +124,18 @@ const TreeView = (props) => {
   };
 
   const toggleSnippetWriter = () => {
-    setWriter((s) => !s);
+    props.popupHandlers.toggle("writer");
+    props.popupHandlers.setWriteHandler((input) => {
+      handlePost(input);
+    });
   };
 
   const toggleThreadReader = () => {
-    setReader((s) => !s);
+    const content = getThread(snippets, target, false)
+      .reverse()
+      .map((id) => snippets[id].content);
+    props.popupHandlers.toggle("reader");
+    props.popupHandlers.setContent(content);
   };
 
   const handlePost = (input) => {
@@ -201,8 +209,6 @@ const TreeView = (props) => {
         }}
         line={line}
         author={author}
-        authorName={s.authorName}
-        authorId={s.authorId}
         content={s.content}
         _id={s._id}
         viewerId={props.viewer._id}
@@ -220,6 +226,7 @@ const TreeView = (props) => {
         }}
         scale={scale}
         goTo={props.goTo}
+        popupHandlers={props.popupHandlers}
       />
     );
   }
@@ -247,30 +254,6 @@ const TreeView = (props) => {
         </TreeViewMenu>
         <>{snippetList}</>
       </div>
-      {writer && (
-        <ModalBackground
-          onClose={() => {
-            setWriter(false);
-          }}
-          children={<WriteNewSnippet onPost={handlePost} onClose={toggleSnippetWriter} />}
-        />
-      )}
-      {reader && (
-        <ModalBackground
-          onClose={() => {
-            setReader(false);
-          }}
-          children={
-            <ThreadReader
-              generateContent={() => {
-                return getThread(snippets, target, false)
-                  .reverse()
-                  .map((id) => snippets[id].content);
-              }}
-            />
-          }
-        />
-      )}
     </>
   );
 };

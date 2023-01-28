@@ -68,6 +68,7 @@ const SnippetDisplayContent = ({
   goTo,
   maxPerPage,
   authorToPic,
+  popupHandlers,
 }) => {
   const [page, setPage] = useState(0);
   console.log("rendering page with snippet list");
@@ -100,6 +101,7 @@ const SnippetDisplayContent = ({
         showIconBar={true}
         goTo={goTo}
         updateLocalViewer={updateLocalViewer}
+        popupHandlers={popupHandlers}
       />
     ));
   return (
@@ -130,6 +132,7 @@ const SnippetDisplayContent = ({
  *  {tabName: String, tabData: [Object]} where the value of the second field is a list of snippet objects
  * @param {Object} authorToPic an object mapping user ids to profile picture URLs
  * @param {Number} maxPerPage
+ * @param {Object} popupHandlers
  */
 const SnippetDisplay = (props) => {
   const [data, setData] = useState(undefined);
@@ -202,6 +205,7 @@ const SnippetDisplay = (props) => {
           updateLocalViewer={updateLocalViewer}
           goTo={props.goTo}
           maxPerPage={props.maxPerPage}
+          popupHandlers={props.popupHandlers}
         />
       )}
     </div>

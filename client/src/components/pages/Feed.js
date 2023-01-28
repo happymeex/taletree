@@ -22,10 +22,9 @@ const WriteNewSnippetButton = ({ onClick }) => {
   );
 };
 
-const Feed = ({ userName, viewer, goTo }) => {
+const Feed = ({ userName, viewer, goTo, popupHandlers }) => {
   const [snippets, setSnippets] = useState(undefined);
   const [authorToPic, setAuthorToPic] = useState(undefined);
-  const [writer, setWriter] = useState(false); //whether new snippet popup is open
 
   useEffect(() => {
     const queryDB = async () => {
@@ -57,18 +56,14 @@ const Feed = ({ userName, viewer, goTo }) => {
   };
 
   const toggleSnippetWriter = () => {
-    setWriter((s) => !s);
+    //setWriter((s) => !s);
+    popupHandlers.toggle("writer");
+    popupHandlers.setWriteHandler((input) => {
+      addPost(input);
+    });
   };
   return (
     <div className="Feed-container">
-      {writer && (
-        <ModalBackground
-          onClose={() => {
-            setWriter(false);
-          }}
-          children={<WriteNewSnippet onPost={addPost} onClose={toggleSnippetWriter} />}
-        />
-      )}
       <div className="Feed-snippets">
         {snippets && authorToPic ? (
           <SnippetDisplay
@@ -77,6 +72,7 @@ const Feed = ({ userName, viewer, goTo }) => {
             snippets={snippets}
             authorToPic={authorToPic}
             maxPerPage={MAX_SNIPPETS_PER_PAGE}
+            popupHandlers={popupHandlers}
           />
         ) : (
           <div className="Loading">Loading...</div>

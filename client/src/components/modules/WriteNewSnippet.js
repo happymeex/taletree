@@ -7,7 +7,7 @@ const MAX_TEXTBOX_HEIGHT = 0.6 * window.innerHeight;
 
 /**
  *
- * @param {(input:String) => void} onPost function to execute when post is hit
+ * @param {(input:String) => void} onPost function to execute when post is hit. inputs a string, the user input
  * @param {() => void} onClose function to execute to close
  */
 const WriteNewSnippet = (props) => {
