@@ -40,16 +40,15 @@ const PageBarNumber = ({ value, onClick, isSelected }) => {
   );
 };
 
-const PageBar = ({ page, totalPages, tabNumber, onClick }) => {
-  const lbound = Math.max(1, page - 2);
-  const ubound = Math.min(totalPages, page + 2);
+const PageBar = ({ pageTracker, totalPages, tabNumber, onClick }) => {
+  const { page, l, r } = pageTracker;
   let numList = [];
-  for (let i = lbound; i <= ubound; i++) {
+  for (let i = l; i <= r; i++) {
     numList.push(
       <PageBarNumber
         key={`${tabNumber},${i}`}
         value={i}
-        onClick={() => onClick(i - page)}
+        onClick={() => onClick(i)}
         isSelected={page === i}
       />
     );
@@ -60,16 +59,23 @@ const PageBar = ({ page, totalPages, tabNumber, onClick }) => {
         <PageBarNumber
           value="Prev"
           onClick={() => {
-            onClick(-1);
+            onClick(page - 1);
           }}
         />
       )}
-      {page > 3 && <span>...</span>}
+      {l > 1 && <span>...</span>}
       {numList}
-      {page < totalPages - 2 && <span>...</span>}
-      {page < totalPages && <PageBarNumber value="Next" onClick={() => onClick(1)} />}
+      {r < totalPages && <span>...</span>}
+      {page < totalPages && <PageBarNumber value="Next" onClick={() => onClick(page + 1)} />}
     </div>
   );
+};
+
+//silly helper function
+const initializeTracker = (n, totalPages) => {
+  let obj = {};
+  obj[n] = { page: 1, l: 1, r: Math.min(3, totalPages) };
+  return obj;
 };
 
 /**
@@ -87,26 +93,37 @@ const SnippetDisplayContent = ({
   popupHandlers,
   tabNumber,
 }) => {
-  const [page, setPage] = useState(0);
-  const [pageTracker, setPageTracker] = useState({});
-  console.log("rendering page with snippet list");
-  console.log(snippetList);
+  const [pageTracker, setPageTracker] = useState(
+    initializeTracker(tabNumber, snippetList.length / maxPerPage)
+  );
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
+    console.log("initializing page tracker");
+    const totalPages = Math.ceil(snippetList.length / maxPerPage);
     if (!(tabNumber in pageTracker)) {
       setPageTracker((obj) => {
-        obj[tabNumber] = 0;
+        console.log("setting page tracker");
+        obj[tabNumber] = { page: 1, l: 1, r: Math.min(3, totalPages) };
         return obj;
       });
-      setPage(0);
-    } else setPage(pageTracker[tabNumber]);
+    }
   }, [tabNumber]);
 
+  useEffect(() => {
+    setReady(true);
+    console.log("ready!");
+  }, [pageTracker]);
+
   const totalPages = Math.ceil(snippetList.length / maxPerPage);
-  const snippets = snippetList
+  const default_tracker = { page: 1, l: 1, r: Math.min(3, totalPages) };
+  const tracker = pageTracker[tabNumber] ? pageTracker[tabNumber] : default_tracker;
+
+  let snippets = null;
+  snippets = snippetList
     .slice() //clone array so that it isn't mutated by reverse
     .reverse()
-    .slice(page * maxPerPage, (page + 1) * maxPerPage)
+    .slice((tracker.page - 1) * maxPerPage, tracker.page * maxPerPage)
     .map((snippet, i) => (
       <SingleSnippet
         key={snippet._id}
@@ -127,20 +144,31 @@ const SnippetDisplayContent = ({
         popupHandlers={popupHandlers}
       />
     ));
+
   return (
     <div className="SnippetDisplay-snippetAndPageBarWrapper">
       <div className="SnippetDisplay-snippetContainer">
-        {snippetList.length === 0 ? <></> : snippets}
+        {ready ? snippets : <div className="Loading">Loading...</div>}
       </div>
-      {snippetList.length > maxPerPage && (
+      {ready && snippetList.length > maxPerPage && (
         <PageBar
-          page={page + 1}
+          pageTracker={tracker}
           totalPages={totalPages}
-          onClick={(delta) => {
-            setPage((x) => x + delta);
+          onClick={(newPage) => {
+            setReady(false);
             setPageTracker((obj) => {
-              obj[tabNumber] += delta;
-              return obj;
+              if (newPage > obj[tabNumber].r)
+                obj[tabNumber] = {
+                  l: Math.max(1, newPage - 4),
+                  r: newPage,
+                };
+              if (newPage < obj[tabNumber].l)
+                obj[tabNumber] = {
+                  l: newPage,
+                  r: Math.min(totalPages, newPage + 4),
+                };
+              obj[tabNumber].page = newPage;
+              return Object.assign({}, obj);
             });
           }}
           tabNumber={tabNumber}
@@ -176,10 +204,6 @@ const SnippetDisplay = (props) => {
 
     setData(d);
   }, [props]);
-
-  console.log("local viewer: ");
-  console.log(localViewer.favorites);
-  console.log(localViewer.bookmarks);
 
   const updateLocalViewer = (attrib, id, action) => {
     console.log("updating!");

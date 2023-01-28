@@ -9,7 +9,7 @@ import "./Profile.css";
 import SnippetDisplay from "../modules/SnippetDisplay";
 
 const ROOT = "63d04ff67f9ad37d137f7750";
-const MAX_SNIPPETS_PER_PAGE = 6;
+const MAX_SNIPPETS_PER_PAGE = 10;
 
 const WriteNewSnippetButton = ({ onClick }) => {
   return (
