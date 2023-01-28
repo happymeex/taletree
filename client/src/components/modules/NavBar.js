@@ -44,8 +44,7 @@ const NavBarButton = ({ profilePicURL, logout, viewer }) => {
   );
 };
 
-const NavBar = ({ handleLogin, handleLogout, userName, profilePicURL, viewer }) => {
-  console.log("ProfilePicURL: " + profilePicURL);
+const NavBar = ({ handleLogin, handleLogout, viewer }) => {
   return (
     <div className="NavBar-container u-flex-spaceBetween">
       <div
@@ -55,7 +54,7 @@ const NavBar = ({ handleLogin, handleLogout, userName, profilePicURL, viewer }) 
             state: {
               handleLogin: handleLogin,
               handleLogout: handleLogout,
-              userName: userName,
+              userName: viewer.name,
               viewer: viewer,
             },
           });
@@ -67,7 +66,7 @@ const NavBar = ({ handleLogin, handleLogout, userName, profilePicURL, viewer }) 
         <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
           {viewer._id ? (
             <NavBarButton
-              profilePicURL={profilePicURL}
+              profilePicURL={viewer.pictureURL}
               logout={() => {
                 googleLogout();
                 handleLogout();

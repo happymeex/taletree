@@ -41,14 +41,12 @@ const Feed = ({ userName, viewer, goTo }) => {
   }, []);
 
   const addPost = (input) => {
-    console.log("posting snippet as " + userName + " with input:");
-    console.log(input);
     const writeToDB = async () => {
       const treeId = await post("/api/new-tree");
       console.log("browser got treeId: " + treeId);
       if (treeId)
         post("/api/new-snippet", {
-          authorName: userName,
+          authorName: viewer.name,
           authorId: viewer._id,
           input: input,
           parentId: ROOT,

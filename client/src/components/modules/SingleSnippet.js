@@ -119,40 +119,42 @@ const SingleSnippet = (props) => {
         setIsToTree(false);
       }}
     >
-      <div className="SingleSnippet-iconBar u-flex-end" style={iconBarStyle}>
-        <Icon
-          showByDefault={isHover || props.showIconBar}
-          imgOn={filledHeart}
-          imgOff={heart}
-          isActive={props.status.isFavorite}
-          scale={scale}
-          toggleActive={(currState) => {
-            props.updateLocalViewer("favorites", props._id, currState ? "delete" : "add");
-            post("/api/snippet-attribs", {
-              _id: props._id,
-              state: !currState,
-              attrib: "favorites",
-              viewerId: props.viewerId,
-            });
-          }}
-        />
-        <Icon
-          showByDefault={isHover || props.showIconBar}
-          imgOn={filledBookmark}
-          imgOff={bookmark}
-          isActive={props.status.isBookmark}
-          scale={scale}
-          toggleActive={(currState) => {
-            props.updateLocalViewer("bookmarks", props._id, currState ? "delete" : "add");
-            post("/api/snippet-attribs", {
-              _id: props._id,
-              state: !currState,
-              attrib: "bookmarks",
-              viewerId: props.viewerId,
-            });
-          }}
-        />
-      </div>
+      {props.viewerId && (
+        <div className="SingleSnippet-iconBar u-flex-end" style={iconBarStyle}>
+          <Icon
+            showByDefault={isHover || props.showIconBar}
+            imgOn={filledHeart}
+            imgOff={heart}
+            isActive={props.status.isFavorite}
+            scale={scale}
+            toggleActive={(currState) => {
+              props.updateLocalViewer("favorites", props._id, currState ? "delete" : "add");
+              post("/api/snippet-attribs", {
+                _id: props._id,
+                state: !currState,
+                attrib: "favorites",
+                viewerId: props.viewerId,
+              });
+            }}
+          />
+          <Icon
+            showByDefault={isHover || props.showIconBar}
+            imgOn={filledBookmark}
+            imgOff={bookmark}
+            isActive={props.status.isBookmark}
+            scale={scale}
+            toggleActive={(currState) => {
+              props.updateLocalViewer("bookmarks", props._id, currState ? "delete" : "add");
+              post("/api/snippet-attribs", {
+                _id: props._id,
+                state: !currState,
+                attrib: "bookmarks",
+                viewerId: props.viewerId,
+              });
+            }}
+          />
+        </div>
+      )}
       <div className="SingleSnippet-displayBox u-flex">
         {props.showAuthor ? (
           <SingleSnippetAuthorInfo

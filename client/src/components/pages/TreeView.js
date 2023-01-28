@@ -39,7 +39,6 @@ const ALLOW_HIGHLIGHT = (classname) => {
  * Page for viewing a snippet tree.
  * Proptypes
  * @param {String} snippetId
- * @param {String} userName
  * @param {Object} viewer
  * @param {Object} goTo navigation functions
  */
@@ -132,10 +131,10 @@ const TreeView = (props) => {
   };
 
   const handlePost = (input) => {
-    console.log("posting snippet as " + props.userName + " with input:");
+    console.log("posting snippet as " + props.viewer.name + " with input:");
     console.log(input);
     post("/api/new-snippet", {
-      authorName: props.userName,
+      authorName: props.viewer.name,
       authorId: props.viewer._id,
       parentId: target,
       input: input,
@@ -152,6 +151,10 @@ const TreeView = (props) => {
         setSnippets(tree);
         setThread(newThread);
         setTarget(s._id);
+        setAuthorToPic((obj) => {
+          obj[props.viewer._id] = props.viewer.pictureURL;
+          return obj;
+        });
       }
     });
   };

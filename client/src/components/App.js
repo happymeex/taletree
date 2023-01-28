@@ -23,12 +23,7 @@ const App = () => {
   const [userId, setUserId] = useState(undefined);
   const [userName, setUserName] = useState(undefined);
   const [profilePicURL, setProfilePicURL] = useState(undefined);
-  const [viewer, setViewer] = useState({
-    _id: undefined,
-    bookmarks: new Set(),
-    favorites: new Set(),
-    setter: undefined,
-  });
+  const [viewer, setViewer] = useState(undefined);
 
   useEffect(() => {
     get("/api/whoami")
@@ -39,14 +34,22 @@ const App = () => {
           await get("/api/profile", { id: user._id }).then((user) => {
             setViewer({
               _id: user._id,
+              name: user.name,
+              pictureURL: user.pictureURL,
               bookmarks: new Set(user.bookmarks),
               favorites: new Set(user.favorites),
-              setter: setViewer,
             });
           });
           setUserName(user.name);
           setProfilePicURL(user.pictureURL);
-        }
+        } else
+          setViewer({
+            _id: null,
+            name: null,
+            pictureURL: null,
+            bookmarks: new Set(),
+            favorites: new Set(),
+          });
       })
       .then(() => {
         setGotUser(true);
@@ -77,15 +80,12 @@ const App = () => {
   };
 
   const goToProfile = (id) => {
-    navigate(`/profile/${id}`, {
-      state: { viewer: viewer },
-    });
+    navigate(`/profile/${id}`);
+    if (!viewer._id) window.location.reload();
   };
 
   const goToTreeView = (id) => {
-    navigate(`/treeview/${id}`, {
-      state: { viewer: viewer, userName: userName },
-    });
+    navigate(`/treeview/${id}`);
   };
 
   const goTo = {
@@ -95,27 +95,22 @@ const App = () => {
 
   return (
     <>
-      <NavBar
-        handleLogin={handleLogin}
-        handleLogout={handleLogout}
-        userName={userName}
-        profilePicURL={profilePicURL}
-        viewer={viewer}
-      />
-      {gotUser ? (
-        <Router>
-          <Feed
-            path="/"
-            handleLogin={handleLogin}
-            handleLogout={handleLogout}
-            userName={userName}
-            viewer={viewer}
-            goTo={goTo}
-          />
-          <TreeView path="/treeview/:snippetId" userName={userName} viewer={viewer} goTo={goTo} />
-          <Profile path="/profile/:profileId" viewer={viewer} goTo={goTo} />
-          <NotFound default />
-        </Router>
+      {viewer ? (
+        <>
+          <NavBar handleLogin={handleLogin} handleLogout={handleLogout} viewer={viewer} />
+          <Router>
+            <Feed
+              path="/"
+              handleLogin={handleLogin}
+              handleLogout={handleLogout}
+              viewer={viewer}
+              goTo={goTo}
+            />
+            <TreeView path="/treeview/:snippetId" viewer={viewer} goTo={goTo} />
+            <Profile path="/profile/:profileId" viewer={viewer} goTo={goTo} />
+            <NotFound default />
+          </Router>
+        </>
       ) : (
         <div className="Loading">Loading...</div>
       )}
