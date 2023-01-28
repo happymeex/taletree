@@ -7,6 +7,7 @@ import { get, post } from "../../utilities";
 import leaf from "../../public/leaf.svg";
 import "./Profile.css";
 import SnippetDisplay from "../modules/SnippetDisplay";
+import SearchBar from "../modules/SearchBar.js";
 
 const ROOT = "63d04ff67f9ad37d137f7750";
 const MAX_SNIPPETS_PER_PAGE = 6;
@@ -60,7 +61,7 @@ const Feed = ({ userName, viewer, goTo }) => {
     setWriter((s) => !s);
   };
   return (
-    <div className="Feed-container">
+    <div className="Feed-container u-flexColumn">
       {writer && (
         <ModalBackground
           onClose={() => {

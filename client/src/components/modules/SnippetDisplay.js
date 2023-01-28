@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { get } from "../../utilities";
 import SingleSnippet from "./SingleSnippet.js";
 import "../pages/Profile.css";
+import "./SearchBar.css";
 
 const MAX_SNIPPETS_PER_PAGE = 6;
 
@@ -182,15 +183,32 @@ const SnippetDisplay = (props) => {
       };
       return snippet;
     });
-    //Let's not try to update as we change tabs -- only update on refresh.
-    //if (props.isViewer && currTab === 1)
-    //  snippetList = snippetList.filter((snippet) => snippet.status.isFavorite);
-    //else if (props.isViewer && currTab === 2)
-    //  snippetList = snippetList.filter((snippet) => snippet.status.isBookmark);
   }
+
+  function search_snippets() {
+    if (snippetList) {
+      let input = document.getElementById("SearchBar").value.toLowerCase();
+      snippetList = snippetList.filter((snippet) => snippet.content.includes(input));
+    }
+  }
+
+  //Let's not try to update as we change tabs -- only update on refresh.
+  //if (props.isViewer && currTab === 1)
+  //  snippetList = snippetList.filter((snippet) => snippet.status.isFavorite);
+  //else if (props.isViewer && currTab === 2)
+  //  snippetList = snippetList.filter((snippet) => snippet.status.isBookmark);
 
   return (
     <div className="ProfileContent-container">
+      <div className="u-flex">
+        <input
+          type="text"
+          id="SearchBar"
+          className="SearchBar-textbox"
+          placeholder="Search for snippets"
+          onKeyUp={search_snippets()}
+        />
+      </div>
       <div className="ProfileContent-tabBar u-flex">{tabList}</div>
       {!snippetList ? (
         <div className="Loading">Loading...</div>
