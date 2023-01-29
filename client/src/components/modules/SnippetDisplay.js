@@ -86,6 +86,7 @@ const initializeTracker = (n, totalPages) => {
 const SnippetDisplayContent = ({
   viewerId,
   snippetList,
+  search,
   updateLocalViewer,
   goTo,
   maxPerPage,
@@ -134,6 +135,7 @@ const SnippetDisplayContent = ({
         }}
         viewerId={viewerId}
         content={snippet.content}
+        search={search}
         _id={snippet._id}
         isTreeView={false}
         showAuthor={true}
@@ -178,6 +180,21 @@ const SnippetDisplayContent = ({
   );
 };
 
+const SearchBar = ({ setSearchInput, initialText }) => {
+  console.log("search rerendering");
+  return (
+    <input
+      type="text"
+      className="SearchBar-textbox"
+      value={initialText}
+      placeholder="Search snippets"
+      onChange={(e) => {
+        setSearchInput(e.target.value);
+      }}
+    />
+  );
+};
+
 /**
  * Tabbed display box for snippets. used for feed and profile
  *
@@ -193,6 +210,7 @@ const SnippetDisplay = (props) => {
   const [data, setData] = useState(undefined);
   const [currTab, setCurrTab] = useState(0);
   const [localViewer, setLocalViewer] = useState(props.viewer);
+  const [searchInput, setSearchInput] = useState("");
 
   console.log("Got snippets: ");
   console.log(props.snippets);
@@ -239,6 +257,15 @@ const SnippetDisplay = (props) => {
     });
   }
 
+  if (searchInput !== "") {
+    snippetList = snippetList.filter((snippet) => {
+      return (
+        snippet.authorName.toLowerCase().includes(searchInput.toLowerCase()) ||
+        snippet.content.toLowerCase().includes(searchInput.toLowerCase())
+      );
+    });
+  }
+
   //Let's not try to update as we change tabs -- only update on refresh.
   //if (props.isViewer && currTab === 1)
   //  snippetList = snippetList.filter((snippet) => snippet.status.isFavorite);
@@ -248,13 +275,7 @@ const SnippetDisplay = (props) => {
   return (
     <div className="SnippetDisplay-container">
       <div className="u-flex">
-        <input
-          type="text"
-          id="SearchBar"
-          className="SearchBar-textbox"
-          placeholder="Search for snippets"
-          onKeyUp={() => {}}
-        />
+        <SearchBar setSearchInput={setSearchInput} initialText={searchInput} />
       </div>
       <div className="SnippetDisplay-tabBar u-flex">{tabList}</div>
       {!snippetList ? (
@@ -263,6 +284,7 @@ const SnippetDisplay = (props) => {
         <SnippetDisplayContent
           viewerId={props.viewer._id}
           snippetList={snippetList}
+          search={searchInput !== "" ? [searchInput] : null}
           authorToPic={props.authorToPic}
           updateLocalViewer={updateLocalViewer}
           goTo={props.goTo}

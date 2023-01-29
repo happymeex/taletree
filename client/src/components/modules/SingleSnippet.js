@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import Highlight from "react-highlighter";
 import "./SingleSnippet.css";
 import "./TreeViewSnippet.css";
 import Icon from "./Icons.js";
@@ -11,36 +12,59 @@ import "../../utilities.css";
 import "../pages/Profile.css";
 import { post } from "../../utilities.js";
 
+const SEARCH_HIGHLIGHT_STYLE = {
+  fontWeight: `bold`,
+  backgroundColor: `var(--primary--dim)`,
+};
+
 /**
  *
  * @param {{name: String, id: String, pictureURL: String}} author
  * @param {Function} goToProfile
  */
-const SingleSnippetAuthorInfo = (props) => {
+const SingleSnippetAuthorInfo = ({ author, goToProfile, search }) => {
+  console.log("search is:");
+  console.log(search);
   return (
     <div className="SingleSnippet-authorInfo u-flexColumn u-flex-alignCenter u-flex-justifyCenter">
       <img
         className="SingleSnippet-profilePic else"
-        src={props.author.pictureURL}
+        src={author.pictureURL}
         onClick={() => {
-          props.goToProfile(props.author.id);
+          goToProfile(author.id);
         }}
       />
       <div
         className="SingleSnippet-authorName u-bold u-clickableText else"
         onClick={() => {
-          props.goToProfile(props.author.id);
+          goToProfile(author.id);
         }}
       >
-        {props.author.name}
+        {search ? (
+          <Highlight search={search[0]} matchStyle={SEARCH_HIGHLIGHT_STYLE}>
+            {author.name}
+          </Highlight>
+        ) : (
+          author.name
+        )}
       </div>
     </div>
   );
 };
 
-const SingleSnippetContentBox = ({ content }) => {
+const SingleSnippetContentBox = ({ content, search }) => {
   //TODO: fade styling for overflow
-  return <div>{content}</div>;
+  return (
+    <div>
+      {search ? (
+        <Highlight search={search[0]} matchStyle={SEARCH_HIGHLIGHT_STYLE}>
+          {content}
+        </Highlight>
+      ) : (
+        content
+      )}
+    </div>
+  );
 };
 
 /**
@@ -55,6 +79,7 @@ const SingleSnippetContentBox = ({ content }) => {
  * @param {Boolean} showIconBar if true, then always shows icon bar regardless of hover status. we might want to just deduce this from
  *    isTreeView, but I'm including this as a parameter in case we want extra control.
  * @param {Boolean} showAuthor used to conditionally render author name/picture
+ * @param {[String]} search? an array of keywords to highlight. for now, this will always have length 1, unless we decide on more fancy
  * @param {{scale: Number, containerStyle: Object, onClick: Function}} treeStyle?
  *    specified for TreeView snippets. Contains all style, sizing data
  * @param {Function} updateLocalViewer handler function passed in to update the viewer's favs/bookmarks in whatever parent component
@@ -103,7 +128,11 @@ const SingleSnippet = (props) => {
         }}
       >
         {props.showAuthor ? (
-          <SingleSnippetAuthorInfo author={props.author} goToProfile={props.goTo.profile} />
+          <SingleSnippetAuthorInfo
+            author={props.author}
+            goToProfile={props.goTo.profile}
+            search={props.search}
+          />
         ) : (
           <></>
         )}
@@ -155,7 +184,7 @@ const SingleSnippet = (props) => {
               />
             )}
           </div>
-          <SingleSnippetContentBox content={props.content} />
+          <SingleSnippetContentBox content={props.content} search={props.search} />
         </div>
       </div>
     </>
