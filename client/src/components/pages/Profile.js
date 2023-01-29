@@ -68,14 +68,16 @@ const Profile = ({ profileId, viewer, goTo, popupHandlers }) => {
             allFriends={data.friends}
             goTo={goTo}
           />
-          <SnippetDisplay
-            viewer={viewer}
-            goTo={goTo}
-            snippets={snippetData}
-            authorToPic={authorToPic}
-            maxPerPage={MAX_SNIPPETS_PER_PAGE}
-            popupHandlers={popupHandlers}
-          />
+          <div className="Profile-snippetDisplayWrapper">
+            <SnippetDisplay
+              viewer={viewer}
+              goTo={goTo}
+              snippets={snippetData}
+              authorToPic={authorToPic}
+              maxPerPage={MAX_SNIPPETS_PER_PAGE}
+              popupHandlers={popupHandlers}
+            />
+          </div>
         </div>
       )}
     </>

@@ -1,3 +1,6 @@
+.SnippetDisplay-container {
+  width: 100%;
+}
 .SnippetDisplay-pageBar {
   gap: var(--s);
 }

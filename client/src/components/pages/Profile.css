@@ -10,6 +10,10 @@
   gap: 1%;
 }
 
+.Profile-snippetDisplayWrapper {
+  width: 60vw;
+}
+
 .Profile-name {
   font-size: var(--xxl);
 }
