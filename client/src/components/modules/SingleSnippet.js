@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./SingleSnippet.css";
+import "./TreeViewSnippet.css";
 import Icon from "./Icons.js";
 import heart from "../../public/heart.svg";
 import bookmark from "../../public/bookmark.svg";
@@ -36,7 +37,7 @@ const SingleSnippetAuthorInfo = (props) => {
     : {};
   return (
     <div
-      className="SingleSnippet-authorInfo u-flexColumn u-flex-alignCenter"
+      className="SingleSnippet-authorInfo u-flexColumn u-flex-alignCenter u-flex-justifyCenter"
       onClick={() => {
         props.goToProfile(props.author.id);
       }}
@@ -46,7 +47,7 @@ const SingleSnippetAuthorInfo = (props) => {
         src={props.author.pictureURL}
         style={imgStyle}
       />
-      <div className="SingleSnippet-authorName u-bold else" style={authorNameStyle}>
+      <div className="SingleSnippet-authorName u-bold u-clickableText else" style={authorNameStyle}>
         {props.author.name}
       </div>
     </div>
@@ -82,7 +83,6 @@ const SingleSnippetContentBox = ({ content, scale }) => {
 const SingleSnippet = (props) => {
   const [isHover, setIsHover] = useState(false);
   const [isToTree, setIsToTree] = useState(false); //if true, then clicking redirects to treeview
-  const [reader, setReader] = useState(false);
 
   const style = props.treeStyle
     ? props.treeStyle.containerStyle
@@ -100,13 +100,12 @@ const SingleSnippet = (props) => {
     : () => null;
 
   const scale = props.treeStyle ? props.treeStyle.scale : null;
+  const className = (props.treeStyle ? "TreeViewSnippet" : "SingleSnippet") + "-container u-flex";
 
   return (
     <>
       <div
-        className={
-          props.treeStyle ? "TreeViewSnippet-container" : "SingleSnippet-container u-flexColumn"
-        }
+        className={className}
         style={style}
         onClick={clickHandler}
         onMouseOver={(e) => {
@@ -119,67 +118,66 @@ const SingleSnippet = (props) => {
           setIsToTree(false);
         }}
       >
-        <div className="SingleSnippet-iconBar u-flex-end" style={iconBarStyle}>
-          {!props.treeStyle && (
-            <Icon
-              showByDefault={isHover || props.showIconBar}
-              imgOn={sprout}
-              imgOff={sprout}
-              isActive={false}
-              scale={scale}
-              toggleActive={(c) => {
-                props.goTo.treeView(props._id);
-              }}
-            />
-          )}
-          {props.viewerId && (
-            <Icon
-              showByDefault={isHover || props.showIconBar}
-              imgOn={filledHeart}
-              imgOff={heart}
-              isActive={props.status.isFavorite}
-              scale={scale}
-              toggleActive={(currState) => {
-                props.updateLocalViewer("favorites", props._id, currState ? "delete" : "add");
-                post("/api/snippet-attribs", {
-                  _id: props._id,
-                  state: !currState,
-                  attrib: "favorites",
-                  viewerId: props.viewerId,
-                });
-              }}
-            />
-          )}
-          {props.viewerId && (
-            <Icon
-              showByDefault={isHover || props.showIconBar}
-              imgOn={filledBookmark}
-              imgOff={bookmark}
-              isActive={props.status.isBookmark}
-              scale={scale}
-              toggleActive={(currState) => {
-                props.updateLocalViewer("bookmarks", props._id, currState ? "delete" : "add");
-                post("/api/snippet-attribs", {
-                  _id: props._id,
-                  state: !currState,
-                  attrib: "bookmarks",
-                  viewerId: props.viewerId,
-                });
-              }}
-            />
-          )}
-        </div>
-
-        <div className="SingleSnippet-displayBox u-flex">
-          {props.showAuthor ? (
-            <SingleSnippetAuthorInfo
-              author={props.author}
-              scale={scale}
-              goToProfile={props.goTo.profile}
-            />
-          ) : (
-            <></>
-          )}
+        {props.showAuthor ? (
+          <SingleSnippetAuthorInfo
+            author={props.author}
+            scale={scale}
+            goToProfile={props.goTo.profile}
+          />
+        ) : (
+          <></>
+        )}
+        <div className="SingleSnippet-displayBox u-flexColumn">
+          <div className="SingleSnippet-iconBar u-flex-end" style={iconBarStyle}>
+            {!props.treeStyle && (
+              <Icon
+                showByDefault={isHover || props.showIconBar}
+                imgOn={sprout}
+                imgOff={sprout}
+                isActive={false}
+                scale={scale}
+                toggleActive={(c) => {
+                  props.goTo.treeView(props._id);
+                }}
+              />
+            )}
+            {props.viewerId && (
+              <Icon
+                showByDefault={isHover || props.showIconBar}
+                imgOn={filledHeart}
+                imgOff={heart}
+                isActive={props.status.isFavorite}
+                scale={scale}
+                toggleActive={(currState) => {
+                  props.updateLocalViewer("favorites", props._id, currState ? "delete" : "add");
+                  post("/api/snippet-attribs", {
+                    _id: props._id,
+                    state: !currState,
+                    attrib: "favorites",
+                    viewerId: props.viewerId,
+                  });
+                }}
+              />
+            )}
+            {props.viewerId && (
+              <Icon
+                showByDefault={isHover || props.showIconBar}
+                imgOn={filledBookmark}
+                imgOff={bookmark}
+                isActive={props.status.isBookmark}
+                scale={scale}
+                toggleActive={(currState) => {
+                  props.updateLocalViewer("bookmarks", props._id, currState ? "delete" : "add");
+                  post("/api/snippet-attribs", {
+                    _id: props._id,
+                    state: !currState,
+                    attrib: "bookmarks",
+                    viewerId: props.viewerId,
+                  });
+                }}
+              />
+            )}
+          </div>
           <SingleSnippetContentBox content={props.content} scale={scale} />
         </div>
       </div>

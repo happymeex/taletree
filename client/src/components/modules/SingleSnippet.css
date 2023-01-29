@@ -5,6 +5,10 @@
   padding: var(--s);
 }
 
+.SingleSnippet-displayBox {
+  width: 100%;
+}
+
 .SingleSnippet-iconBar {
   gap: var(--s);
 }
@@ -19,6 +23,7 @@
 
 .SingleSnippet-authorName {
   cursor: pointer;
+  text-align: center;
 }
 
 .SingleSnippet-profilePic {

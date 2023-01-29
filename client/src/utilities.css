@@ -123,6 +123,11 @@ form {
   cursor: pointer;
 }
 
+.u-clickableText:hover {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
 .u-grow:hover {
   transform: scale(1.1);
 }

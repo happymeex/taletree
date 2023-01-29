@@ -1,5 +1,4 @@
 import React from "react";
-import "./TreeViewSnippet.css";
 import { assembleStyle, getIconBarStyle } from "../../utils/treeview.utils";
 import SingleSnippet from "./SingleSnippet.js";
 
