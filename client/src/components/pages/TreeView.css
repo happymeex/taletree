@@ -4,4 +4,7 @@
   background-color: var(--primary--dim);
   position: fixed;
   top: 0;
+
+  --default-width: 370px;
+  --default-height: 180px;
 }

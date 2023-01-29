@@ -8,13 +8,10 @@ const BORDER_HIGHLIGHT_MULTIPLIER = 5;
 const DEFAULT_LINE_WIDTH = 0.01;
 const LINE_HIGHLIGHT_MULTIPLIER = 2;
 const ZOOM_SENSITIVITY = 0.05;
-const DEFAULT_PADDING = 8; //in pixels
 const DEFAULT_PROFILE_PICTURE_SIZE = 48; //in pixels
 const DEFAULT_AUTHOR_NAME_FONT_SIZE = 16;
 const DEFAULT_ICON_SIZE = 24; //in pixels
 const DEFAULT_CONTENT_FONT_SIZE = 16;
-const DEFAULT_BORDER_RADIUS = 12;
-const DEFAULT_ICON_BAR_GAP = 8;
 
 const ROOT = "63d04ff67f9ad37d137f7750";
 
@@ -204,16 +201,16 @@ const assembleStyle = (obj, highlight, lineOrientation = undefined, scale) => {
     position: `absolute`,
     left: `${obj.pos.x}px`,
     top: `${obj.pos.y}px`,
-    width: `${obj.size.x}px`,
-    height: `${obj.size.y}px`,
+    //width: `${obj.size.x}px`,
+    //height: `${obj.size.y}px`,
     margin: `0`,
   };
   if (lineOrientation === undefined) {
-    ret["border"] = `${obj.size.border * (highlight ? BORDER_HIGHLIGHT_MULTIPLIER : 1)}px solid`;
-    ret["backgroundColor"] = "var(--white)";
-    ret["padding"] = `${DEFAULT_PADDING * scale}px`;
-    ret["borderRadius"] = `${DEFAULT_BORDER_RADIUS * scale}px`;
+    ret["transform"] = `scale(${scale})`;
+    ret["transformOrigin"] = `top left`;
   } else {
+    ret["width"] = `${obj.size.x}px`;
+    ret["height"] = `${obj.size.y}px`;
     for (const side of SIDES[lineOrientation])
       ret[side] = `${obj.thickness * (highlight ? LINE_HIGHLIGHT_MULTIPLIER : 1)}px solid`;
   }
@@ -221,10 +218,8 @@ const assembleStyle = (obj, highlight, lineOrientation = undefined, scale) => {
   return ret;
 };
 
-const getIconBarStyle = (scale) => {
-  return {
-    gap: `${DEFAULT_ICON_BAR_GAP * scale}px`,
-  };
+const getSnippetBorder = (highlight, scale) => {
+  return `${DEFAULT_BORDER * scale * (highlight ? BORDER_HIGHLIGHT_MULTIPLIER : 1)}px solid black`;
 };
 
 const getScaledDelta = (delta, zoomOrigin, scale) => {
@@ -249,5 +244,5 @@ export {
   getIncomingLine,
   assembleStyle,
   getScaledDelta,
-  getIconBarStyle,
+  getSnippetBorder,
 };

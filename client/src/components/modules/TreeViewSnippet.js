@@ -1,6 +1,8 @@
 import React from "react";
-import { assembleStyle, getIconBarStyle } from "../../utils/treeview.utils";
+import "./TreeViewSnippet.css";
+import { assembleStyle } from "../../utils/treeview.utils";
 import SingleSnippet from "./SingleSnippet.js";
+import { getSnippetBorder } from "../../utils/treeview.utils";
 
 /**
  * proptypes
@@ -39,13 +41,21 @@ const TreeViewSnippet = (props) => {
     : undefined;
 
   const snippetStyle = {
-    scale: props.scale,
     containerStyle: containerStyle,
-    iconBarStyle: getIconBarStyle(props.scale),
     onClick: props.onClick,
+    highlight: inTargetThread,
   };
   return (
     <>
+      {props.line.fromParent ? (
+        <>
+          <div style={upLineFromParentStyle}></div>
+          <div style={horizontalLineFromParentStyle}></div>
+        </>
+      ) : (
+        <></>
+      )}
+      {props.line.toChild ? <div style={lineToChildStyle}></div> : <></>}
       <SingleSnippet
         author={props.author}
         content={props.content}
@@ -59,15 +69,6 @@ const TreeViewSnippet = (props) => {
         goTo={props.goTo}
         popupHandlers={props.popupHandlers}
       />
-      {props.line.fromParent ? (
-        <>
-          <div style={upLineFromParentStyle}></div>
-          <div style={horizontalLineFromParentStyle}></div>
-        </>
-      ) : (
-        <></>
-      )}
-      {props.line.toChild ? <div style={lineToChildStyle}></div> : <></>}
     </>
   );
 };

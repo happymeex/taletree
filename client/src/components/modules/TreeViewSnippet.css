@@ -3,4 +3,20 @@
   position: absolute;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
+  border-radius: 8px;
+  padding: var(--s);
+  width: var(--default-width);
+  height: var(--default-height);
+}
+
+.TreeViewSnippet-highlightContainer {
+  background-color: white;
+  position: absolute;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  border-radius: 8px;
+  border: 6px solid black;
+  padding: var(--s);
+  width: var(--default-width);
+  height: var(--default-height);
 }

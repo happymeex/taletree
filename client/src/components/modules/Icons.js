@@ -9,19 +9,19 @@ import "./Icons.css";
  * @param {String} imgOff URL to the icon's inactive display state (e.g. empty grey heart, like mine)
  * @param {Boolean} initialActive active/inactive state upon initial render
  * @param {Function} toggleActive handler for (in)activation (i.e. updates DB). takes current state (pre-click) as a parameter
- * @param {Number} scale? only used for treeview
  */
 const Icon = ({ showByDefault, imgOn, imgOff, isActive, toggleActive, scale }) => {
   const [isHover, setIsHover] = useState(false);
   const [active, setActive] = useState(isActive);
-  let iconStyle = { height: `${DEFAULT_ICON_SIZE * (scale ? scale : 1)}px` };
+
+  let iconStyle = {};
   if (isHover && !active) iconStyle["filter"] = `brightness(0.5)`;
 
   return showByDefault || active ? (
     <img
       src={active ? imgOn : imgOff}
-      style={iconStyle}
       className="Icon else"
+      style={iconStyle}
       onClick={() => {
         console.log("click?");
         toggleActive(active);
