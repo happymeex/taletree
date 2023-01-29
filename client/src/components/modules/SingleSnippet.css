@@ -9,6 +9,15 @@
   width: 100%;
 }
 
+.SingleSnippet-contentBox {
+  font-family: inherit;
+  font-weight: inherit;
+  font-size: inherit;
+  margin-left: var(--xs);
+  overflow-wrap: break-word;
+  hyphens: auto;
+  white-space: pre-line;
+}
 .SingleSnippet-iconBar {
   gap: var(--s);
 }

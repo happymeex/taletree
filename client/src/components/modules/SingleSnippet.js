@@ -55,7 +55,7 @@ const SingleSnippetAuthorInfo = ({ author, goToProfile, search }) => {
 const SingleSnippetContentBox = ({ content, search }) => {
   //TODO: fade styling for overflow
   return (
-    <div>
+    <div className="SingleSnippet-contentBox">
       {search ? (
         <Highlight search={search[0]} matchStyle={SEARCH_HIGHLIGHT_STYLE}>
           {content}
