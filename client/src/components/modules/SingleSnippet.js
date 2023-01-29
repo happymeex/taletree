@@ -55,7 +55,7 @@ const SingleSnippetAuthorInfo = ({ author, goToProfile, search }) => {
 const SingleSnippetContentBox = ({ content, search }) => {
   //TODO: fade styling for overflow
   return (
-    <div className="SingleSnippet-contentBox">
+    <div className="SingleSnippet-contentBox u-flexColumn">
       {search ? (
         <Highlight search={search[0]} matchStyle={SEARCH_HIGHLIGHT_STYLE}>
           {content}
@@ -106,9 +106,8 @@ const SingleSnippet = (props) => {
 
   const className =
     (props.treeStyle
-      ? props.treeStyle.highlight
-        ? "TreeViewSnippet-highlightContainer"
-        : "TreeViewSnippet-container"
+      ? (props.treeStyle.highlight ? "TreeViewSnippet-highlight " : "") +
+        "TreeViewSnippet-container"
       : "SingleSnippet-container") + " u-flex";
 
   return (

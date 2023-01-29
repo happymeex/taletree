@@ -2,7 +2,8 @@
   border: var(--darkgrey) 1px solid;
   border-radius: var(--m);
   margin-top: var(--m);
-  padding: var(--s);
+  padding: var(--s) var(--s) var(--xs) var(--s);
+  max-height: 30vh;
 }
 
 .SingleSnippet-displayBox {
@@ -10,14 +11,19 @@
 }
 
 .SingleSnippet-contentBox {
-  font-family: inherit;
-  font-weight: inherit;
-  font-size: inherit;
   margin-left: var(--xs);
   overflow-wrap: break-word;
+  overflow-y: hidden;
   hyphens: auto;
-  white-space: pre-line;
+  white-space: pre-wrap;
+  mask: linear-gradient(white 20vh, transparent);
+  flex-grow: 1;
 }
+
+.TreeViewSnippet-container .SingleSnippet-contentBox {
+  mask: linear-gradient(white 70%, transparent);
+}
+
 .SingleSnippet-iconBar {
   gap: var(--s);
 }

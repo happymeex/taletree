@@ -16,6 +16,7 @@
 
 .Profile-name {
   font-size: var(--xxl);
+  text-align: center;
 }
 
 .Profile-bio {
