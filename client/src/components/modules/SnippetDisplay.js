@@ -228,6 +228,7 @@ const SnippetDisplay = (props) => {
   ));
 
   let snippetList = undefined;
+  //let input = document.getElementById("SearchBar").value.toLowerCase();
   if (data) {
     snippetList = data[currTab].tabData.map((snippet) => {
       snippet.status = {
@@ -236,13 +237,6 @@ const SnippetDisplay = (props) => {
       };
       return snippet;
     });
-  }
-
-  function search_snippets() {
-    if (snippetList) {
-      let input = document.getElementById("SearchBar").value.toLowerCase();
-      snippetList = snippetList.filter((snippet) => snippet.content.includes(input));
-    }
   }
 
   //Let's not try to update as we change tabs -- only update on refresh.
@@ -259,7 +253,7 @@ const SnippetDisplay = (props) => {
           id="SearchBar"
           className="SearchBar-textbox"
           placeholder="Search for snippets"
-          onKeyUp={search_snippets()}
+          onKeyUp={() => {}}
         />
       </div>
       <div className="SnippetDisplay-tabBar u-flex">{tabList}</div>
