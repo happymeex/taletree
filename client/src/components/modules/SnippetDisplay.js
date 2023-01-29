@@ -150,7 +150,7 @@ const SnippetDisplayContent = ({
   return (
     <div className="SnippetDisplay-snippetAndPageBarWrapper">
       <div className="SnippetDisplay-snippetContainer">
-        {ready ? snippets : <div className="Loading">Loading...</div>}
+        {ready ? snippets : <div className="Loading"></div>}
       </div>
       {ready && snippetList.length > maxPerPage && (
         <PageBar
@@ -280,7 +280,7 @@ const SnippetDisplay = (props) => {
       </div>
       <div className="SnippetDisplay-tabBar u-flex">{tabList}</div>
       {!snippetList ? (
-        <div className="Loading">Loading...</div>
+        <div className="Loading"></div>
       ) : (
         <SnippetDisplayContent
           viewerId={props.viewer._id}

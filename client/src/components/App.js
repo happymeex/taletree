@@ -152,7 +152,7 @@ const App = () => {
             </Router>
           </>
         ) : (
-          <div className="Loading">Loading...</div>
+          <div className="Loading"></div>
         );
       }, [viewer])}
       {(reader || writer) && (

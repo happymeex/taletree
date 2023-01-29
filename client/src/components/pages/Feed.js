@@ -75,7 +75,7 @@ const Feed = ({ userName, viewer, goTo, popupHandlers }) => {
             popupHandlers={popupHandlers}
           />
         ) : (
-          <div className="Loading">Loading...</div>
+          <div className="Loading"></div>
         )}
       </div>
       {viewer._id && <WriteNewSnippetButton onClick={toggleSnippetWriter} />}

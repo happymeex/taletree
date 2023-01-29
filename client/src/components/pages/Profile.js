@@ -57,7 +57,7 @@ const Profile = ({ profileId, viewer, goTo, popupHandlers }) => {
   return (
     <>
       {!snippetData || !authorToPic ? (
-        <div className="Loading">Loading</div>
+        <div className="Loading"></div>
       ) : (
         <div className="Profile-container">
           <ProfilePersonalInfo

@@ -59,11 +59,7 @@ const FollowButton = ({ profileId, initialState }) => {
   };
   return (
     <div className="FollowButton u-clickable" onClick={toggleFollow}>
-      {loading ? (
-        <div className="Loading">loading...</div>
-      ) : (
-        <span>{following ? "Unfollow" : "Follow"}</span>
-      )}
+      {loading ? <div className="Loading"></div> : <span>{following ? "Unfollow" : "Follow"}</span>}
     </div>
   );
 };
