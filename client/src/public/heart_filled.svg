@@ -8,7 +8,7 @@
    version="1.1"
    id="svg5"
    inkscape:version="1.2.1 (1:1.2.1+202210291243+9c6d41e410)"
-   sodipodi:docname="drawing.svg"
+   sodipodi:docname="filled_drawing.svg"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -25,8 +25,8 @@
      inkscape:document-units="mm"
      showgrid="false"
      inkscape:zoom="1.0708779"
-     inkscape:cx="450.098"
-     inkscape:cy="380.52891"
+     inkscape:cx="387.53251"
+     inkscape:cy="398.27136"
      inkscape:window-width="1846"
      inkscape:window-height="1016"
      inkscape:window-x="74"
@@ -44,15 +44,19 @@
        transform="matrix(0.97495786,0,0,0.95864193,4.6411511,0.04642816)"
        style="stroke-width:14.2313;stroke-dasharray:none">
       <path
-         style="fill:none;stroke:#7a8a7b;stroke-width:14.2313;stroke-linecap:round;stroke-dasharray:none;stroke-opacity:1"
+         style="fill:#b93e55;stroke:#b93e55;stroke-width:14.2313;stroke-linecap:round;stroke-dasharray:none;stroke-opacity:1;fill-opacity:1"
          d="M 97.843934,54.043105 C 114.78576,27.530869 131.16944,14.454339 157.13579,20.103217 c 25.64053,5.966935 44.50833,35.537546 30.22588,69.713063 -11.58668,27.725 -48.8422,62.01159 -89.517736,99.83643"
          id="path9065"
          sodipodi:nodetypes="ccsc" />
       <path
-         style="fill:none;stroke:#7a8a7b;stroke-width:14.2313;stroke-linecap:round;stroke-dasharray:none;stroke-opacity:1"
+         style="fill:#b93e55;stroke:#b93e55;stroke-width:14.2313;stroke-linecap:round;stroke-dasharray:none;stroke-opacity:1;fill-opacity:1"
          d="M 97.498495,54.043105 C 80.556761,27.530869 64.173174,14.454339 38.206971,20.103217 12.566588,26.070152 -6.3011606,55.640763 7.9812632,89.81628 c 11.5866128,27.725 48.8419228,62.01159 89.5172318,99.83643"
          id="path9067"
          sodipodi:nodetypes="ccsc" />
     </g>
+    <path
+       style="fill:#b93e55;fill-opacity:1;stroke:#b93e55;stroke-width:10.0603;stroke-linecap:round;stroke-opacity:1"
+       d="M 100.06076,178.63822 99.884166,47.955826"
+       id="path13694" />
   </g>
 </svg>

@@ -1,15 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "@reach/router";
-import { navigate } from "@reach/router";
 import "./SingleSnippet.css";
 import Icon from "./Icons.js";
-import ModalBackground from "./ModalBackground";
-import ThreadReader from "./ThreadReader";
-import menuUp from "../../public/menu_up.svg";
 import heart from "../../public/heart.svg";
-import bookmark from "../../public/bookmark_unmarked.svg";
-import filledBookmark from "../../public/bookmark_marked.svg";
-import filledHeart from "../../public/filled_heart.svg";
+import bookmark from "../../public/bookmark.svg";
+import sprout from "../../public/sprout.svg";
+import filledBookmark from "../../public/bookmark_filled.svg";
+import filledHeart from "../../public/heart_filled.svg";
 import "../../utilities.css";
 import "../pages/Profile.css";
 import { post } from "../../utilities.js";
@@ -18,8 +14,6 @@ import {
   DEFAULT_AUTHOR_NAME_FONT_SIZE,
   DEFAULT_CONTENT_FONT_SIZE,
 } from "../../utils/treeview.utils";
-
-const NO_REDIRECT_TO_TREEVIEW = new Set(["SingleSnippet-author", "SingleSnippet-iconBar"]);
 
 /**
  *
@@ -93,14 +87,15 @@ const SingleSnippet = (props) => {
   const style = props.treeStyle
     ? props.treeStyle.containerStyle
     : isToTree
-    ? { backgroundColor: `rgba(0,0,0,0.15)`, cursor: `pointer` }
+    ? { backgroundColor: `rgba(0,0,0,0.1)`, cursor: `pointer` }
     : {};
   const iconBarStyle = props.treeStyle ? props.treeStyle.iconBarStyle : {};
   const clickHandler = props.treeStyle
     ? props.treeStyle.onClick
     : isToTree
     ? () => {
-        props.goTo.treeView(props._id);
+        props.popupHandlers.setContent([props.content]);
+        props.popupHandlers.toggle("reader");
       }
     : () => null;
 
@@ -124,19 +119,20 @@ const SingleSnippet = (props) => {
           setIsToTree(false);
         }}
       >
-        {props.viewerId && (
-          <div className="SingleSnippet-iconBar u-flex-end" style={iconBarStyle}>
+        <div className="SingleSnippet-iconBar u-flex-end" style={iconBarStyle}>
+          {!props.treeStyle && (
             <Icon
               showByDefault={isHover || props.showIconBar}
-              imgOn={menuUp}
-              imgOff={menuUp}
+              imgOn={sprout}
+              imgOff={sprout}
               isActive={false}
               scale={scale}
               toggleActive={(c) => {
-                props.popupHandlers.setContent([props.content]);
-                props.popupHandlers.toggle("reader");
+                props.goTo.treeView(props._id);
               }}
             />
+          )}
+          {props.viewerId && (
             <Icon
               showByDefault={isHover || props.showIconBar}
               imgOn={filledHeart}
@@ -153,6 +149,8 @@ const SingleSnippet = (props) => {
                 });
               }}
             />
+          )}
+          {props.viewerId && (
             <Icon
               showByDefault={isHover || props.showIconBar}
               imgOn={filledBookmark}
@@ -169,8 +167,9 @@ const SingleSnippet = (props) => {
                 });
               }}
             />
-          </div>
-        )}
+          )}
+        </div>
+
         <div className="SingleSnippet-displayBox u-flex">
           {props.showAuthor ? (
             <SingleSnippetAuthorInfo
