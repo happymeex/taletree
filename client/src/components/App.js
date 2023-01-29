@@ -126,7 +126,12 @@ const App = () => {
       {useMemo(() => {
         return viewer ? (
           <>
-            <NavBar handleLogin={handleLogin} handleLogout={handleLogout} viewer={viewer} />
+            <NavBar
+              handleLogin={handleLogin}
+              handleLogout={handleLogout}
+              viewer={viewer}
+              goTo={goTo}
+            />
             <Router>
               <Feed
                 path="/"
