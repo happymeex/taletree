@@ -260,8 +260,9 @@ const SnippetDisplay = (props) => {
   if (searchInput !== "") {
     snippetList = snippetList.filter((snippet) => {
       return (
-        snippet.authorName.toLowerCase().includes(searchInput.toLowerCase()) ||
-        snippet.content.toLowerCase().includes(searchInput.toLowerCase())
+        snippet.authorName != "GOD" &&
+        (snippet.authorName.toLowerCase().includes(searchInput.toLowerCase()) ||
+          snippet.content.toLowerCase().includes(searchInput.toLowerCase()))
       );
     });
   }
