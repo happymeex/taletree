@@ -77,8 +77,10 @@ router.post("/new-tree", (req, res) => {
 router.get("/snippets", (req, res) => {
   console.log(`api called, grabbing several snippets for user with id ${req.query.userId}`);
   const getSnippets = async () => {
-    const likedSnippets = await Snippet.find().sort({ numLikes: -1 });
-    const recentSnippets = await Snippet.find().sort();
+    const likedSnippets = await Snippet.find({ _id: { $ne: "63d04ff67f9ad37d137f7750" } }).sort({
+      numLikes: -1,
+    });
+    const recentSnippets = await Snippet.find({ _id: { $ne: "63d04ff67f9ad37d137f7750" } }).sort();
     //res.send({ 1: likedSnippets, 0: recentSnippets });
     res.send([
       { tabName: "New", tabData: recentSnippets },
