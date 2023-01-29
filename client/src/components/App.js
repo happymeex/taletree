@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { isRedirect, Router } from "@reach/router";
 import jwt_decode from "jwt-decode";
 
@@ -39,6 +39,7 @@ const App = () => {
   useEffect(() => {
     get("/api/whoami").then(async (user) => {
       if (user._id) {
+        console.log("got user!");
         // they are registed in the database, and currently logged in.
         //setUserId(user._id);
         await get("/api/profile", { id: user._id }).then((user) => {
@@ -85,7 +86,7 @@ const App = () => {
 
   const goToProfile = (id) => {
     navigate(`/profile/${id}`);
-    if (!viewer._id) window.location.reload();
+    window.location.reload();
   };
 
   const goToTreeView = (id) => {
@@ -119,36 +120,38 @@ const App = () => {
 
   return (
     <>
-      {viewer ? (
-        <>
-          <NavBar handleLogin={handleLogin} handleLogout={handleLogout} viewer={viewer} />
-          <Router>
-            <Feed
-              path="/"
-              handleLogin={handleLogin}
-              handleLogout={handleLogout}
-              viewer={viewer}
-              goTo={goTo}
-              popupHandlers={popupHandlers}
-            />
-            <TreeView
-              path="/treeview/:snippetId"
-              viewer={viewer}
-              goTo={goTo}
-              popupHandlers={popupHandlers}
-            />
-            <Profile
-              path="/profile/:profileId"
-              viewer={viewer}
-              goTo={goTo}
-              popupHandlers={popupHandlers}
-            />
-            <NotFound default />
-          </Router>
-        </>
-      ) : (
-        <div className="Loading">Loading...</div>
-      )}
+      {useMemo(() => {
+        return viewer ? (
+          <>
+            <NavBar handleLogin={handleLogin} handleLogout={handleLogout} viewer={viewer} />
+            <Router>
+              <Feed
+                path="/"
+                handleLogin={handleLogin}
+                handleLogout={handleLogout}
+                viewer={viewer}
+                goTo={goTo}
+                popupHandlers={popupHandlers}
+              />
+              <TreeView
+                path="/treeview/:snippetId"
+                viewer={viewer}
+                goTo={goTo}
+                popupHandlers={popupHandlers}
+              />
+              <Profile
+                path="/profile/:profileId"
+                viewer={viewer}
+                goTo={goTo}
+                popupHandlers={popupHandlers}
+              />
+              <NotFound default />
+            </Router>
+          </>
+        ) : (
+          <div className="Loading">Loading...</div>
+        );
+      }, [viewer])}
       {(reader || writer) && (
         <ModalBackground
           onClose={() => {
