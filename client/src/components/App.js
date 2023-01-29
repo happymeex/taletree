@@ -24,6 +24,7 @@ const ANONYMOUS_VIEWER = {
   pictureURL: null,
   bookmarks: new Set(),
   favorites: new Set(),
+  friends: new Set(),
 };
 
 /**
@@ -49,6 +50,7 @@ const App = () => {
             pictureURL: user.pictureURL,
             bookmarks: new Set(user.bookmarks),
             favorites: new Set(user.favorites),
+            friends: new Set(user.friends),
           });
         });
       } else setViewer(ANONYMOUS_VIEWER);
@@ -74,6 +76,7 @@ const App = () => {
         pictureURL: user.pictureURL,
         bookmarks: new Set(user.bookmarks),
         favorites: new Set(user.favorites),
+        friends: new Set(user.friends),
       });
       post("/api/initsocket", { socketid: socket.id });
     });

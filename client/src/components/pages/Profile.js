@@ -61,9 +61,11 @@ const Profile = ({ profileId, viewer, goTo, popupHandlers }) => {
       ) : (
         <div className="Profile-container">
           <ProfilePersonalInfo
+            profileId={profileId}
             name={data.name}
             bio={data.bio}
             profilePicURL={data.pictureURL}
+            viewer={viewer}
             isViewer={viewer._id === profileId}
             allFriends={data.friends}
             goTo={goTo}

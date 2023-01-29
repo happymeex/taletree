@@ -21,6 +21,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Nunito&display=swap");
 
 :root {
+  --primary--light: #bbedcc;
   --primary: #7ae6a0;
   --primary--dim: #9dc9a5;
   --primary--dark: #3c4d3f;

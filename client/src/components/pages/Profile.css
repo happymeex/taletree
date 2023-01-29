@@ -98,3 +98,19 @@
 .FriendsViewer-header {
   font-size: var(--xl);
 }
+
+.FollowButton {
+  margin: var(--m) 0;
+  padding: var(--xs) var(--s);
+  border-radius: var(--xs);
+  outline: 1px solid var(--primary--dim);
+  background-color: var(--primary--light);
+}
+
+.FollowButton:hover {
+  filter: brightness(0.95);
+}
+
+.FollowButton > span {
+  color: var(--primary--dark);
+}
