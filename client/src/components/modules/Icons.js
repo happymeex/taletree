@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import "./Icons.css";
 
-let TOOLTIPS = {
-  Heart: "Save to favorites",
-  Bookmark: "Save to bookmarks",
-  Sprout: "View full tree",
+const getTooltip = (desc, active) => {
+  if (desc === "Sprout") return "View full tree";
+  return (active ? "Saved" : "Save") + " to " + (desc === "Heart" ? "favorites" : "bookmarks");
 };
 
 /**
@@ -41,7 +40,7 @@ const Icon = ({ showByDefault, imgOn, imgOff, isActive, toggleActive, desc }) =>
           setIsHover(false);
         }}
       ></img>
-      <div className="Icon-tooltip">{TOOLTIPS[desc]}</div>
+      <div className="Icon-tooltip">{getTooltip(desc, active)}</div>
     </div>
   ) : (
     <></>
