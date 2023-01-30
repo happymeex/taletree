@@ -7,7 +7,7 @@ input[type="text"] {
   background: transparent;
   font-family: inherit;
   font-weight: inherit;
-  font-size: var(--m);
+  font-size: 20px;
   background-color: var(--lightgrey);
   padding: var(--m);
   width: 100%;

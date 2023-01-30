@@ -93,7 +93,7 @@ const SingleSnippet = (props) => {
   const style = props.treeStyle
     ? props.treeStyle.containerStyle
     : isToTree
-    ? { backgroundColor: `rgba(0,0,0,0.1)`, cursor: `pointer` }
+    ? { backgroundColor: `rgba(0,0,0,0.08)`, cursor: `pointer` }
     : {};
   const clickHandler = props.treeStyle
     ? props.treeStyle.onClick
