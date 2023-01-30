@@ -76,7 +76,7 @@ router.post("/new-tree", (req, res) => {
 
 router.get("/snippets", (req, res) => {
   console.log(`api called, grabbing several snippets for user with id ${req.query.userId}`);
-  const userPresent = req.query.userId !== null;
+  const userPresent = req.query.userId !== "null";
   const getSnippets = async () => {
     const likedSnippets = await Snippet.find({ _id: { $ne: "63d04ff67f9ad37d137f7750" } }).sort({
       numLikes: 1,
@@ -90,7 +90,6 @@ router.get("/snippets", (req, res) => {
       { tabName: "New", tabData: recentSnippets },
       { tabName: "Most Popular", tabData: likedSnippets },
     ];
-
     if (userPresent) {
       const user = await User.findById(req.query.userId);
       const friends = new Set(user.friends);
