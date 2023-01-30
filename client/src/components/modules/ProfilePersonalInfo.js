@@ -135,18 +135,17 @@ const ProfilePersonalInfo = (props) => {
             initialState={props.viewer.friends.has(props.profileId)}
           />
         )}
-        {props.profileSettings.showFollowing ||
-          (props.profileId === props.viewer._id && (
-            <div className="Profile-friendsDisplayBox u-flexColumn">
-              <div
-                className="Profile-friendsHeader ProfileLeft-separator u-flex u-bold"
-                onClick={togglePopupViewer}
-              >
-                Following ({props.allFriends.length})
-              </div>
-              <div className="Profile-smallProfileDisplayBox u-flex">{picList}</div>
+        {(props.profileSettings.showFollowing || props.profileId === props.viewer._id) && (
+          <div className="Profile-friendsDisplayBox u-flexColumn">
+            <div
+              className="Profile-friendsHeader ProfileLeft-separator u-flex u-bold"
+              onClick={togglePopupViewer}
+            >
+              Following ({props.allFriends.length})
             </div>
-          ))}
+            <div className="Profile-smallProfileDisplayBox u-flex">{picList}</div>
+          </div>
+        )}
       </div>
 
       {friendsViewer && (
