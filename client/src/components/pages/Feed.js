@@ -37,7 +37,7 @@ const Feed = ({ userName, viewer, goTo, popupHandlers }) => {
       setAuthorToPic(await get("/api/profile-pictures", { userIds: authorIds }));
     };
     queryDB();
-  }, []);
+  }, [snippets]);
 
   const addPost = (input) => {
     const writeToDB = async () => {

@@ -82,9 +82,11 @@ const SingleSnippetContentBox = ({ content, search }) => {
  *    specified for TreeView snippets. Contains all style, sizing data
  * @param {Function} updateLocalViewer handler function passed in to update the viewer's favs/bookmarks in whatever parent component
  * @param {Object} goTo
+ * @param {Number} numLikes number of likes
  * @param {{toggle: Function, setContentGenerator: Function}} popupHandlers
  */
 const SingleSnippet = (props) => {
+  const [likes, setLikes] = useState(props.numLikes);
   const [isHover, setIsHover] = useState(false);
   const [isToTree, setIsToTree] = useState(false); //if true, then clicking redirects to treeview
 
@@ -147,21 +149,27 @@ const SingleSnippet = (props) => {
               />
             )}
             {props.viewerId && (
-              <Icon
-                showByDefault={isHover || props.showIconBar}
-                imgOn={filledHeart}
-                imgOff={heart}
-                isActive={props.status.isFavorite}
-                toggleActive={(currState) => {
-                  props.updateLocalViewer("favorites", props._id, currState ? "delete" : "add");
-                  post("/api/snippet-attribs", {
-                    _id: props._id,
-                    state: !currState,
-                    attrib: "favorites",
-                    viewerId: props.viewerId,
-                  });
-                }}
-              />
+              <div>
+                <Icon
+                  showByDefault={isHover || props.showIconBar}
+                  imgOn={filledHeart}
+                  imgOff={heart}
+                  isActive={props.status.isFavorite}
+                  toggleActive={(currState) => {
+                    props.updateLocalViewer("favorites", props._id, currState ? "delete" : "add");
+                    console.log(`likes ${likes}`);
+                    setLikes(currState ? likes - 1 : likes + 1);
+                    console.log(`likes ${likes}`);
+                    post("/api/snippet-attribs", {
+                      _id: props._id,
+                      state: !currState,
+                      attrib: "favorites",
+                      viewerId: props.viewerId,
+                    });
+                  }}
+                />
+                <div className="SingleSnippet-likes">{likes}</div>
+              </div>
             )}
             {props.viewerId && (
               <Icon
