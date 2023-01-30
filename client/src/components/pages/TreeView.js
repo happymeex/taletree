@@ -9,6 +9,7 @@ import {
   getIncomingLine,
   getOutgoingLine,
   getScaledDelta,
+  getVerticalDelta,
   ROOT,
   ZOOM_SENSITIVITY,
 } from "../../utils/treeview.utils";
@@ -105,7 +106,6 @@ const TreeView = (props) => {
   };
 
   const handleMouseDown = (e) => {
-    console.log("pos: " + pos.x + " " + pos.y);
     if (!ALLOW_HIGHLIGHT(e.target.className)) e.preventDefault();
     if (ALLOW_DRAG(e.target.className)) {
       setIsDrag(true);
@@ -168,19 +168,23 @@ const TreeView = (props) => {
   };
 
   const alignCurrentThread = () => {
+    console.log("target: " + target + " viewTarget: " + viewTarget);
     const newCoords = getCoords(snippets, target);
     const newThread = getThread(snippets, target);
     setThread(newThread);
+    const newY = getVerticalDelta(coords[target].y, coords[viewTarget].y, scale);
     setDelta((d) => {
-      return { x: 0, y: d.y };
+      return { x: 0, y: d.y - newY };
     });
     setCoords(newCoords);
-    setViewTarget(target);
+    setViewTarget((vt) => {
+      console.log("setting viewTarget to " + target);
+      return target;
+    });
   };
 
   const handleWheel = (e) => {
     const scaleRatio = 1 - Math.sign(e.deltaY) * ZOOM_SENSITIVITY;
-    console.log("scale ratio: " + scaleRatio);
     setDelta((d) => getScaledDelta(d, pos, scaleRatio));
     setScale((x) => scaleRatio * x);
   };
@@ -256,7 +260,7 @@ const TreeView = (props) => {
                 <GenericButton text="Read" onClick={toggleThreadReader} />
               </>
             ),
-            [snippets, target]
+            [snippets, target, viewTarget, coords]
           )}
         </TreeViewMenu>
         <>{snippetList}</>

@@ -48,8 +48,6 @@ const getCoords = (tree, targetId) => {
     }
   }
 
-  console.log("rootid of this tree: " + rootId);
-
   let threadIndices = []; //ith entry indicates the ``horizontal'' index of ith snippet in its corresponding level
   let levels = [];
   let layer = [{ id: rootId, l: true, r: true }];
@@ -124,13 +122,11 @@ const getCoords = (tree, targetId) => {
     }
   }
 
-  console.log("returning:");
   const { x, y } = coords[targetId];
   for (const id in coords) {
     coords[id].x -= x;
     coords[id].y -= y;
   }
-  console.log(coords);
   return coords;
 };
 
@@ -229,6 +225,10 @@ const getScaledDelta = (delta, zoomOrigin, scale) => {
   };
 };
 
+const getVerticalDelta = (y1, y2, scale) => {
+  return (y2 - y1) * (2 * DEFAULT_LINE_HEIGHT + DEFAULT_HEIGHT) * DEFAULT_SCALE * scale;
+};
+
 export {
   ROOT,
   ZOOM_SENSITIVITY,
@@ -245,4 +245,5 @@ export {
   assembleStyle,
   getScaledDelta,
   getSnippetBorder,
+  getVerticalDelta,
 };

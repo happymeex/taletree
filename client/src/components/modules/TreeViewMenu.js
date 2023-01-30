@@ -5,8 +5,6 @@ import menuUp from "../../public/menu_up.svg";
 import menuDown from "../../public/menu_down.svg";
 
 const TreeViewMenu = React.memo((props) => {
-  console.log("menu: ");
-  console.log(props.children);
   const [isOpen, setIsOpen] = useState(true);
   return (
     <div id="TreeViewMenu" className="TreeViewMenu-container u-bringToFront">
@@ -24,7 +22,5 @@ const TreeViewMenu = React.memo((props) => {
     </div>
   );
 });
-
-
 
 export default TreeViewMenu;
