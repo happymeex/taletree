@@ -78,15 +78,6 @@
   cursor: pointer;
 }
 
-.PopupViewer-container {
-  background-color: white;
-  max-height: 60vh;
-  overflow-y: scroll;
-  border-radius: var(--s);
-  padding: var(--m);
-  gap: var(--s);
-}
-
 .ProfileCard-container {
   gap: var(--m);
 }
@@ -94,10 +85,6 @@
 .ProfileCard-friendName:hover {
   cursor: pointer;
   text-decoration: underline;
-}
-
-.FriendsViewer-header {
-  font-size: var(--xl);
 }
 
 .FollowButton {

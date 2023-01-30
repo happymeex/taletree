@@ -7,6 +7,15 @@ const socketManager = require("./server-socket");
 const CLIENT_ID = "614278991840-38k97pg151j5p5vp8is590n9fom48eko.apps.googleusercontent.com";
 const client = new OAuth2Client(CLIENT_ID);
 
+const DEFAULT_SETTINGS = {
+  authorVisible: true,
+  showBookmarks: false,
+  showContributions: true,
+  showFavorites: true,
+  goToTreeViewAfterPost: true,
+  showFollowing: true,
+};
+
 // accepts a login token from the frontend, and verifies that it's legit
 function verify(token) {
   return client
@@ -31,6 +40,8 @@ function getOrCreateUser(user) {
       contribs: [],
       favorites: [],
       bookmarks: [],
+      friends: [],
+      settings: DEFAULT_SETTINGS,
     });
 
     return newUser.save();

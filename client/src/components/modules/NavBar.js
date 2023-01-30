@@ -7,25 +7,25 @@ import "./NavBar.css";
 
 const GOOGLE_CLIENT_ID = "614278991840-38k97pg151j5p5vp8is590n9fom48eko.apps.googleusercontent.com";
 
-const NavBarDropdown = ({ logout, viewer }) => {
-  const navigateToProfile = () => {
-    navigate(`/profile/${viewer._id}`, {
-      state: { viewer: viewer },
-    });
-  };
+const NavBarDropdown = ({ logout, viewer, goTo, toggleSettings }) => {
   const openSettings = () => {
     console.log("TODO: Settings popup");
   };
   return (
     <div className="NavBar-dropdownContainer">
-      <GenericButton text="Profile" onClick={navigateToProfile} />
-      <GenericButton text="Settings" onClick={openSettings} />
+      <GenericButton
+        text="Profile"
+        onClick={() => {
+          goTo.profile(viewer._id);
+        }}
+      />
+      <GenericButton text="Settings" onClick={toggleSettings} />
       <GenericButton text="Log out" onClick={logout} />
     </div>
   );
 };
 
-const NavBarButton = ({ profilePicURL, logout, viewer }) => {
+const NavBarButton = ({ profilePicURL, logout, viewer, goTo, toggleSettings }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   useEffect(() => {
     window.addEventListener("click", (e) => {
@@ -39,12 +39,19 @@ const NavBarButton = ({ profilePicURL, logout, viewer }) => {
         src={profilePicURL}
         onClick={() => setDropdownOpen((s) => !s)}
       ></img>
-      {dropdownOpen && <NavBarDropdown logout={logout} viewer={viewer} />}
+      {dropdownOpen && (
+        <NavBarDropdown
+          logout={logout}
+          viewer={viewer}
+          goTo={goTo}
+          toggleSettings={toggleSettings}
+        />
+      )}
     </>
   );
 };
 
-const NavBar = ({ handleLogin, handleLogout, viewer }) => {
+const NavBar = ({ handleLogin, handleLogout, viewer, goTo, toggleSettings }) => {
   return (
     <div className="NavBar-container u-flex-spaceBetween">
       <div
@@ -73,6 +80,8 @@ const NavBar = ({ handleLogin, handleLogout, viewer }) => {
                 window.location.reload();
               }}
               viewer={viewer}
+              goTo={goTo}
+              toggleSettings={toggleSettings}
             />
           ) : (
             <GoogleLogin onSuccess={handleLogin} onError={(err) => console.log(err)} />

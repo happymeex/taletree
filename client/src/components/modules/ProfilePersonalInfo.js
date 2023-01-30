@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "../pages/Profile.css";
+import "./Popup.css";
 import { get, post } from "../../utilities";
 import ModalBackground from "../modules/ModalBackground";
 
@@ -11,8 +12,6 @@ import ModalBackground from "../modules/ModalBackground";
  * @param {String} size? optional parameter to control size
  */
 const SmallProfilePic = ({ imgURL, onClick, size }) => {
-  console.log("rendering small");
-  console.log("friend URL: " + imgURL);
   return (
     <img
       className="Profile-smallProfilePic"
@@ -68,6 +67,7 @@ const FollowButton = ({ profileId, initialState }) => {
  * left (or top) portion of profile page with name, bio, friends, groups
  *
  * @param {String} profileId profile's id
+ * @param {Settings} profileSettings
  * @param {String} name profile's name
  * @param {String} bio profile's bio
  * @param {Object} viewer
@@ -82,6 +82,7 @@ const ProfilePersonalInfo = (props) => {
   console.log(props.allFriends);
 
   useEffect(() => {
+    console.log(props.profileSettings);
     setFriendsData([]);
     setPopupViewer(false);
     const getFriends = async () => {
@@ -90,8 +91,8 @@ const ProfilePersonalInfo = (props) => {
       console.log(res);
       setFriendsData(res);
     };
-    getFriends();
-  }, [props]);
+    if (props.profileSettings.showFollowing || props.profileId === props.viewer._id) getFriends();
+  }, []);
 
   const togglePopupViewer = () => {
     setPopupViewer((s) => !s);
@@ -134,15 +135,17 @@ const ProfilePersonalInfo = (props) => {
             initialState={props.viewer.friends.has(props.profileId)}
           />
         )}
-        <div className="Profile-friendsDisplayBox u-flexColumn">
-          <div
-            className="Profile-friendsHeader ProfileLeft-separator u-flex u-bold"
-            onClick={togglePopupViewer}
-          >
-            Following ({props.allFriends.length})
+        {(props.profileSettings.showFollowing || props.profileId === props.viewer._id) && (
+          <div className="Profile-friendsDisplayBox u-flexColumn">
+            <div
+              className="Profile-friendsHeader ProfileLeft-separator u-flex u-bold"
+              onClick={togglePopupViewer}
+            >
+              Following ({props.allFriends.length})
+            </div>
+            <div className="Profile-smallProfileDisplayBox u-flex">{picList}</div>
           </div>
-          <div className="Profile-smallProfileDisplayBox u-flex">{picList}</div>
-        </div>
+        )}
       </div>
 
       {friendsViewer && (
@@ -151,9 +154,7 @@ const ProfilePersonalInfo = (props) => {
           children={
             <PopupViewer>
               {" "}
-              <div className="FriendsViewer-header u-flex-justifyCenter u-flex-alignCenter">
-                Following
-              </div>
+              <div className="Popup-header u-flex-justifyCenter u-flex-alignCenter">Following</div>
               {cardList}
             </PopupViewer>
           }

@@ -4,8 +4,14 @@ import ProfilePersonalInfo from "../modules/ProfilePersonalInfo";
 import SnippetDisplay from "../modules/SnippetDisplay";
 
 import "./Profile.css";
+import { checkSettings, populateSettings } from "../../utils/user.utils";
 
 const MAX_SNIPPETS_PER_PAGE = 10;
+const TABS = [
+  ["Contributions", "contribs"],
+  ["Favorites", "favorites"],
+  ["Bookmarks", "bookmarks"],
+];
 
 /**
  * Profile page.
@@ -20,6 +26,7 @@ const Profile = ({ profileId, viewer, goTo, popupHandlers }) => {
   const [data, setData] = useState(undefined);
   const [snippetData, setSnippetData] = useState(undefined);
   const [authorToPic, setAuthorToPic] = useState(undefined);
+  const [profileSettings, setProfileSettings] = useState(undefined);
 
   useEffect(() => {
     console.log("viewing profile of user " + profileId);
@@ -27,22 +34,25 @@ const Profile = ({ profileId, viewer, goTo, popupHandlers }) => {
       const res = await get("/api/profile", { id: profileId });
       console.log("got profile data:");
       console.log(res);
+      const settings = checkSettings(res.settings, res._id);
+      setProfileSettings(settings);
       setData(res);
-      return res;
+      return { profileData: res, settings: settings };
     };
-    const getProfileSnippetData = async (profileData) => {
-      let params = {
-        Contributions: profileData.contribs,
-        Favorites: profileData.favorites,
-      };
-      if (profileId === viewer._id) params.Bookmarks = profileData.bookmarks;
+    const getProfileSnippetData = async ({ profileData, settings }) => {
+      let visibleTabs =
+        profileId === viewer._id ? TABS : TABS.filter((tab) => settings["show" + tab[0]]);
+      let params = {};
+      for (const tab of visibleTabs) params[tab[0]] = profileData[tab[1]];
+
       const res = await get("/api/profile-snippet-data", params);
-      setSnippetData(
-        [
-          { tabName: "Contributions", tabData: res.Contributions },
-          { tabName: "Favorites", tabData: res.Favorites },
-        ].concat(profileId === viewer._id ? [{ tabName: "Bookmarks", tabData: res.Bookmarks }] : [])
-      );
+      visibleTabs = visibleTabs.map((tab) => {
+        return {
+          tabName: tab[0],
+          tabData: res[tab[0]],
+        };
+      });
+      setSnippetData(visibleTabs);
       let userIds = [];
       for (const field in res) {
         for (const snippetObj of res[field]) userIds.push(snippetObj.authorId);
@@ -56,12 +66,13 @@ const Profile = ({ profileId, viewer, goTo, popupHandlers }) => {
 
   return (
     <>
-      {!snippetData || !authorToPic ? (
+      {!snippetData || !authorToPic || !profileSettings ? (
         <div className="Loading"></div>
       ) : (
         <div className="Profile-container">
           <ProfilePersonalInfo
             profileId={profileId}
+            profileSettings={profileSettings}
             name={data.name}
             bio={data.bio}
             profilePicURL={data.pictureURL}

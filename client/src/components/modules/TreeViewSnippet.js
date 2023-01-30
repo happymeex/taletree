@@ -19,6 +19,7 @@ import { getSnippetBorder } from "../../utils/treeview.utils";
  * @param {Function} onClick
  * @param {Number} scale
  * @param {String} viewerId
+ * @param {Boolean} showAuthor
  * @param {{isFavorite: Boolean, isBookmark: Boolean}} status
  * @param {Function} updateLocalViewer handler function to update viewer's favs/bookmarks in the parent component's viewer state
  * @param {Object} goTo navigation functions
@@ -61,7 +62,7 @@ const TreeViewSnippet = (props) => {
         author={props.author}
         content={props.content}
         _id={props._id}
-        showAuthor={true}
+        showAuthor={props.showAuthor}
         viewerId={props.viewerId}
         showIconBar={true}
         treeStyle={snippetStyle}

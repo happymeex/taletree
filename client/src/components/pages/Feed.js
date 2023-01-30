@@ -25,6 +25,7 @@ const WriteNewSnippetButton = ({ onClick }) => {
 const Feed = ({ userName, viewer, goTo, popupHandlers }) => {
   const [snippets, setSnippets] = useState(undefined);
   const [authorToPic, setAuthorToPic] = useState(undefined);
+  const [fetchAgain, setFetchAgain] = useState(false); //dummy state to trigger useEffect hook on new post
 
   useEffect(() => {
     const queryDB = async () => {
@@ -37,7 +38,7 @@ const Feed = ({ userName, viewer, goTo, popupHandlers }) => {
       setAuthorToPic(await get("/api/profile-pictures", { userIds: authorIds }));
     };
     queryDB();
-  }, [snippets]);
+  }, [fetchAgain]);
 
   const addPost = (input) => {
     const writeToDB = async () => {
@@ -50,6 +51,8 @@ const Feed = ({ userName, viewer, goTo, popupHandlers }) => {
           input: input,
           parentId: ROOT,
           treeId: treeId,
+        }).then(() => {
+          setFetchAgain((s) => !s);
         });
     };
     writeToDB();
