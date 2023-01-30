@@ -3,6 +3,7 @@ import "./Icons.css";
 
 const getTooltip = (desc, active) => {
   if (desc === "Sprout") return "View full tree";
+  if (desc === "Leaf") return active ? "Open writer" : "Close writer";
   return (active ? "Saved" : "Save") + " to " + (desc === "Heart" ? "favorites" : "bookmarks");
 };
 

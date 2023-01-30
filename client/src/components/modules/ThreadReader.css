@@ -6,7 +6,17 @@
   font-size: var(--l);
   box-sizing: border-box;
   padding: var(--m);
+  overflow-y: scroll;
+  border-radius: var(--s);
+}
+
+.ThreadReader-iconBar {
+  width: 100%;
+  height: var(--l);
+  gap: var(--s);
+}
+
+.ThreadReader-textContainer {
   gap: var(--xl);
   overflow: scroll;
-  border-radius: var(--s);
 }

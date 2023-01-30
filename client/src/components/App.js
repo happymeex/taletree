@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { isRedirect, Router } from "@reach/router";
+import { Router } from "@reach/router";
 import jwt_decode from "jwt-decode";
 
 import NotFound from "./pages/NotFound.js";
@@ -113,16 +113,13 @@ const App = () => {
 
   //passed down as a prop to the various pages, which will call the handlers to set
   //the appropriate states to open the needed popup
+  //params
   const popupHandlers = {
-    toggle: (popup, placeholder = "") => {
+    toggle: (popup) => {
       if (popup === "reader") {
-        if (reader) setReaderContent(undefined);
         setReader((s) => !s);
       } else if (popup === "writer") {
-        if (writer) {
-          setWriter(undefined);
-          setPostHandler(undefined);
-        } else setWriter(placeholder);
+        setWriter((s) => !s);
       }
     },
     setContent: (text) => {
@@ -135,7 +132,6 @@ const App = () => {
   };
 
   const toggleSettings = () => {
-    console.log("settings opened");
     setSettings((s) => !s);
   };
 
@@ -191,8 +187,10 @@ const App = () => {
         >
           {(reader || writer) && (
             <div className="ModalBackground-readerWriterWrapper">
-              {reader && readerContent && <ThreadReader content={readerContent} />}
-              {writer && postHandler && (
+              {reader && readerContent && (
+                <ThreadReader goTo={goTo} content={readerContent} popupHandlers={popupHandlers} />
+              )}
+              {writer && postHandler && writerPlaceholder && (
                 <WriteNewSnippet
                   onClose={() => {
                     setWriter(false);
@@ -200,7 +198,7 @@ const App = () => {
                     setPostHandler(undefined);
                   }}
                   onPost={postHandler}
-                  flavortext={writer}
+                  flavortext={writerPlaceholder}
                 />
               )}
             </div>

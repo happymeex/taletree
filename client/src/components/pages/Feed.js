@@ -62,10 +62,11 @@ const Feed = ({ userName, viewer, goTo, popupHandlers }) => {
   const toggleSnippetWriter = () => {
     //setWriter((s) => !s);
     const placeholder = getRandomPlaceholder("new");
-    popupHandlers.toggle("writer", placeholder);
+    popupHandlers.toggle("writer");
     popupHandlers.setWriteHandler((input) => {
       addPost(input);
     });
+    popupHandlers.setWriterPlaceholder(placeholder);
   };
   return (
     <div className="Feed-container u-flex-justifyCenter">

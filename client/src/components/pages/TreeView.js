@@ -124,22 +124,29 @@ const TreeView = (props) => {
     setThread(newThread);
   };
 
-  const toggleSnippetWriter = () => {
+  const toggleSnippetWriter = (toggleReader) => {
     //open reader along with writer
+    console.log("snippet writer toggler called, toggleReader: " + toggleReader);
     const placeholder = getRandomPlaceholder("append");
-    toggleThreadReader();
-    props.popupHandlers.toggle("writer", placeholder);
+    if (toggleReader) toggleThreadReader();
+    props.popupHandlers.toggle("writer");
     props.popupHandlers.setWriteHandler((input) => {
       handlePost(input);
     });
+    props.popupHandlers.setWriterPlaceholder(placeholder);
   };
 
   const toggleThreadReader = () => {
-    const content = getThread(snippets, target, false)
+    const text = getThread(snippets, target, false)
       .reverse()
       .map((id) => snippets[id].content);
+    const settings = {
+      openWriter: () => {
+        toggleSnippetWriter(false);
+      },
+    };
     props.popupHandlers.toggle("reader");
-    props.popupHandlers.setContent(content);
+    props.popupHandlers.setContent({ settings: settings, text: text });
   };
 
   const handlePost = (input) => {
@@ -256,7 +263,12 @@ const TreeView = (props) => {
             () => (
               <>
                 <GenericButton text="Read" onClick={toggleThreadReader} />
-                <GenericButton text="Write" onClick={toggleSnippetWriter} />
+                <GenericButton
+                  text="Write"
+                  onClick={() => {
+                    toggleSnippetWriter(true);
+                  }}
+                />
                 <GenericButton text="Align" onClick={alignCurrentThread} />
                 <GenericButton
                   text="Center"

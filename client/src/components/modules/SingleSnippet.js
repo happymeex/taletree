@@ -96,13 +96,17 @@ const SingleSnippet = (props) => {
     : isToTree
     ? { backgroundColor: `rgba(0,0,0,0.05)`, cursor: `pointer` }
     : {};
+
+  const toggleReader = () => {
+    const text = [props.content];
+    const settings = { snippetId: props._id };
+    props.popupHandlers.setContent({ settings: settings, text: text });
+    props.popupHandlers.toggle("reader");
+  };
   const clickHandler = props.treeStyle
     ? props.treeStyle.onClick
     : isToTree
-    ? () => {
-        props.popupHandlers.setContent([props.content]);
-        props.popupHandlers.toggle("reader");
-      }
+    ? toggleReader
     : () => null;
 
   const className =
