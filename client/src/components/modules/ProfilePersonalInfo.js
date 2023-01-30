@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "../pages/Profile.css";
+import "./Popup.css";
 import { get, post } from "../../utilities";
 import ModalBackground from "../modules/ModalBackground";
 
@@ -151,9 +152,7 @@ const ProfilePersonalInfo = (props) => {
           children={
             <PopupViewer>
               {" "}
-              <div className="FriendsViewer-header u-flex-justifyCenter u-flex-alignCenter">
-                Following
-              </div>
+              <div className="Popup-header u-flex-justifyCenter u-flex-alignCenter">Following</div>
               {cardList}
             </PopupViewer>
           }

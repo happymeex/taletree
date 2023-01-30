@@ -10,22 +10,20 @@ import NavBar from "./modules/NavBar";
 import ModalBackground from "./modules/ModalBackground.js";
 import ThreadReader from "./modules/ThreadReader.js";
 import WriteNewSnippet from "./modules/WriteNewSnippet.js";
+import SettingsPopup from "./modules/SettingsPopup.js";
 
 import "../utilities.css";
 
 import { socket } from "../client-socket.js";
 
 import { get, post } from "../utilities";
+import {
+  DEFAULT_SETTINGS,
+  ANONYMOUS_USER,
+  populateSettings,
+  initializeUser,
+} from "../utils/user.utils.js";
 import { navigate } from "@reach/router";
-
-const ANONYMOUS_VIEWER = {
-  _id: null,
-  name: null,
-  pictureURL: null,
-  bookmarks: new Set(),
-  favorites: new Set(),
-  friends: new Set(),
-};
 
 /**
  * Define the "App" component
@@ -34,6 +32,7 @@ const App = () => {
   const [viewer, setViewer] = useState(undefined);
   const [reader, setReader] = useState(false);
   const [writer, setWriter] = useState(false);
+  const [settings, setSettings] = useState(false);
   const [readerContent, setReaderContent] = useState(undefined);
   const [postHandler, setPostHandler] = useState(undefined);
 
@@ -43,17 +42,26 @@ const App = () => {
         console.log("got user!");
         // they are registed in the database, and currently logged in.
         //setUserId(user._id);
-        await get("/api/profile", { id: user._id }).then((user) => {
-          setViewer({
-            _id: user._id,
-            name: user.name,
-            pictureURL: user.pictureURL,
-            bookmarks: new Set(user.bookmarks),
-            favorites: new Set(user.favorites),
-            friends: new Set(user.friends),
-          });
+        get("/api/profile", { id: user._id }).then((user) => {
+          console.log("user: ");
+          console.log(user);
+          initializeUser(setViewer, user);
+          //let useDefaultSettings = false;
+          //if (!user.settings || Object.keys(user.settings).length <= 1) {
+          //  useDefaultSettings = true;
+          //  populateSettings(DEFAULT_SETTINGS);
+          //}
+          //setViewer({
+          //  _id: user._id,
+          //  name: user.name,
+          //  pictureURL: user.pictureURL,
+          //  bookmarks: new Set(user.bookmarks),
+          //  favorites: new Set(user.favorites),
+          //  friends: new Set(user.friends),
+          //  settings: useDefaultSettings ? DEFAULT_SETTINGS : user.settings,
+          //});
         });
-      } else setViewer(ANONYMOUS_VIEWER);
+      } else initializeUser(setViewer, ANONYMOUS_USER);
     });
   }, []);
 
@@ -70,14 +78,15 @@ const App = () => {
       //setUserName(name);
       //setProfilePicURL(user.pictureURL);
       window.location.reload();
-      setViewer({
-        _id: user._id,
-        name: user.name,
-        pictureURL: user.pictureURL,
-        bookmarks: new Set(user.bookmarks),
-        favorites: new Set(user.favorites),
-        friends: new Set(user.friends),
-      });
+      initializeUser(setViewer, user);
+      //setViewer({
+      //  _id: user._id,
+      //  name: user.name,
+      //  pictureURL: user.pictureURL,
+      //  bookmarks: new Set(user.bookmarks),
+      //  favorites: new Set(user.favorites),
+      //  friends: new Set(user.friends),
+      //});
       post("/api/initsocket", { socketid: socket.id });
     });
   };
@@ -121,6 +130,11 @@ const App = () => {
     },
   };
 
+  const toggleSettings = () => {
+    console.log("settings opened");
+    setSettings((s) => !s);
+  };
+
   return (
     <>
       {useMemo(() => {
@@ -131,6 +145,7 @@ const App = () => {
               handleLogout={handleLogout}
               viewer={viewer}
               goTo={goTo}
+              toggleSettings={toggleSettings}
             />
             <Router>
               <Feed
@@ -160,11 +175,12 @@ const App = () => {
           <div className="Loading"></div>
         );
       }, [viewer])}
-      {(reader || writer) && (
+      {(reader || writer || settings) && (
         <ModalBackground
           onClose={() => {
             setReader(false);
             setWriter(false);
+            setSettings(false);
             setReaderContent(undefined);
             setPostHandler(undefined);
           }}
@@ -179,6 +195,7 @@ const App = () => {
               onPost={postHandler}
             />
           )}
+          {settings && <SettingsPopup setViewer={setViewer} settings={viewer.settings} />}
         </ModalBackground>
       )}
     </>

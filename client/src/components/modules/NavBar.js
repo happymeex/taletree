@@ -7,7 +7,7 @@ import "./NavBar.css";
 
 const GOOGLE_CLIENT_ID = "614278991840-38k97pg151j5p5vp8is590n9fom48eko.apps.googleusercontent.com";
 
-const NavBarDropdown = ({ logout, viewer, goTo }) => {
+const NavBarDropdown = ({ logout, viewer, goTo, toggleSettings }) => {
   const openSettings = () => {
     console.log("TODO: Settings popup");
   };
@@ -19,13 +19,13 @@ const NavBarDropdown = ({ logout, viewer, goTo }) => {
           goTo.profile(viewer._id);
         }}
       />
-      <GenericButton text="Settings" onClick={openSettings} />
+      <GenericButton text="Settings" onClick={toggleSettings} />
       <GenericButton text="Log out" onClick={logout} />
     </div>
   );
 };
 
-const NavBarButton = ({ profilePicURL, logout, viewer, goTo }) => {
+const NavBarButton = ({ profilePicURL, logout, viewer, goTo, toggleSettings }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   useEffect(() => {
     window.addEventListener("click", (e) => {
@@ -39,12 +39,19 @@ const NavBarButton = ({ profilePicURL, logout, viewer, goTo }) => {
         src={profilePicURL}
         onClick={() => setDropdownOpen((s) => !s)}
       ></img>
-      {dropdownOpen && <NavBarDropdown logout={logout} viewer={viewer} goTo={goTo} />}
+      {dropdownOpen && (
+        <NavBarDropdown
+          logout={logout}
+          viewer={viewer}
+          goTo={goTo}
+          toggleSettings={toggleSettings}
+        />
+      )}
     </>
   );
 };
 
-const NavBar = ({ handleLogin, handleLogout, viewer, goTo }) => {
+const NavBar = ({ handleLogin, handleLogout, viewer, goTo, toggleSettings }) => {
   return (
     <div className="NavBar-container u-flex-spaceBetween">
       <div
@@ -74,6 +81,7 @@ const NavBar = ({ handleLogin, handleLogout, viewer, goTo }) => {
               }}
               viewer={viewer}
               goTo={goTo}
+              toggleSettings={toggleSettings}
             />
           ) : (
             <GoogleLogin onSuccess={handleLogin} onError={(err) => console.log(err)} />

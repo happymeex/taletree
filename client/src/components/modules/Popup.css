@@ -1,0 +1,44 @@
+.PopupViewer-container {
+  background-color: white;
+  max-height: 60vh;
+  overflow-y: scroll;
+  border-radius: var(--s);
+  padding: var(--m);
+  gap: var(--s);
+}
+
+.PopupViewer-large {
+  padding: var(--l) var(--xl);
+  gap: var(--m);
+}
+
+.Popup-header {
+  font-size: var(--xl);
+}
+
+.SettingsPopup-settingWrapper {
+  align-items: flex-start;
+  gap: var(--m);
+}
+
+.SettingsPopup-settingHeader {
+  font-size: var(--l);
+}
+
+.SettingsPopup-settingDescription {
+  font-size: var(--m);
+  color: var(--darkgrey);
+}
+
+.SettingsPopup-checkbox {
+  width: var(--l);
+  height: var(--l);
+  appearance: none;
+  cursor: pointer;
+  outline: 1px solid var(--primary--dark);
+  border-radius: var(--xs);
+}
+
+.SettingsPopup-checkbox:checked {
+  background-color: var(--primary);
+}

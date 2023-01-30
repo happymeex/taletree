@@ -23,8 +23,6 @@ const SEARCH_HIGHLIGHT_STYLE = {
  * @param {Function} goToProfile
  */
 const SingleSnippetAuthorInfo = ({ author, goToProfile, search }) => {
-  console.log("search is:");
-  console.log(search);
   return (
     <div className="SingleSnippet-authorInfo u-flexColumn u-flex-alignCenter u-flex-justifyCenter">
       <img

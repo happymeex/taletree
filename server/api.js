@@ -222,11 +222,26 @@ router.post("/follow", (req, res) => {
         viewer.save();
         console.log("Updated following list: ");
         console.log(viewer.friends);
-        res.send({});
+        res.status(200).send({});
       } else {
         res.status(404).send("profile not found");
         return;
       }
+    };
+    updateDB();
+  });
+});
+
+router.post("/update-settings", (req, res) => {
+  auth.ensureLoggedIn(req, res, () => {
+    const updateDB = async () => {
+      //allowing client to update another user's setting for now, since DB isn't populated yet
+      const id = req.body._id ? req.body._id : req.user._id;
+      const user = await User.findById(id);
+      user.settings = req.body.settings;
+      user.save().then(() => {
+        res.status(200).send({});
+      });
     };
     updateDB();
   });
