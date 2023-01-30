@@ -1,13 +1,14 @@
 .WriteNewSnippet-container {
   background-color: white;
   padding: var(--m);
-  width: 50%;
-  border-radius: var(--m);
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: var(--s);
   gap: var(--m);
 }
 .WriteNewSnippet-textbox {
   resize: none;
-  height: 30vh;
+  height: 20vh;
   font-family: inherit;
   font-weight: inherit;
   font-size: var(--l);

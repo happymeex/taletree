@@ -124,6 +124,8 @@ const TreeView = (props) => {
   };
 
   const toggleSnippetWriter = () => {
+    //open reader along with writer
+    toggleThreadReader();
     props.popupHandlers.toggle("writer");
     props.popupHandlers.setWriteHandler((input) => {
       handlePost(input);

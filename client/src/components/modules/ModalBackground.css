@@ -17,3 +17,14 @@
   right: var(--l);
   cursor: pointer;
 }
+
+.ReaderWriter-wrapper {
+  width: 50vw;
+  height: 100vh;
+  overflow-y: scroll;
+  gap: var(--m);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--s);
+}

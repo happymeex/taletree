@@ -2,7 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import "./WriteNewSnippet.css";
 
-const INITIAL_TEXTBOX_HEIGHT = 0.3 * window.innerHeight;
+const INITIAL_TEXTBOX_HEIGHT = 0.2 * window.innerHeight;
 const MAX_TEXTBOX_HEIGHT = 0.6 * window.innerHeight;
 
 /**

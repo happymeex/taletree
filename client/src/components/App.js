@@ -185,15 +185,20 @@ const App = () => {
             setPostHandler(undefined);
           }}
         >
-          {reader && readerContent && <ThreadReader content={readerContent} />}
-          {writer && postHandler && (
-            <WriteNewSnippet
-              onClose={() => {
-                setWriter(false);
-                setPostHandler(undefined);
-              }}
-              onPost={postHandler}
-            />
+          {(reader || writer) && (
+            <div className="ReaderWriter-wrapper">
+              {reader && readerContent && <ThreadReader content={readerContent} />}
+              {writer && postHandler && (
+                <WriteNewSnippet
+                  onClose={() => {
+                    setWriter(false);
+                    setReader(false);
+                    setPostHandler(undefined);
+                  }}
+                  onPost={postHandler}
+                />
+              )}
+            </div>
           )}
           {settings && <SettingsPopup setViewer={setViewer} settings={viewer.settings} />}
         </ModalBackground>
