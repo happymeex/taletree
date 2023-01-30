@@ -67,6 +67,7 @@ const FollowButton = ({ profileId, initialState }) => {
  * left (or top) portion of profile page with name, bio, friends, groups
  *
  * @param {String} profileId profile's id
+ * @param {Settings} profileSettings
  * @param {String} name profile's name
  * @param {String} bio profile's bio
  * @param {Object} viewer
@@ -81,6 +82,7 @@ const ProfilePersonalInfo = (props) => {
   console.log(props.allFriends);
 
   useEffect(() => {
+    console.log(props.profileSettings);
     setFriendsData([]);
     setPopupViewer(false);
     const getFriends = async () => {
@@ -89,7 +91,7 @@ const ProfilePersonalInfo = (props) => {
       console.log(res);
       setFriendsData(res);
     };
-    getFriends();
+    if (props.profileSettings.showFollowing || props.profileId === props.viewer._id) getFriends();
   }, []);
 
   const togglePopupViewer = () => {
@@ -133,15 +135,18 @@ const ProfilePersonalInfo = (props) => {
             initialState={props.viewer.friends.has(props.profileId)}
           />
         )}
-        <div className="Profile-friendsDisplayBox u-flexColumn">
-          <div
-            className="Profile-friendsHeader ProfileLeft-separator u-flex u-bold"
-            onClick={togglePopupViewer}
-          >
-            Following ({props.allFriends.length})
-          </div>
-          <div className="Profile-smallProfileDisplayBox u-flex">{picList}</div>
-        </div>
+        {props.profileSettings.showFollowing ||
+          (props.profileId === props.viewer._id && (
+            <div className="Profile-friendsDisplayBox u-flexColumn">
+              <div
+                className="Profile-friendsHeader ProfileLeft-separator u-flex u-bold"
+                onClick={togglePopupViewer}
+              >
+                Following ({props.allFriends.length})
+              </div>
+              <div className="Profile-smallProfileDisplayBox u-flex">{picList}</div>
+            </div>
+          ))}
       </div>
 
       {friendsViewer && (

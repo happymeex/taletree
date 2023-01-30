@@ -150,32 +150,38 @@ const SnippetDisplayContent = ({
 
   return (
     <div className="SnippetDisplay-snippetAndPageBarWrapper">
-      <div className="SnippetDisplay-snippetContainer">
-        {ready ? snippets : <div className="Loading"></div>}
-      </div>
-      {ready && snippetList.length > maxPerPage && (
-        <PageBar
-          pageTracker={tracker}
-          totalPages={totalPages}
-          onClick={(newPage) => {
-            setReady(false);
-            setPageTracker((obj) => {
-              if (newPage > obj[tabNumber].r)
-                obj[tabNumber] = {
-                  l: Math.max(1, newPage - 4),
-                  r: newPage,
-                };
-              if (newPage < obj[tabNumber].l)
-                obj[tabNumber] = {
-                  l: newPage,
-                  r: Math.min(totalPages, newPage + 4),
-                };
-              obj[tabNumber].page = newPage;
-              return Object.assign({}, obj);
-            });
-          }}
-          tabNumber={tabNumber}
-        />
+      {snippetList.length === 0 ? (
+        <div className="SpecialCenterText">Nothing to see here!</div>
+      ) : (
+        <>
+          <div className="SnippetDisplay-snippetContainer">
+            {ready ? snippets : <div className="Loading"></div>}
+          </div>
+          {ready && snippetList.length > maxPerPage && (
+            <PageBar
+              pageTracker={tracker}
+              totalPages={totalPages}
+              onClick={(newPage) => {
+                setReady(false);
+                setPageTracker((obj) => {
+                  if (newPage > obj[tabNumber].r)
+                    obj[tabNumber] = {
+                      l: Math.max(1, newPage - 4),
+                      r: newPage,
+                    };
+                  if (newPage < obj[tabNumber].l)
+                    obj[tabNumber] = {
+                      l: newPage,
+                      r: Math.min(totalPages, newPage + 4),
+                    };
+                  obj[tabNumber].page = newPage;
+                  return Object.assign({}, obj);
+                });
+              }}
+              tabNumber={tabNumber}
+            />
+          )}
+        </>
       )}
     </div>
   );
@@ -247,8 +253,7 @@ const SnippetDisplay = (props) => {
   ));
 
   let snippetList = undefined;
-  //let input = document.getElementById("SearchBar").value.toLowerCase();
-  if (data) {
+  if (data && props.snippets.length > 0) {
     snippetList = data[currTab].tabData.map((snippet) => {
       snippet.status = {
         isFavorite: localViewer.favorites.has(snippet._id),
@@ -258,7 +263,7 @@ const SnippetDisplay = (props) => {
     });
   }
 
-  if (searchInput !== "") {
+  if (searchInput !== "" && props.snippets.length > 0) {
     snippetList = snippetList.filter((snippet) => {
       return (
         snippet.authorName != "GOD" &&
@@ -276,25 +281,31 @@ const SnippetDisplay = (props) => {
 
   return (
     <div className="SnippetDisplay-container">
-      <div className="u-flex">
-        <SearchBar setSearchInput={setSearchInput} initialText={searchInput} />
-      </div>
-      <div className="SnippetDisplay-tabBar u-flex">{tabList}</div>
-      {!snippetList ? (
-        <div className="Loading"></div>
+      {props.snippets.length === 0 ? (
+        <div className="SpecialCenterText">This user has hidden everything!</div>
       ) : (
-        <SnippetDisplayContent
-          viewerId={props.viewer._id}
-          showAuthor={props.viewer.settings.authorVisible}
-          snippetList={snippetList}
-          search={searchInput !== "" ? [searchInput] : null}
-          authorToPic={props.authorToPic}
-          updateLocalViewer={updateLocalViewer}
-          goTo={props.goTo}
-          maxPerPage={props.maxPerPage}
-          popupHandlers={props.popupHandlers}
-          tabNumber={currTab}
-        />
+        <>
+          <div className="u-flex">
+            <SearchBar setSearchInput={setSearchInput} initialText={searchInput} />
+          </div>
+          <div className="SnippetDisplay-tabBar u-flex">{tabList}</div>
+          {!snippetList ? (
+            <div className="Loading"></div>
+          ) : (
+            <SnippetDisplayContent
+              viewerId={props.viewer._id}
+              showAuthor={props.viewer.settings.authorVisible}
+              snippetList={snippetList}
+              search={searchInput !== "" ? [searchInput] : null}
+              authorToPic={props.authorToPic}
+              updateLocalViewer={updateLocalViewer}
+              goTo={props.goTo}
+              maxPerPage={props.maxPerPage}
+              popupHandlers={props.popupHandlers}
+              tabNumber={currTab}
+            />
+          )}
+        </>
       )}
     </div>
   );

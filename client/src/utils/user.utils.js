@@ -23,14 +23,19 @@ const populateSettings = async (settings, id) => {
   post("/api/update-settings", params);
 };
 
+const checkSettings = (settings, id) => {
+  if (!settings || Object.keys(settings).length < 7) {
+    console.log("profile id " + id + " doesn't have proper settings, giving them default");
+    populateSettings(DEFAULT_SETTINGS, id);
+    return DEFAULT_SETTINGS;
+  }
+  console.log("settings ok");
+  return settings;
+};
+
 const initializeUser = (setter, user) => {
   console.log("initializing user " + user.name);
-  let useDefaultSettings = false;
-  if (!user.settings || Object.keys(user.settings).length < 7) {
-    useDefaultSettings = true;
-    console.log("user settings not set, using default");
-    populateSettings(DEFAULT_SETTINGS);
-  }
+  const settings = checkSettings(user.settings, user._id);
 
   setter({
     _id: user._id,
@@ -39,7 +44,7 @@ const initializeUser = (setter, user) => {
     bookmarks: new Set(user.bookmarks),
     favorites: new Set(user.favorites),
     friends: new Set(user.friends),
-    settings: useDefaultSettings ? DEFAULT_SETTINGS : user.settings,
+    settings: settings,
   });
 };
-export { DEFAULT_SETTINGS, ANONYMOUS_USER, populateSettings, initializeUser };
+export { DEFAULT_SETTINGS, ANONYMOUS_USER, populateSettings, checkSettings, initializeUser };
