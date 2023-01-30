@@ -1,6 +1,35 @@
+.Icon-wrapper {
+  height: 24px;
+  width: 24px;
+  position: relative;
+  padding: 0;
+}
+
 .Icon {
   height: 24px;
+  width: 24px;
 }
+
 .Icon:hover {
   cursor: pointer;
+}
+
+.Icon-tooltip {
+  position: absolute;
+  border-radius: var(--xs);
+  width: max-content;
+  padding: var(--xs) var(--s);
+  bottom: 120%;
+  background: rgb(34, 35, 33);
+  color: white;
+  text-align: center;
+  filter: none;
+  z-index: 100;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.Icon-wrapper .Icon:hover + .Icon-tooltip {
+  display: block;
+  opacity: 1;
 }

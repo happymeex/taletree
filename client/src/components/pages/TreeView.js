@@ -16,10 +16,7 @@ import {
 } from "../../utils/treeview.utils";
 import TreeViewSnippet from "../modules/TreeViewSnippet";
 import GenericButton from "../modules/GenericButton";
-import WriteNewSnippet from "../modules/WriteNewSnippet";
-import ModalBackground from "../modules/ModalBackground";
 import TreeViewMenu from "../modules/TreeViewMenu";
-import ThreadReader from "../modules/ThreadReader";
 import "./TreeView.css";
 
 const ALLOW_DRAG = (classname) => {
@@ -29,9 +26,11 @@ const ALLOW_DRAG = (classname) => {
     classname === "NavBar-container"
   );
 };
+
+//DEPRECATED
 const ALLOW_HIGHLIGHT = (classname) => {
   return (
-    classname.startsWith("SingleSnippet-contentBox") ||
+    classname.startsWith("SingleSnippet-contentWrapper") ||
     classname.startsWith("SingleSnippet-authorName") ||
     classname === "WriteNewSnippet-textbox"
   );
@@ -107,7 +106,7 @@ const TreeView = (props) => {
   };
 
   const handleMouseDown = (e) => {
-    if (!ALLOW_HIGHLIGHT(e.target.className)) e.preventDefault();
+    e.preventDefault();
     if (ALLOW_DRAG(e.target.className)) {
       setIsDrag(true);
       setStartPos(pos);

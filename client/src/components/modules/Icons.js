@@ -1,6 +1,11 @@
 import React, { useState } from "react";
-import { DEFAULT_ICON_SIZE } from "../../utils/treeview.utils";
 import "./Icons.css";
+
+let TOOLTIPS = {
+  Heart: "Save to favorites",
+  Bookmark: "Save to bookmarks",
+  Sprout: "View full tree",
+};
 
 /**
  *
@@ -9,8 +14,9 @@ import "./Icons.css";
  * @param {String} imgOff URL to the icon's inactive display state (e.g. empty grey heart, like mine)
  * @param {Boolean} initialActive active/inactive state upon initial render
  * @param {Function} toggleActive handler for (in)activation (i.e. updates DB). takes current state (pre-click) as a parameter
+ * @param {String} desc description of the icon. used to determine the tooltip
  */
-const Icon = ({ showByDefault, imgOn, imgOff, isActive, toggleActive, scale }) => {
+const Icon = ({ showByDefault, imgOn, imgOff, isActive, toggleActive, desc }) => {
   const [isHover, setIsHover] = useState(false);
   const [active, setActive] = useState(isActive);
 
@@ -18,22 +24,25 @@ const Icon = ({ showByDefault, imgOn, imgOff, isActive, toggleActive, scale }) =
   if (isHover && !active) iconStyle["filter"] = `brightness(0.5)`;
 
   return showByDefault || active ? (
-    <img
-      src={active ? imgOn : imgOff}
-      className="Icon else"
-      style={iconStyle}
-      onClick={() => {
-        console.log("click?");
-        toggleActive(active);
-        setActive((s) => !s);
-      }}
-      onMouseOver={() => {
-        if (!active) setIsHover(true);
-      }}
-      onMouseOut={() => {
-        setIsHover(false);
-      }}
-    ></img>
+    <div className="Icon-wrapper u-flexColumn u-flex-alignCenter">
+      <img
+        className={"Icon else"}
+        src={active ? imgOn : imgOff}
+        style={iconStyle}
+        onClick={() => {
+          console.log("click?");
+          toggleActive(active);
+          setActive((s) => !s);
+        }}
+        onMouseOver={() => {
+          if (!active) setIsHover(true);
+        }}
+        onMouseOut={() => {
+          setIsHover(false);
+        }}
+      ></img>
+      <div className="Icon-tooltip">{TOOLTIPS[desc]}</div>
+    </div>
   ) : (
     <></>
   );

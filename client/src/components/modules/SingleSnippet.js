@@ -51,16 +51,17 @@ const SingleSnippetAuthorInfo = ({ author, goToProfile, search }) => {
 };
 
 const SingleSnippetContentBox = ({ content, search }) => {
-  //TODO: fade styling for overflow
   return (
     <div className="SingleSnippet-contentBox u-flexColumn">
-      {search ? (
-        <Highlight search={search[0]} matchStyle={SEARCH_HIGHLIGHT_STYLE}>
-          {content}
-        </Highlight>
-      ) : (
-        content
-      )}
+      <div className="SingleSnippet-contentWrapper">
+        {search ? (
+          <Highlight search={search[0]} matchStyle={SEARCH_HIGHLIGHT_STYLE}>
+            {content}
+          </Highlight>
+        ) : (
+          content
+        )}
+      </div>
     </div>
   );
 };
@@ -93,7 +94,7 @@ const SingleSnippet = (props) => {
   const style = props.treeStyle
     ? props.treeStyle.containerStyle
     : isToTree
-    ? { backgroundColor: `rgba(0,0,0,0.08)`, cursor: `pointer` }
+    ? { backgroundColor: `rgba(0,0,0,0.05)`, cursor: `pointer` }
     : {};
   const clickHandler = props.treeStyle
     ? props.treeStyle.onClick
@@ -142,6 +143,7 @@ const SingleSnippet = (props) => {
                 showByDefault={isHover || props.showIconBar}
                 imgOn={sprout}
                 imgOff={sprout}
+                desc={"Sprout"}
                 isActive={false}
                 toggleActive={(c) => {
                   props.goTo.treeView(props._id);
@@ -154,12 +156,11 @@ const SingleSnippet = (props) => {
                   showByDefault={isHover || props.showIconBar}
                   imgOn={filledHeart}
                   imgOff={heart}
+                  desc={"Heart"}
                   isActive={props.status.isFavorite}
                   toggleActive={(currState) => {
                     props.updateLocalViewer("favorites", props._id, currState ? "delete" : "add");
-                    console.log(`likes ${likes}`);
                     setLikes(currState ? likes - 1 : likes + 1);
-                    console.log(`likes ${likes}`);
                     post("/api/snippet-attribs", {
                       _id: props._id,
                       state: !currState,
@@ -178,6 +179,7 @@ const SingleSnippet = (props) => {
                 showByDefault={isHover || props.showIconBar}
                 imgOn={filledBookmark}
                 imgOff={bookmark}
+                desc={"Bookmark"}
                 isActive={props.status.isBookmark}
                 toggleActive={(currState) => {
                   props.updateLocalViewer("bookmarks", props._id, currState ? "delete" : "add");
