@@ -10,6 +10,7 @@ import {
   getOutgoingLine,
   getScaledDelta,
   getVerticalDelta,
+  getDisplacement,
   ROOT,
   ZOOM_SENSITIVITY,
 } from "../../utils/treeview.utils";
@@ -168,7 +169,6 @@ const TreeView = (props) => {
   };
 
   const alignCurrentThread = () => {
-    console.log("target: " + target + " viewTarget: " + viewTarget);
     const newCoords = getCoords(snippets, target);
     const newThread = getThread(snippets, target);
     setThread(newThread);
@@ -177,10 +177,7 @@ const TreeView = (props) => {
       return { x: 0, y: d.y - newY };
     });
     setCoords(newCoords);
-    setViewTarget((vt) => {
-      console.log("setting viewTarget to " + target);
-      return target;
-    });
+    setViewTarget(target);
   };
 
   const handleWheel = (e) => {
@@ -255,9 +252,15 @@ const TreeView = (props) => {
           {useMemo(
             () => (
               <>
+                <GenericButton text="Read" onClick={toggleThreadReader} />
                 <GenericButton text="Write" onClick={toggleSnippetWriter} />
                 <GenericButton text="Align" onClick={alignCurrentThread} />
-                <GenericButton text="Read" onClick={toggleThreadReader} />
+                <GenericButton
+                  text="Center"
+                  onClick={() => {
+                    setDelta(getDisplacement(coords[target], coords[viewTarget], scale));
+                  }}
+                />
               </>
             ),
             [snippets, target, viewTarget, coords]

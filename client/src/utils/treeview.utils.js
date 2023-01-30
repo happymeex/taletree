@@ -229,6 +229,13 @@ const getVerticalDelta = (y1, y2, scale) => {
   return (y2 - y1) * (2 * DEFAULT_LINE_HEIGHT + DEFAULT_HEIGHT) * DEFAULT_SCALE * scale;
 };
 
+const getDisplacement = (pos1, pos2, scale) => {
+  return {
+    x: (pos2.x - pos1.x) * HORIZONTAL_SPACING * DEFAULT_SCALE * scale,
+    y: getVerticalDelta(pos1.y, pos2.y, scale),
+  };
+};
+
 export {
   ROOT,
   ZOOM_SENSITIVITY,
@@ -246,4 +253,5 @@ export {
   getScaledDelta,
   getSnippetBorder,
   getVerticalDelta,
+  getDisplacement,
 };
