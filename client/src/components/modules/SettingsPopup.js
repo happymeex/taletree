@@ -4,22 +4,19 @@ import { populateSettings } from "../../utils/user.utils";
 
 const SETTINGS = [
   "authorVisible",
+  "showSnippetLikes",
   "showContributions",
   "showFavorites",
   "showBookmarks",
   "showFollowing",
-  "goToTreeViewAfterPost",
 ];
 const SETTING_LABELS = [
-  [
-    "Show author labels",
-    "Decide whether author names and profile pictures display next to snippet text.",
-  ],
+  ["Show author labels", "Show author name and profile picture next to snippet text."],
+  ["Show snippet likes", "Display the number of likes on snippets."],
   ["Show contributions", "Display snippets you wrote publicly on your profile."],
   ["Show favorites", "Display favorited snippets publicly on your profile."],
-  ["Show bookmarks", "Display snippets publicly on your profile."],
-  ["Show following", "Display followed accounts on your profile."],
-  ["Open tree view after posting", "Automatically navigate to tree view after posting a snippet."],
+  ["Show bookmarks", "Display bookmarked snippets publicly on your profile."],
+  ["Show following", "Display followed accounts publicly on your profile."],
 ];
 const SettingsPopup = ({ setViewer, settings }) => {
   console.log("Settings popup rerendered, got settings");

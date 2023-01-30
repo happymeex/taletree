@@ -76,7 +76,7 @@ const SingleSnippetContentBox = ({ content, search }) => {
  * @param {{isFavorite: Boolean, isBookmark: Boolean}} status
  * @param {Boolean} showIconBar if true, then always shows icon bar regardless of hover status. we might want to just deduce this from
  *    isTreeView, but I'm including this as a parameter in case we want extra control.
- * @param {Boolean} showAuthor used to conditionally render author name/picture
+ * @param {{authorDisplay: Boolean, showSnippetLikes: Boolean}} settings
  * @param {[String]} search? an array of keywords to highlight. for now, this will always have length 1, unless we decide on more fancy
  * @param {{scale: Number, containerStyle: Object, onClick: Function}} treeStyle?
  *    specified for TreeView snippets. Contains all style, sizing data
@@ -126,7 +126,7 @@ const SingleSnippet = (props) => {
           setIsToTree(false);
         }}
       >
-        {props.showAuthor ? (
+        {props.settings.authorVisible ? (
           <SingleSnippetAuthorInfo
             author={props.author}
             goToProfile={props.goTo.profile}
@@ -168,7 +168,9 @@ const SingleSnippet = (props) => {
                     });
                   }}
                 />
-                <div className="SingleSnippet-likes">{likes}</div>
+                {props.settings.showSnippetLikes && (
+                  <div className="SingleSnippet-likes">{likes}</div>
+                )}
               </div>
             )}
             {props.viewerId && (

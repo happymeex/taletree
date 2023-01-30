@@ -85,7 +85,7 @@ const initializeTracker = (n, totalPages) => {
  */
 const SnippetDisplayContent = ({
   viewerId,
-  showAuthor,
+  settings,
   snippetList,
   search,
   updateLocalViewer,
@@ -139,7 +139,7 @@ const SnippetDisplayContent = ({
         search={search}
         _id={snippet._id}
         isTreeView={false}
-        showAuthor={showAuthor}
+        settings={settings}
         status={snippet.status}
         showIconBar={true}
         goTo={goTo}
@@ -295,7 +295,10 @@ const SnippetDisplay = (props) => {
           ) : (
             <SnippetDisplayContent
               viewerId={props.viewer._id}
-              showAuthor={props.viewer.settings.authorVisible}
+              settings={{
+                authorVisible: props.viewer.settings.authorVisible,
+                showSnippetLikes: props.viewer.settings.showSnippetLikes,
+              }}
               snippetList={snippetList}
               search={searchInput !== "" ? [searchInput] : null}
               authorToPic={props.authorToPic}

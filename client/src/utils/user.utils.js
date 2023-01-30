@@ -1,6 +1,7 @@
 import { get, post } from "../utilities";
 const DEFAULT_SETTINGS = {
   authorVisible: true,
+  showSnippetLikes: true,
   showBookmarks: false,
   showContributions: true,
   showFavorites: true,
@@ -24,7 +25,8 @@ const populateSettings = async (settings, id) => {
 };
 
 const checkSettings = (settings, id) => {
-  if (!settings || Object.keys(settings).length < 7) {
+  //we have 6 actual settings and 1 deprecated setting; the _id field makes 8
+  if (!settings || Object.keys(settings).length < 8) {
     console.log("profile id " + id + " doesn't have proper settings, giving them default");
     populateSettings(DEFAULT_SETTINGS, id);
     return DEFAULT_SETTINGS;

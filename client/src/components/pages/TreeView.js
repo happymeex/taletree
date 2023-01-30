@@ -171,7 +171,9 @@ const TreeView = (props) => {
     const newCoords = getCoords(snippets, target);
     const newThread = getThread(snippets, target);
     setThread(newThread);
-    setDelta({ x: 0, y: 0 });
+    setDelta((d) => {
+      return { x: 0, y: d.y };
+    });
     setCoords(newCoords);
     setViewTarget(target);
   };
@@ -212,7 +214,10 @@ const TreeView = (props) => {
         content={s.content}
         _id={s._id}
         viewerId={props.viewer._id}
-        showAuthor={props.viewer.settings.authorVisible}
+        settings={{
+          authorVisible: props.viewer.settings.authorVisible,
+          showSnippetLikes: props.viewer.settings.showSnippetLikes,
+        }}
         highlight={highlight}
         numLikes={s.numLikes}
         status={{

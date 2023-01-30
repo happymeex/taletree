@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 
 const SettingsSchema = new mongoose.Schema({
   authorVisible: Boolean,
+  showSnippetLikes: Boolean,
   showFollowing: Boolean,
   showBookmarks: Boolean,
   showContributions: Boolean,
