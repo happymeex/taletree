@@ -213,6 +213,7 @@ const TreeView = (props) => {
         _id={s._id}
         viewerId={props.viewer._id}
         highlight={highlight}
+        numLikes={s.numLikes}
         status={{
           isFavorite: localViewer.favorites.has(id),
           isBookmark: localViewer.bookmarks.has(id),

@@ -78,9 +78,12 @@ router.get("/snippets", (req, res) => {
   console.log(`api called, grabbing several snippets for user with id ${req.query.userId}`);
   const getSnippets = async () => {
     const likedSnippets = await Snippet.find({ _id: { $ne: "63d04ff67f9ad37d137f7750" } }).sort({
-      numLikes: -1,
+      numLikes: 1,
+      _id: 1,
     });
-    const recentSnippets = await Snippet.find({ _id: { $ne: "63d04ff67f9ad37d137f7750" } }).sort();
+    const recentSnippets = await Snippet.find({ _id: { $ne: "63d04ff67f9ad37d137f7750" } }).sort({
+      _id: 1,
+    });
     //res.send({ 1: likedSnippets, 0: recentSnippets });
     res.send([
       { tabName: "New", tabData: recentSnippets },
@@ -203,8 +206,15 @@ router.post("/snippet-attribs", (req, res) => {
   auth.ensureLoggedIn(req, res, () => {
     const updateDB = async () => {
       const user = await User.findById(req.body.viewerId);
-      if (req.body.state) user[req.body.attrib].push(req.body._id);
-      else user[req.body.attrib] = user[req.body.attrib].filter((s) => s !== req.body._id);
+      const snippet = await Snippet.findById(req.body._id);
+      if (req.body.state) {
+        user[req.body.attrib].push(req.body._id);
+        snippet["numLikes"] += req.body.attrib === "favorites" ? 1 : 0;
+      } else {
+        user[req.body.attrib] = user[req.body.attrib].filter((s) => s !== req.body._id);
+        snippet["numLikes"] += req.body.attrib === "favorites" ? -1 : 0;
+      }
+      snippet.save();
       return user.save();
     };
     updateDB();

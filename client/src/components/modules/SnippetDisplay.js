@@ -142,6 +142,7 @@ const SnippetDisplayContent = ({
         status={snippet.status}
         showIconBar={true}
         goTo={goTo}
+        numLikes={snippet.numLikes}
         updateLocalViewer={updateLocalViewer}
         popupHandlers={popupHandlers}
       />

@@ -15,6 +15,7 @@ import { getSnippetBorder } from "../../utils/treeview.utils";
  * @param {Object} line object containing all position/sizing data for lines
  * @param {Boolean} inTargetThread
  * @param {Boolean} isTarget
+ * @param {Number} numLikes
  * @param {Function} onClick
  * @param {Number} scale
  * @param {String} viewerId
@@ -65,6 +66,7 @@ const TreeViewSnippet = (props) => {
         showIconBar={true}
         treeStyle={snippetStyle}
         status={props.status}
+        numLikes={props.numLikes}
         updateLocalViewer={props.updateLocalViewer}
         goTo={props.goTo}
         popupHandlers={props.popupHandlers}

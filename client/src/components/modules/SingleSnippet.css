@@ -50,3 +50,9 @@
 .SingleSnippet-profilePic:hover {
   cursor: pointer;
 }
+
+.SingleSnippet-likes {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
