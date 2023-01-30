@@ -12,8 +12,6 @@ import ModalBackground from "../modules/ModalBackground";
  * @param {String} size? optional parameter to control size
  */
 const SmallProfilePic = ({ imgURL, onClick, size }) => {
-  console.log("rendering small");
-  console.log("friend URL: " + imgURL);
   return (
     <img
       className="Profile-smallProfilePic"
@@ -92,7 +90,7 @@ const ProfilePersonalInfo = (props) => {
       setFriendsData(res);
     };
     getFriends();
-  }, [props]);
+  }, []);
 
   const togglePopupViewer = () => {
     setPopupViewer((s) => !s);
