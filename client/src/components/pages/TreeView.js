@@ -14,6 +14,7 @@ import {
   ROOT,
   ZOOM_SENSITIVITY,
 } from "../../utils/treeview.utils";
+import { getRandomPlaceholder } from "../../utils/snippet.utils";
 import TreeViewSnippet from "../modules/TreeViewSnippet";
 import GenericButton from "../modules/GenericButton";
 import TreeViewMenu from "../modules/TreeViewMenu";
@@ -125,8 +126,9 @@ const TreeView = (props) => {
 
   const toggleSnippetWriter = () => {
     //open reader along with writer
+    const placeholder = getRandomPlaceholder("append");
     toggleThreadReader();
-    props.popupHandlers.toggle("writer");
+    props.popupHandlers.toggle("writer", placeholder);
     props.popupHandlers.setWriteHandler((input) => {
       handlePost(input);
     });

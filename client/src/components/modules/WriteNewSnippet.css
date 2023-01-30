@@ -17,6 +17,10 @@
   outline: none;
 }
 
+.WriteNewSnippet-textbox::placeholder {
+  color: var(--medgrey);
+}
+
 .WriteNewSnippet-postButton {
   font-family: inherit;
   font-size: var(--l);

@@ -32,6 +32,7 @@ const App = () => {
   const [viewer, setViewer] = useState(undefined);
   const [reader, setReader] = useState(false);
   const [writer, setWriter] = useState(false);
+  const [writerPlaceholder, setWriterPlaceholder] = useState(undefined);
   const [settings, setSettings] = useState(false);
   const [readerContent, setReaderContent] = useState(undefined);
   const [postHandler, setPostHandler] = useState(undefined);
@@ -113,13 +114,15 @@ const App = () => {
   //passed down as a prop to the various pages, which will call the handlers to set
   //the appropriate states to open the needed popup
   const popupHandlers = {
-    toggle: (popup) => {
+    toggle: (popup, placeholder = "") => {
       if (popup === "reader") {
         if (reader) setReaderContent(undefined);
         setReader((s) => !s);
       } else if (popup === "writer") {
-        if (writer) setPostHandler(undefined);
-        setWriter((s) => !s);
+        if (writer) {
+          setWriter(undefined);
+          setPostHandler(undefined);
+        } else setWriter(placeholder);
       }
     },
     setContent: (text) => {
@@ -128,6 +131,7 @@ const App = () => {
     setWriteHandler: (func) => {
       setPostHandler(() => func);
     },
+    setWriterPlaceholder: setWriterPlaceholder,
   };
 
   const toggleSettings = () => {
@@ -196,6 +200,7 @@ const App = () => {
                     setPostHandler(undefined);
                   }}
                   onPost={postHandler}
+                  flavortext={writer}
                 />
               )}
             </div>

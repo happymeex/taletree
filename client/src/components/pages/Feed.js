@@ -7,6 +7,7 @@ import { get, post } from "../../utilities";
 import leaf from "../../public/leaf.svg";
 import "./Profile.css";
 import SnippetDisplay from "../modules/SnippetDisplay";
+import { getRandomPlaceholder } from "../../utils/snippet.utils";
 
 const ROOT = "63d04ff67f9ad37d137f7750";
 const MAX_SNIPPETS_PER_PAGE = 10;
@@ -60,7 +61,8 @@ const Feed = ({ userName, viewer, goTo, popupHandlers }) => {
 
   const toggleSnippetWriter = () => {
     //setWriter((s) => !s);
-    popupHandlers.toggle("writer");
+    const placeholder = getRandomPlaceholder("new");
+    popupHandlers.toggle("writer", placeholder);
     popupHandlers.setWriteHandler((input) => {
       addPost(input);
     });
