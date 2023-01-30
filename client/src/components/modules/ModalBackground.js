@@ -9,14 +9,10 @@ import "./ModalBackground.css";
  */
 const ModalBackground = (props) => {
   const clickHandler = (e) => {
-    if (e.target.id === "ModalBackground") props.onClose();
+    if (e.target.className.startsWith("ModalBackground")) props.onClose();
   };
   return (
-    <div
-      id="ModalBackground"
-      className="ModalBackground-container u-flex-justifyCenter"
-      onClick={clickHandler}
-    >
+    <div className="ModalBackground-container u-flex-justifyCenter" onClick={clickHandler}>
       <div onClick={props.onClose} className="ModalBackground-closeButton">
         &times;
       </div>

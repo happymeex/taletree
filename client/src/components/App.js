@@ -190,7 +190,7 @@ const App = () => {
           }}
         >
           {(reader || writer) && (
-            <div className="ReaderWriter-wrapper">
+            <div className="ModalBackground-readerWriterWrapper">
               {reader && readerContent && <ThreadReader content={readerContent} />}
               {writer && postHandler && (
                 <WriteNewSnippet
