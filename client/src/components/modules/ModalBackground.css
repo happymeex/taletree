@@ -21,7 +21,6 @@
 .ModalBackground-readerWriterWrapper {
   width: 50vw;
   height: 100vh;
-  overflow-y: scroll;
   gap: var(--m);
   display: flex;
   flex-direction: column;

@@ -6,7 +6,6 @@
   font-size: var(--l);
   box-sizing: border-box;
   padding: var(--m);
-  overflow-y: scroll;
   border-radius: var(--s);
 }
 
