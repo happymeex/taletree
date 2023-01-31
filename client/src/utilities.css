@@ -106,10 +106,6 @@ form {
   position: relative;
 }
 
-.u-pointer {
-  cursor: pointer;
-}
-
 .u-link {
   color: var(--primary);
   text-decoration: none;

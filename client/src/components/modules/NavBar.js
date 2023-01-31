@@ -29,7 +29,11 @@ const NavBarButton = ({ profilePicURL, logout, viewer, goTo, toggleSettings }) =
   const [dropdownOpen, setDropdownOpen] = useState(false);
   useEffect(() => {
     window.addEventListener("click", (e) => {
-      if (!e.target.className.startsWith("NavBar-")) setDropdownOpen(false);
+      if (
+        !e.target.className.startsWith("NavBar-") ||
+        e.target.className.startsWith("NavBar-container")
+      )
+        setDropdownOpen(false);
     });
   }, []);
   return (
@@ -53,7 +57,7 @@ const NavBarButton = ({ profilePicURL, logout, viewer, goTo, toggleSettings }) =
 
 const NavBar = ({ handleLogin, handleLogout, viewer, goTo, toggleSettings }) => {
   return (
-    <div className="NavBar-container u-flex-spaceBetween">
+    <div className="NavBar-container u-flex-spaceBetween u-flex-alignCenter">
       <div
         className="NavBar-websiteName"
         onClick={() => {
@@ -69,7 +73,7 @@ const NavBar = ({ handleLogin, handleLogout, viewer, goTo, toggleSettings }) => 
       >
         TaleTree
       </div>
-      <div className="NavBar-buttonWrapper">
+      <div className="NavBar-buttonWrapper u-flex-alignEnd">
         <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
           {viewer._id ? (
             <NavBarButton
