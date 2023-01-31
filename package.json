@@ -34,6 +34,7 @@
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
     "react-highlighter": "^0.4.3",
+    "react-image-file-resizer": "^0.4.8",
     "react-router-dom": "^5.2.0",
     "socket.io": "^2.3.0",
     "socket.io-client": "^2.3.1",

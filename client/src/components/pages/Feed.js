@@ -36,6 +36,8 @@ const Feed = ({ userName, viewer, goTo, popupHandlers }) => {
       for (const { tabName, tabData } of res) {
         for (const snippet of tabData) authorIds.push(snippet.authorId);
       }
+      console.log("getting snippets, authorIds are: ");
+      console.log(new Set(authorIds));
       setAuthorToPic(await get("/api/profile-pictures", { userIds: authorIds }));
     };
     queryDB();

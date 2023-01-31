@@ -3,6 +3,7 @@ import "../pages/Profile.css";
 import "./Popup.css";
 import { get, post } from "../../utilities";
 import ModalBackground from "../modules/ModalBackground";
+import ProfilePicture from "./ProfilePicture";
 
 /**
  * Small profile picture that appears in a profile's friendslist
@@ -71,7 +72,7 @@ const FollowButton = ({ profileId, initialState }) => {
  * @param {String} name profile's name
  * @param {String} bio profile's bio
  * @param {Object} viewer
- * @param {Boolean} isViewer true if this is the viewer's page
+ * @param {Function} setAuthorToPic
  * @param {[String]} allFriends array of profile's friends' ids (NOT the viewer's)
  * @param {Function} goTo
  *
@@ -123,10 +124,17 @@ const ProfilePersonalInfo = (props) => {
     );
   });
 
+  console.log("profile page rerendering");
+
   return (
     <>
       <div className="Profile-personalInfoContainer u-flexColumn u-flex-alignCenter u-flex-justifyCenter">
-        <img src={props.profilePicURL} className="Profile-picture" />
+        <ProfilePicture
+          id={props.profileId}
+          pictureURL={props.profilePicURL}
+          setAuthorToPic={props.setAuthorToPic}
+          editable={props.profileId === props.viewer._id}
+        />
         <div className="Profile-name ProfileLeft-separator">{props.name}</div>
         <div className="Profile-bio ProfileLeft-separator">{props.bio}</div>
         {props.viewer._id && props.viewer._id !== props.profileId && (

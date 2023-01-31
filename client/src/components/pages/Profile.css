@@ -72,6 +72,7 @@
   border-radius: 50%;
   width: var(--xl);
   height: var(--xl);
+  object-fit: cover;
 }
 
 .Profile-smallProfilePic:hover {

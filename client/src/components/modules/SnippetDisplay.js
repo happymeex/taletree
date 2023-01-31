@@ -189,7 +189,6 @@ const SnippetDisplayContent = ({
 };
 
 const SearchBar = ({ setSearchInput, initialText }) => {
-  console.log("search rerendering");
   return (
     <input
       type="text"
@@ -219,9 +218,6 @@ const SnippetDisplay = (props) => {
   const [currTab, setCurrTab] = useState(0);
   const [localViewer, setLocalViewer] = useState(props.viewer);
   const [searchInput, setSearchInput] = useState("");
-
-  console.log("Got snippets: ");
-  console.log(props.snippets);
 
   useEffect(() => {
     let d = {};

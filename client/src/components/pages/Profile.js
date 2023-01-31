@@ -21,8 +21,9 @@ const TABS = [
  * @param {Object} viewer the viewer
  * @param {Object} goTo navigation functions
  * @param {Object} popupHandlers
+ * @param {Function} setViewer
  */
-const Profile = ({ profileId, viewer, goTo, popupHandlers }) => {
+const Profile = ({ profileId, viewer, goTo, popupHandlers, setViewer }) => {
   const [data, setData] = useState(undefined);
   const [snippetData, setSnippetData] = useState(undefined);
   const [authorToPic, setAuthorToPic] = useState(undefined);
@@ -57,6 +58,8 @@ const Profile = ({ profileId, viewer, goTo, popupHandlers }) => {
       for (const field in res) {
         for (const snippetObj of res[field]) userIds.push(snippetObj.authorId);
       }
+      console.log("User ids for the snippets on this profile page:");
+      console.log(new Set(userIds));
       setAuthorToPic(await get("/api/profile-pictures", { userIds: userIds }));
     };
     getProfileData().then((res) => {
@@ -77,7 +80,7 @@ const Profile = ({ profileId, viewer, goTo, popupHandlers }) => {
             bio={data.bio}
             profilePicURL={data.pictureURL}
             viewer={viewer}
-            isViewer={viewer._id === profileId}
+            setAuthorToPic={setAuthorToPic}
             allFriends={data.friends}
             goTo={goTo}
           />

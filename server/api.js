@@ -58,7 +58,7 @@ router.get("/profile-pictures", (req, res) => {
       users.reduce((acc, curr) => {
         acc[curr._id] = curr.pictureURL;
         return acc;
-      })
+      }, {})
     );
   };
   queryDB();
@@ -264,6 +264,26 @@ router.post("/update-settings", (req, res) => {
     };
     updateDB();
   });
+});
+
+//I'm not requiring users to be logged in to trigger this post request,
+//so that we can handle the google pfps that we don't want
+router.post("/profile-picture", (req, res) => {
+  const updateDB = async () => {
+    const user = await User.findById(req.body.id).catch((err) => {
+      res.status(500).send(err);
+      return;
+    });
+    if (!user) {
+      res.status(404).send({});
+      return;
+    }
+    user.pictureURL = req.body.url;
+    user.save().then((user) => {
+      res.status(200).send(user);
+    });
+  };
+  updateDB();
 });
 
 // anything else falls to this "not found" case

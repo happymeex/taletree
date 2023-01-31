@@ -1,0 +1,57 @@
+.ProfilePicture-wrapper {
+  position: relative;
+  height: 200px;
+  width: 200px;
+  padding: 0;
+}
+.ProfilePicture {
+  height: 100%;
+  width: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.ProfilePicture-editable:hover {
+  filter: blur(4px) brightness(50%);
+  cursor: pointer;
+}
+
+.ProfilePicture-inputButton {
+  opacity: 0;
+  top: 50%;
+  left: 0%;
+  position: absolute;
+  z-index: -1;
+}
+.ProfilePicture-inputLabel {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0%;
+  left: 0%;
+  color: white;
+  opacity: 0;
+  font-size: var(--l);
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.ProfilePicture-inputLabel:hover {
+  opacity: 1;
+  transition: opacity 0.1s, backdrop-filter 0.4s;
+  backdrop-filter: blur(4px) brightness(40%);
+}
+
+.ProfilePicture-loading + .ProfilePicture-inputLabel {
+  opacity: 1;
+  color: transparent;
+  backdrop-filter: blur(4px) brightness(40%);
+}
+
+.ProfilePicture-loading {
+  position: absolute;
+  width: 50%;
+  height: 50%;
+  z-index: 3;
+}

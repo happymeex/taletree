@@ -45,6 +45,7 @@
   border-radius: 50%;
   height: var(--xxl);
   width: var(--xxl);
+  object-fit: cover;
 }
 
 .SingleSnippet-profilePic:hover {

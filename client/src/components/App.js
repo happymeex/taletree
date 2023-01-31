@@ -42,25 +42,10 @@ const App = () => {
       if (user._id) {
         console.log("got user!");
         // they are registed in the database, and currently logged in.
-        //setUserId(user._id);
         get("/api/profile", { id: user._id }).then((user) => {
           console.log("user: ");
           console.log(user);
           initializeUser(setViewer, user);
-          //let useDefaultSettings = false;
-          //if (!user.settings || Object.keys(user.settings).length <= 1) {
-          //  useDefaultSettings = true;
-          //  populateSettings(DEFAULT_SETTINGS);
-          //}
-          //setViewer({
-          //  _id: user._id,
-          //  name: user.name,
-          //  pictureURL: user.pictureURL,
-          //  bookmarks: new Set(user.bookmarks),
-          //  favorites: new Set(user.favorites),
-          //  friends: new Set(user.friends),
-          //  settings: useDefaultSettings ? DEFAULT_SETTINGS : user.settings,
-          //});
         });
       } else initializeUser(setViewer, ANONYMOUS_USER);
     });
@@ -75,19 +60,8 @@ const App = () => {
     console.log(`Logged in as ${decodedCredential.name}`);
 
     post("/api/login", { token: userToken }).then((user) => {
-      //setUserId(user._id);
-      //setUserName(name);
-      //setProfilePicURL(user.pictureURL);
       window.location.reload();
       initializeUser(setViewer, user);
-      //setViewer({
-      //  _id: user._id,
-      //  name: user.name,
-      //  pictureURL: user.pictureURL,
-      //  bookmarks: new Set(user.bookmarks),
-      //  favorites: new Set(user.favorites),
-      //  friends: new Set(user.friends),
-      //});
       post("/api/initsocket", { socketid: socket.id });
     });
   };
@@ -165,6 +139,7 @@ const App = () => {
               <Profile
                 path="/profile/:profileId"
                 viewer={viewer}
+                setViewer={setViewer}
                 goTo={goTo}
                 popupHandlers={popupHandlers}
               />
