@@ -93,6 +93,7 @@ const SnippetDisplayContent = ({
   maxPerPage,
   authorToPic,
   popupHandlers,
+  triggerRefresh,
   tabNumber,
 }) => {
   const [pageTracker, setPageTracker] = useState(
@@ -163,6 +164,7 @@ const SnippetDisplayContent = ({
               pageTracker={tracker}
               totalPages={totalPages}
               onClick={(newPage) => {
+                triggerRefresh((s) => !s);
                 setReady(false);
                 setPageTracker((obj) => {
                   if (newPage > obj[tabNumber].r)
@@ -218,6 +220,7 @@ const SnippetDisplay = (props) => {
   const [currTab, setCurrTab] = useState(0);
   const [localViewer, setLocalViewer] = useState(props.viewer);
   const [searchInput, setSearchInput] = useState("");
+  const [trigger, triggerRefresh] = useState(false);
 
   useEffect(() => {
     let d = {};
@@ -297,6 +300,7 @@ const SnippetDisplay = (props) => {
               maxPerPage={props.maxPerPage}
               popupHandlers={props.popupHandlers}
               tabNumber={currTab}
+              triggerRefresh={triggerRefresh}
             />
           )}
         </>
