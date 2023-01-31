@@ -11,11 +11,12 @@
 
 .ThreadReader-iconBar {
   width: 100%;
-  height: var(--l);
   gap: var(--s);
+  margin-bottom: var(--s);
 }
 
 .ThreadReader-textContainer {
   gap: var(--xl);
   overflow: scroll;
+  white-space: pre-wrap;
 }

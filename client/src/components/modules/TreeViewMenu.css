@@ -2,7 +2,7 @@
   position: fixed;
   width: 200px;
   background-color: var(--white);
-  border-radius: var(--m);
+  border-radius: var(--s);
   bottom: var(--xl);
   right: var(--xl);
   box-shadow: 5px 5px 6px 5px rgba(0, 0, 0, 0.4);
@@ -12,7 +12,7 @@
   height: 64px;
   gap: var(--m);
   font-size: var(--l);
-  font-weight: 900;
+  font-weight: 700;
 }
 
 .TreeViewMenu-arrowWrapper {
@@ -34,5 +34,5 @@
 }
 
 .TreeViewMenu-buttonContainer {
-  padding: var(--s);
+  padding: 0 var(--s) var(--s);
 }

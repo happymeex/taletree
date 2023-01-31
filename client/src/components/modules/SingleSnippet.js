@@ -14,7 +14,7 @@ import { post } from "../../utilities.js";
 
 const SEARCH_HIGHLIGHT_STYLE = {
   fontWeight: `bold`,
-  backgroundColor: `var(--primary--dim)`,
+  backgroundColor: `var(--primary)`,
 };
 
 /**

@@ -6,7 +6,8 @@
   border: none;
   font-family: inherit;
   font-size: var(--l);
-  border-radius: var(--s);
+  font-weight: inherit;
+  border-radius: var(--xs);
   color: var(--darkgrey);
 }
 

@@ -16,7 +16,7 @@
   overflow-y: hidden;
   hyphens: auto;
   white-space: pre-wrap;
-  mask: linear-gradient(white 20vh, transparent);
+  mask: linear-gradient(white 17vh, transparent);
   flex-grow: 1;
 }
 
@@ -36,6 +36,9 @@
   padding: var(--m) var(--l);
 }
 
+.SingleSnippet-authorInfo {
+  gap: var(--xs);
+}
 .SingleSnippet-authorName {
   cursor: pointer;
   text-align: center;

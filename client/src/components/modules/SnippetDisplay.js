@@ -15,7 +15,7 @@ const TabBar = ({ text, onClick, isSelected }) => {
       className="SnippetDisplay-tab u-clickable"
       style={
         isSelected
-          ? { backgroundColor: `var(--primary--dim)`, fontWeight: `900`, color: `black` }
+          ? { backgroundColor: `var(--primary--dim)`, fontWeight: `600`, color: `black` }
           : {}
       }
       onClick={onClick}

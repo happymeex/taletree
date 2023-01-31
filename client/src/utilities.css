@@ -41,7 +41,7 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: "Nunito", sans-serif;
+  font-family: "Lato", sans-serif;
   font-weight: 300;
 }
 
@@ -95,7 +95,7 @@ form {
 }
 
 .u-bold {
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .u-textCenter {

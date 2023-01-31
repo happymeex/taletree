@@ -5,6 +5,11 @@
   padding: 0;
 }
 
+.ThreadReader-iconBar .Icon-wrapper {
+  height: 36px;
+  width: 36px;
+}
+
 .Icon {
   height: 24px;
   width: 24px;
