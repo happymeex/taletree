@@ -128,15 +128,15 @@ const ProfilePersonalInfo = (props) => {
 
   return (
     <>
-      <div className="Profile-personalInfoContainer u-flexColumn u-flex-alignCenter u-flex-justifyCenter">
+      <div className="Profile-personalInfoContainer u-flexColumn u-flex-alignCenter">
         <ProfilePicture
           id={props.profileId}
           pictureURL={props.profilePicURL}
           setAuthorToPic={props.setAuthorToPic}
           editable={props.profileId === props.viewer._id}
         />
-        <div className="Profile-name ProfileLeft-separator">{props.name}</div>
-        <div className="Profile-bio ProfileLeft-separator">{props.bio}</div>
+        <div className="Profile-name u-textCenter">{props.name}</div>
+        <div className="Profile-bio u-textCenter">{props.bio}</div>
         {props.viewer._id && props.viewer._id !== props.profileId && (
           <FollowButton
             profileId={props.profileId}
@@ -145,10 +145,7 @@ const ProfilePersonalInfo = (props) => {
         )}
         {(props.profileSettings.showFollowing || props.profileId === props.viewer._id) && (
           <div className="Profile-friendsDisplayBox u-flexColumn">
-            <div
-              className="Profile-friendsHeader ProfileLeft-separator u-flex u-bold"
-              onClick={togglePopupViewer}
-            >
+            <div className="Profile-friendsHeader u-flex u-bold" onClick={togglePopupViewer}>
               Following ({props.allFriends.length})
             </div>
             <div className="Profile-smallProfileDisplayBox u-flex">{picList}</div>
