@@ -61,14 +61,7 @@ const NavBar = ({ handleLogin, handleLogout, viewer, goTo, toggleSettings }) => 
       <div
         className="NavBar-websiteName"
         onClick={() => {
-          navigate("/", {
-            state: {
-              handleLogin: handleLogin,
-              handleLogout: handleLogout,
-              userName: viewer.name,
-              viewer: viewer,
-            },
-          });
+          goTo.home();
         }}
       >
         TaleTree

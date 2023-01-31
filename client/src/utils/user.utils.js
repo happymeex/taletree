@@ -1,4 +1,7 @@
 import { get, post } from "../utilities";
+
+const GOOGLE_CLIENT_ID = "614278991840-38k97pg151j5p5vp8is590n9fom48eko.apps.googleusercontent.com";
+
 const DEFAULT_SETTINGS = {
   authorVisible: true,
   showSnippetLikes: true,
@@ -49,4 +52,11 @@ const initializeUser = (setter, user) => {
     settings: settings,
   });
 };
-export { DEFAULT_SETTINGS, ANONYMOUS_USER, populateSettings, checkSettings, initializeUser };
+export {
+  GOOGLE_CLIENT_ID,
+  DEFAULT_SETTINGS,
+  ANONYMOUS_USER,
+  populateSettings,
+  checkSettings,
+  initializeUser,
+};

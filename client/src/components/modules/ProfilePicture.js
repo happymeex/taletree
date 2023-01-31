@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Resizer from "react-image-file-resizer";
 import { post } from "../../utilities";
 import "./ProfilePicture.css";
@@ -6,6 +6,11 @@ import "./ProfilePicture.css";
 const ProfilePicture = ({ id, pictureURL, editable, setAuthorToPic }) => {
   const [url, setUrl] = useState(pictureURL);
   const [loading, setLoading] = useState(false);
+
+  console.log("reredering big profile picture with url " + pictureURL + " url is");
+  useEffect(() => {
+    setUrl(pictureURL);
+  }, [pictureURL]);
 
   const saveToDB = (formData) => {
     fetch("https://api.imgur.com/3/image/", {

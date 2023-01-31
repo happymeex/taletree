@@ -11,6 +11,7 @@ import ModalBackground from "./modules/ModalBackground.js";
 import ThreadReader from "./modules/ThreadReader.js";
 import WriteNewSnippet from "./modules/WriteNewSnippet.js";
 import SettingsPopup from "./modules/SettingsPopup.js";
+import Landing from "./pages/Landing.js";
 
 import "../utilities.css";
 
@@ -25,6 +26,14 @@ import {
 } from "../utils/user.utils.js";
 import { navigate } from "@reach/router";
 
+const goToFactory = (loc, setRerenderTrigger) => {
+  return (id) => {
+    console.log("Going to " + loc);
+    const url = id ? `/${loc}/${id}` : `/${loc}`;
+    navigate(url);
+    setRerenderTrigger((s) => !s);
+  };
+};
 /**
  * Define the "App" component
  */
@@ -32,10 +41,12 @@ const App = () => {
   const [viewer, setViewer] = useState(undefined);
   const [reader, setReader] = useState(false);
   const [writer, setWriter] = useState(false);
+  const [landing, setLanding] = useState(true);
   const [writerPlaceholder, setWriterPlaceholder] = useState(undefined);
   const [settings, setSettings] = useState(false);
   const [readerContent, setReaderContent] = useState(undefined);
   const [postHandler, setPostHandler] = useState(undefined);
+  const [rerenderTrigger, setRerenderTrigger] = useState(false);
 
   useEffect(() => {
     get("/api/whoami").then(async (user) => {
@@ -45,6 +56,7 @@ const App = () => {
         get("/api/profile", { id: user._id }).then((user) => {
           console.log("user: ");
           console.log(user);
+          setLanding(false);
           initializeUser(setViewer, user);
         });
       } else initializeUser(setViewer, ANONYMOUS_USER);
@@ -81,8 +93,9 @@ const App = () => {
   };
 
   const goTo = {
-    profile: goToProfile,
-    treeView: goToTreeView,
+    home: goToFactory("", setRerenderTrigger),
+    profile: goToFactory("profile", setRerenderTrigger),
+    treeView: goToFactory("treeview", setRerenderTrigger),
   };
 
   //passed down as a prop to the various pages, which will call the handlers to set
@@ -109,47 +122,52 @@ const App = () => {
     setSettings((s) => !s);
   };
 
+  console.log("App rerendering");
   return (
     <>
       {useMemo(() => {
         return viewer ? (
-          <>
-            <NavBar
-              handleLogin={handleLogin}
-              handleLogout={handleLogout}
-              viewer={viewer}
-              goTo={goTo}
-              toggleSettings={toggleSettings}
-            />
-            <Router>
-              <Feed
-                path="/"
+          !landing ? (
+            <>
+              <NavBar
                 handleLogin={handleLogin}
                 handleLogout={handleLogout}
                 viewer={viewer}
                 goTo={goTo}
-                popupHandlers={popupHandlers}
+                toggleSettings={toggleSettings}
               />
-              <TreeView
-                path="/treeview/:snippetId"
-                viewer={viewer}
-                goTo={goTo}
-                popupHandlers={popupHandlers}
-              />
-              <Profile
-                path="/profile/:profileId"
-                viewer={viewer}
-                setViewer={setViewer}
-                goTo={goTo}
-                popupHandlers={popupHandlers}
-              />
-              <NotFound default />
-            </Router>
-          </>
+              <Router>
+                <Feed
+                  path="/"
+                  handleLogin={handleLogin}
+                  handleLogout={handleLogout}
+                  viewer={viewer}
+                  goTo={goTo}
+                  popupHandlers={popupHandlers}
+                />
+                <TreeView
+                  path="/treeview/:snippetId"
+                  viewer={viewer}
+                  setViewer={setViewer}
+                  goTo={goTo}
+                  popupHandlers={popupHandlers}
+                />
+                <Profile
+                  path="/profile/:profileId"
+                  viewer={viewer}
+                  goTo={goTo}
+                  popupHandlers={popupHandlers}
+                />
+                <NotFound default />
+              </Router>
+            </>
+          ) : (
+            <Landing handleLogin={handleLogin} setLanding={setLanding} />
+          )
         ) : (
           <div className="Loading"></div>
         );
-      }, [viewer])}
+      }, [viewer, landing, rerenderTrigger])}
       {(reader || writer || settings) && (
         <ModalBackground
           onClose={() => {

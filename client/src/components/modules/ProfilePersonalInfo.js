@@ -71,6 +71,7 @@ const FollowButton = ({ profileId, initialState }) => {
  * @param {Settings} profileSettings
  * @param {String} name profile's name
  * @param {String} bio profile's bio
+ * @param {String} profilePicURL
  * @param {Object} viewer
  * @param {Function} setAuthorToPic
  * @param {[String]} allFriends array of profile's friends' ids (NOT the viewer's)
@@ -125,6 +126,7 @@ const ProfilePersonalInfo = (props) => {
   });
 
   console.log("profile page rerendering");
+  console.log(props);
 
   return (
     <>

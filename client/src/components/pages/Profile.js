@@ -4,7 +4,7 @@ import ProfilePersonalInfo from "../modules/ProfilePersonalInfo";
 import SnippetDisplay from "../modules/SnippetDisplay";
 
 import "./Profile.css";
-import { checkSettings, populateSettings } from "../../utils/user.utils";
+import { checkSettings } from "../../utils/user.utils";
 
 const MAX_SNIPPETS_PER_PAGE = 10;
 const TABS = [
@@ -12,6 +12,15 @@ const TABS = [
   ["Favorites", "favorites"],
   ["Bookmarks", "bookmarks"],
 ];
+
+//display loading until all of these state data are set
+const TO_LOAD = ["data", "snippetData", "authorToPic", "profileSettings"];
+const LOADING_START = {
+  data: true,
+  snippetData: true,
+  authorToPic: true,
+  profileSettings: true,
+};
 
 /**
  * Profile page.
@@ -21,15 +30,16 @@ const TABS = [
  * @param {Object} viewer the viewer
  * @param {Object} goTo navigation functions
  * @param {Object} popupHandlers
- * @param {Function} setViewer
  */
-const Profile = ({ profileId, viewer, goTo, popupHandlers, setViewer }) => {
+const Profile = ({ profileId, viewer, goTo, popupHandlers }) => {
   const [data, setData] = useState(undefined);
   const [snippetData, setSnippetData] = useState(undefined);
   const [authorToPic, setAuthorToPic] = useState(undefined);
   const [profileSettings, setProfileSettings] = useState(undefined);
+  const [loading, setLoading] = useState(LOADING_START);
 
   useEffect(() => {
+    setLoading(LOADING_START);
     console.log("viewing profile of user " + profileId);
     const getProfileData = async () => {
       const res = await get("/api/profile", { id: profileId });
@@ -60,16 +70,33 @@ const Profile = ({ profileId, viewer, goTo, popupHandlers, setViewer }) => {
       }
       console.log("User ids for the snippets on this profile page:");
       console.log(new Set(userIds));
-      setAuthorToPic(await get("/api/profile-pictures", { userIds: userIds }));
+      let atp = await get("/api/profile-pictures", { userIds: userIds });
+      atp[profileId] = profileData.pictureURL;
+      setAuthorToPic(atp);
     };
     getProfileData().then((res) => {
       getProfileSnippetData(res);
     });
   }, [profileId]);
 
+  for (let i = 0; i < TO_LOAD.length; i++) {
+    useEffect(() => {
+      if (loading[TO_LOAD[i]])
+        setLoading((obj) => {
+          console.log("set Loading");
+          let newObj = structuredClone(obj);
+          newObj[TO_LOAD[i]] = false;
+          return newObj;
+        });
+    }, [[data, snippetData, authorToPic, profileSettings][i]]);
+  }
+
   return (
     <>
-      {!snippetData || !authorToPic || !profileSettings ? (
+      {TO_LOAD.some((item) => {
+        console.log("checking if " + item + " is loading; ans is " + loading[item]);
+        return loading[item];
+      }) || ![data, snippetData, authorToPic, profileSettings].every((v) => v) ? (
         <div className="Loading"></div>
       ) : (
         <div className="Profile-container">

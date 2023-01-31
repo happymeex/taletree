@@ -42,6 +42,7 @@ const ALLOW_HIGHLIGHT = (classname) => {
  * Proptypes
  * @param {String} snippetId
  * @param {Object} viewer
+ * @param {Function} setViewer
  * @param {Object} goTo navigation functions
  * @param {{toggle: Function, setContentGenerator: Function}} popupHandlers
  */
@@ -56,8 +57,6 @@ const TreeView = (props) => {
   const [viewTarget, setViewTarget] = useState(props.snippetId); //the snippet assigned coordinates (0,0)
   const [thread, setThread] = useState(undefined);
   const [highlight, setHighlight] = useState(true);
-  const [writer, setWriter] = useState(false);
-  const [reader, setReader] = useState(false);
   const [scale, setScale] = useState(1);
   const [localViewer, setLocalViewer] = useState(props.viewer);
   const [authorToPic, setAuthorToPic] = useState(undefined);
@@ -96,14 +95,23 @@ const TreeView = (props) => {
 
   const updateLocalViewer = (attrib, id, action) => {
     console.log("updating!");
-    setLocalViewer((v) => {
+    const update = (v) => {
       if (action === "add") {
         v[attrib].add(id);
       } else if (action === "delete") {
         v[attrib].delete(id);
       }
       return v;
-    });
+    };
+    //setLocalViewer((v) => {
+    //  if (action === "add") {
+    //    v[attrib].add(id);
+    //  } else if (action === "delete") {
+    //    v[attrib].delete(id);
+    //  }
+    //  return v;
+    //});
+    setLocalViewer((v) => update(v));
   };
 
   const handleMouseDown = (e) => {

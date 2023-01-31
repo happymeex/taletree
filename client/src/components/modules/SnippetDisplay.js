@@ -99,6 +99,7 @@ const SnippetDisplayContent = ({
     initializeTracker(tabNumber, snippetList.length / maxPerPage)
   );
   const [ready, setReady] = useState(false);
+  let snippets = null;
 
   useEffect(() => {
     console.log("initializing page tracker");
@@ -121,7 +122,6 @@ const SnippetDisplayContent = ({
   const default_tracker = { page: 1, l: 1, r: Math.min(3, totalPages) };
   const tracker = pageTracker[tabNumber] ? pageTracker[tabNumber] : default_tracker;
 
-  let snippets = null;
   snippets = snippetList
     .slice() //clone array so that it isn't mutated by reverse
     .reverse()
@@ -269,12 +269,6 @@ const SnippetDisplay = (props) => {
       );
     });
   }
-
-  //Let's not try to update as we change tabs -- only update on refresh.
-  //if (props.isViewer && currTab === 1)
-  //  snippetList = snippetList.filter((snippet) => snippet.status.isFavorite);
-  //else if (props.isViewer && currTab === 2)
-  //  snippetList = snippetList.filter((snippet) => snippet.status.isBookmark);
 
   return (
     <div className="SnippetDisplay-container">
