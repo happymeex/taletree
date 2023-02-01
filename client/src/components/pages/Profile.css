@@ -14,6 +14,16 @@
   width: 60vw;
 }
 
+@media only screen and (max-width: 1000px) {
+  .Profile-container {
+    flex-direction: column;
+    width: 100vw;
+  }
+  .Profile-container > * {
+    width: 100%;
+  }
+}
+
 .Profile-name {
   font-size: var(--xxl);
   text-align: center;
