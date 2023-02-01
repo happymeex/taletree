@@ -139,13 +139,24 @@ form {
 
 .Loading {
   margin: auto;
-  border: 20px solid #eaf0f6;
+  padding: var(--m);
+  box-sizing: border-box;
+  border: 16px solid #eaf0f6;
   border-radius: 50%;
-  border-top: 20px solid var(--primary);
+  border-top: 16px solid var(--primary);
   width: 200px;
   height: 200px;
   align-self: center;
   animation: spinner 4s linear infinite;
+}
+
+.Loading-small {
+  margin: 0;
+  border: 6px solid var(--lightgrey);
+  width: 32px;
+  height: 32px;
+  border-top: 4px solid var(--primary);
+  animation: spinner 2s linear infinite;
 }
 
 @keyframes spinner {

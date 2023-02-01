@@ -102,3 +102,7 @@
 .FollowButton > span {
   color: var(--primary--dark);
 }
+
+.FollowButton:has(.Loading) {
+  display: none;
+}

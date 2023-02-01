@@ -49,18 +49,29 @@ const FollowButton = ({ profileId, initialState }) => {
   const toggleFollow = () => {
     //Note: the viewer id is automatically included as req.user
     setLoading(true);
-    post("/api/follow", { profileId: profileId, method: following ? "delete" : "add" }).then(
-      (res) => {
+    post("/api/follow", { profileId: profileId, method: following ? "delete" : "add" })
+      .then((res) => {
         console.log(res.status);
         setFollowing((s) => !s);
         setLoading(false);
-      }
-    );
+      })
+      .catch((err) => {
+        alert(
+          "An error occurred while processing the " + (following ? "un" : "") + "follow request!"
+        );
+        setLoading(false);
+      });
   };
   return (
-    <div className="FollowButton u-clickable" onClick={toggleFollow}>
-      {loading ? <div className="Loading"></div> : <span>{following ? "Unfollow" : "Follow"}</span>}
-    </div>
+    <>
+      {loading ? (
+        <div className="Loading Loading-small"></div>
+      ) : (
+        <div className="FollowButton u-clickable" onClick={toggleFollow}>
+          <span>{following ? "Unfollow" : "Follow"}</span>
+        </div>
+      )}
+    </>
   );
 };
 
