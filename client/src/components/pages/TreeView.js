@@ -42,7 +42,6 @@ const ALLOW_HIGHLIGHT = (classname) => {
  * Proptypes
  * @param {String} snippetId
  * @param {Object} viewer
- * @param {Function} setViewer
  * @param {Object} goTo navigation functions
  * @param {{toggle: Function, setContentGenerator: Function}} popupHandlers
  */
@@ -148,11 +147,13 @@ const TreeView = (props) => {
     const text = getThread(snippets, target, false)
       .reverse()
       .map((id) => snippets[id].content);
-    const settings = {
-      openWriter: () => {
-        toggleSnippetWriter(false);
-      },
-    };
+    const settings = props.viewer._id
+      ? {
+          openWriter: () => {
+            toggleSnippetWriter(false);
+          },
+        }
+      : {};
     props.popupHandlers.toggle("reader");
     props.popupHandlers.setContent({ settings: settings, text: text });
   };
@@ -271,12 +272,14 @@ const TreeView = (props) => {
             () => (
               <>
                 <GenericButton text="Read" onClick={toggleThreadReader} />
-                <GenericButton
-                  text="Write"
-                  onClick={() => {
-                    toggleSnippetWriter(true);
-                  }}
-                />
+                {props.viewer._id && (
+                  <GenericButton
+                    text="Write"
+                    onClick={() => {
+                      toggleSnippetWriter(true);
+                    }}
+                  />
+                )}
                 <GenericButton text="Align" onClick={alignCurrentThread} />
                 <GenericButton
                   text="Center"

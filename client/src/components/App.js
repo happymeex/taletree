@@ -83,15 +83,6 @@ const App = () => {
     post("/api/logout");
   };
 
-  const goToProfile = (id) => {
-    navigate(`/profile/${id}`);
-    window.location.reload();
-  };
-
-  const goToTreeView = (id) => {
-    navigate(`/treeview/${id}`);
-  };
-
   const goTo = {
     home: goToFactory("", setRerenderTrigger),
     profile: goToFactory("profile", setRerenderTrigger),
@@ -148,7 +139,6 @@ const App = () => {
                 <TreeView
                   path="/treeview/:snippetId"
                   viewer={viewer}
-                  setViewer={setViewer}
                   goTo={goTo}
                   popupHandlers={popupHandlers}
                 />
