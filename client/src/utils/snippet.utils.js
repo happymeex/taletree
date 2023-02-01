@@ -23,20 +23,4 @@ const getRandomPlaceholder = (type) => {
   return placeholders[index % placeholders.length];
 };
 
-const postFromFeed = (input, viewer, callback) => {
-  const writeToDB = async () => {
-    const treeId = await post("/api/new-tree");
-    console.log("browser got treeId: " + treeId);
-    if (treeId)
-      post("/api/new-snippet", {
-        authorName: viewer.name,
-        authorId: viewer._id,
-        input: input,
-        parentId: ROOT,
-        treeId: treeId,
-      }).then(callback());
-  };
-  writeToDB();
-};
-
-export { getRandomPlaceholder, postFromFeed };
+export { getRandomPlaceholder };
