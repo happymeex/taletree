@@ -7,6 +7,7 @@
   background-color: rgba(0, 0, 0, 0.4);
   align-items: center;
   font-family: "Lato", sans-serif;
+  overflow-y: scroll;
 }
 
 .ModalBackground-closeButton {
@@ -19,11 +20,18 @@
 }
 
 .ModalBackground-readerWriterWrapper {
-  width: 50vw;
+  width: 60vw;
   height: 100vh;
   gap: var(--m);
+  padding-top: 100px;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   gap: var(--s);
+}
+
+@media only screen and (max-width: 1000px) {
+  .ModalBackground-readerWriterWrapper {
+    width: 100vw;
+  }
 }
