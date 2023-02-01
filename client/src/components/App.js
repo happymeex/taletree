@@ -15,15 +15,8 @@ import Landing from "./pages/Landing.js";
 
 import "../utilities.css";
 
-import { socket } from "../client-socket.js";
-
 import { get, post } from "../utilities";
-import {
-  DEFAULT_SETTINGS,
-  ANONYMOUS_USER,
-  populateSettings,
-  initializeUser,
-} from "../utils/user.utils.js";
+import { ANONYMOUS_USER, initializeUser } from "../utils/user.utils.js";
 import { navigate } from "@reach/router";
 
 const goToFactory = (loc, setRerenderTrigger) => {
@@ -74,7 +67,6 @@ const App = () => {
     post("/api/login", { token: userToken }).then((user) => {
       window.location.reload();
       initializeUser(setViewer, user);
-      post("/api/initsocket", { socketid: socket.id });
     });
   };
 
