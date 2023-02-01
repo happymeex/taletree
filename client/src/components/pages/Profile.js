@@ -42,13 +42,17 @@ const Profile = ({ profileId, viewer, goTo, popupHandlers }) => {
     setLoading(LOADING_START);
     console.log("viewing profile of user " + profileId);
     const getProfileData = async () => {
-      const res = await get("/api/profile", { id: profileId });
-      console.log("got profile data:");
-      console.log(res);
-      const settings = checkSettings(res.settings, res._id);
-      setProfileSettings(settings);
-      setData(res);
-      return { profileData: res, settings: settings };
+      const res = await get("/api/profile", { id: profileId }).catch((err) => {
+        console.log(err);
+      });
+      if (res) {
+        console.log("got profile data:");
+        console.log(res);
+        const settings = checkSettings(res.settings, res._id);
+        setProfileSettings(settings);
+        setData(res);
+        return { profileData: res, settings: settings };
+      } else goTo.notFound();
     };
     const getProfileSnippetData = async ({ profileData, settings }) => {
       let visibleTabs =
