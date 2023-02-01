@@ -1,5 +1,5 @@
 .SingleSnippet-container {
-  border-top: var(--medgrey) 1px solid;
+  border-top: var(--lightgrey) 1px solid;
   padding: var(--s) var(--s) var(--xs) var(--s);
   max-height: 30vh;
   min-height: 100px;

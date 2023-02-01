@@ -71,23 +71,26 @@ const Feed = ({ userName, viewer, goTo, popupHandlers }) => {
     popupHandlers.setWriterPlaceholder(placeholder);
   };
   return (
-    <div className="Feed-container u-flex-justifyCenter">
-      <div className="Feed-snippetDisplayWrapper">
-        {snippets && authorToPic ? (
-          <SnippetDisplay
-            viewer={viewer}
-            goTo={goTo}
-            snippets={snippets}
-            authorToPic={authorToPic}
-            maxPerPage={MAX_SNIPPETS_PER_PAGE}
-            popupHandlers={popupHandlers}
-          />
-        ) : (
-          <div className="Loading"></div>
-        )}
+    <>
+      <div className="BackgroundImage"></div>
+      <div className="Feed-container u-flex-justifyCenter">
+        <div className="Feed-snippetDisplayWrapper">
+          {snippets && authorToPic ? (
+            <SnippetDisplay
+              viewer={viewer}
+              goTo={goTo}
+              snippets={snippets}
+              authorToPic={authorToPic}
+              maxPerPage={MAX_SNIPPETS_PER_PAGE}
+              popupHandlers={popupHandlers}
+            />
+          ) : (
+            <div className="Loading"></div>
+          )}
+        </div>
+        {viewer._id && <WriteNewSnippetButton onClick={toggleSnippetWriter} />}
       </div>
-      {viewer._id && <WriteNewSnippetButton onClick={toggleSnippetWriter} />}
-    </div>
+    </>
   );
 };
 

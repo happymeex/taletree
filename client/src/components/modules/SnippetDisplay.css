@@ -1,5 +1,7 @@
 .SnippetDisplay-container {
   width: 100%;
+  background-color: rgba(256, 256, 256, 0.8);
+  backdrop-filter: blur(4px);
 }
 .SnippetDisplay-pageBar {
   gap: var(--s);
