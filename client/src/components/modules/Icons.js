@@ -3,7 +3,7 @@ import "./Icons.css";
 
 const getTooltip = (desc, active) => {
   if (desc === "Sprout") return "View full tree";
-  if (desc === "Leaf") return active ? "Close writer" : "Open writer";
+  if (desc === "Leaf") return "Toggle writer";
   return (active ? "Saved" : "Save") + " to " + (desc === "Heart" ? "favorites" : "bookmarks");
 };
 
@@ -21,7 +21,7 @@ const Icon = ({ showByDefault, imgOn, imgOff, isActive, toggleActive, desc }) =>
   const [active, setActive] = useState(isActive);
 
   let iconStyle = {};
-  if (isHover && !active) iconStyle["filter"] = `brightness(0.5)`;
+  if (isHover && (!active || desc === "Leaf")) iconStyle["filter"] = `brightness(0.5)`;
 
   return showByDefault || active ? (
     <div className="Icon-wrapper u-flexColumn u-flex-alignCenter">
@@ -35,7 +35,7 @@ const Icon = ({ showByDefault, imgOn, imgOff, isActive, toggleActive, desc }) =>
           setActive((s) => !s);
         }}
         onMouseOver={() => {
-          if (!active) setIsHover(true);
+          setIsHover(true);
         }}
         onMouseOut={() => {
           setIsHover(false);

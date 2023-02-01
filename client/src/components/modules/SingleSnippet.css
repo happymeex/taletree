@@ -1,9 +1,8 @@
 .SingleSnippet-container {
-  border: var(--darkgrey) 1px solid;
-  border-radius: var(--m);
-  margin-top: var(--m);
+  border-top: var(--medgrey) 1px solid;
   padding: var(--s) var(--s) var(--xs) var(--s);
   max-height: 30vh;
+  min-height: 100px;
 }
 
 .SingleSnippet-displayBox {
@@ -28,8 +27,8 @@
   gap: var(--s);
 }
 
-.SingleSnippet-container:first-of-type {
-  margin-top: var(--l);
+.SingleSnippet-container:last-of-type {
+  border-bottom: var(--medgrey) 1px solid;
 }
 
 .SingleSnippet-story {
@@ -38,10 +37,21 @@
 
 .SingleSnippet-authorInfo {
   gap: var(--xs);
+  margin-right: var(--xs);
 }
+
+.SingleSnippet-authorInfo {
+  --width: 110px;
+  flex-basis: var(--width);
+  max-width: var(--width);
+}
+
 .SingleSnippet-authorName {
+  max-width: 100%;
   cursor: pointer;
   text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .SingleSnippet-profilePic {

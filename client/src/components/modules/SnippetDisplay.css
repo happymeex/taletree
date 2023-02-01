@@ -33,7 +33,7 @@
 .SnippetDisplay-tabBar {
   width: 100%;
   flex-direction: row;
-  margin-bottom: var(--m);
+  margin-bottom: var(--xs);
 }
 
 .SnippetDisplay-tabBar > * {
