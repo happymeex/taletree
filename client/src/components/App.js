@@ -87,6 +87,7 @@ const App = () => {
     home: goToFactory("", setRerenderTrigger),
     profile: goToFactory("profile", setRerenderTrigger),
     treeView: goToFactory("treeview", setRerenderTrigger),
+    notFound: goToFactory("not-found", (f) => f(0)),
   };
 
   //passed down as a prop to the various pages, which will call the handlers to set

@@ -62,16 +62,20 @@ const TreeView = (props) => {
 
   useEffect(() => {
     const getSnippetData = async () => {
-      const tree = await get("/api/treeview", { _id: props.snippetId });
-      console.log("Tree received from server: ");
-      console.log(tree);
-      let userIds = [];
-      for (const id in tree) userIds.push(tree[id].authorId);
-      const atp = await get("/api/profile-pictures", { userIds: userIds });
-      setAuthorToPic(atp);
-      setCoords(getCoords(tree, props.snippetId));
-      setThread(getThread(tree, props.snippetId));
-      setSnippets(tree);
+      const tree = await get("/api/treeview", { _id: props.snippetId }).catch((err) => {
+        console.log(err);
+      });
+      if (tree) {
+        console.log("Tree received from server: ");
+        console.log(tree);
+        let userIds = [];
+        for (const id in tree) userIds.push(tree[id].authorId);
+        const atp = await get("/api/profile-pictures", { userIds: userIds });
+        setAuthorToPic(atp);
+        setCoords(getCoords(tree, props.snippetId));
+        setThread(getThread(tree, props.snippetId));
+        setSnippets(tree);
+      } else props.goTo.notFound();
     };
     getSnippetData();
 
@@ -292,7 +296,7 @@ const TreeView = (props) => {
             [snippets, target, viewTarget, coords]
           )}
         </TreeViewMenu>
-        <>{snippetList}</>
+        {snippetList.length === 0 ? <div className="Loading"></div> : <>{snippetList}</>}
       </div>
     </>
   );

@@ -105,20 +105,31 @@ router.get("/snippets", (req, res) => {
 router.get("/treeview", (req, res) => {
   console.log("api called, finding snippet with id " + req.query._id);
   const getTree = async () => {
-    const snippet = await Snippet.findById(req.query._id).lean();
+    let flag = false;
+    const snippet = await Snippet.findById(req.query._id)
+      .lean()
+      .catch((err) => {
+        res.status(400).send({ msg: "Invalid snippet id" });
+        flag = true;
+      });
+
     if (!snippet) {
-      res.status(404).send("Snippet not found");
+      if (!flag) res.status(404).send({ msg: "Snippet not found" });
       return;
     }
-    const tree = await Tree.findById(snippet.treeId);
-    console.log("Got treeid " + tree._id);
-    const snippetList = await Snippet.find({ _id: { $in: tree.snippets } }).lean();
-    res.send(
-      snippetList.reduce((acc, curr) => {
-        acc[curr._id] = curr;
-        return acc;
-      }, {})
-    );
+    const tree = await Tree.findById(snippet.treeId).catch((err) => {
+      res.status(500).send({ msg: "Database error: snippet has no corresponding tree" });
+      flag = true;
+    });
+    if (tree && !flag) {
+      const snippetList = await Snippet.find({ _id: { $in: tree.snippets } }).lean();
+      res.send(
+        snippetList.reduce((acc, curr) => {
+          acc[curr._id] = curr;
+          return acc;
+        }, {})
+      );
+    }
   };
   getTree();
 });
