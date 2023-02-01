@@ -74,7 +74,6 @@ const NavBar = ({ handleLogin, handleLogout, viewer, goTo, toggleSettings }) => 
               logout={() => {
                 googleLogout();
                 handleLogout();
-                window.location.reload();
               }}
               viewer={viewer}
               goTo={goTo}

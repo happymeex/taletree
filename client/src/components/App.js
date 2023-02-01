@@ -79,8 +79,14 @@ const App = () => {
   };
 
   const handleLogout = () => {
-    window.location.reload();
-    post("/api/logout");
+    post("/api/logout")
+      .then(() => {
+        console.log("ok");
+        window.location.reload();
+      })
+      .catch((err) => {
+        alert("An error occurred while logging out!");
+      });
   };
 
   const goTo = {
