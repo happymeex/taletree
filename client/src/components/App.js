@@ -144,6 +144,7 @@ const App = () => {
                 <Profile
                   path="/profile/:profileId"
                   viewer={viewer}
+                  setViewer={setViewer}
                   goTo={goTo}
                   popupHandlers={popupHandlers}
                 />

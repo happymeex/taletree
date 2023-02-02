@@ -3,7 +3,7 @@ import Resizer from "react-image-file-resizer";
 import { post } from "../../utilities";
 import "./ProfilePicture.css";
 
-const ProfilePicture = ({ id, pictureURL, editable, setAuthorToPic }) => {
+const ProfilePicture = ({ id, pictureURL, editable, setViewer, setAuthorToPic }) => {
   const [url, setUrl] = useState(pictureURL);
   const [loading, setLoading] = useState(false);
 
@@ -32,6 +32,12 @@ const ProfilePicture = ({ id, pictureURL, editable, setAuthorToPic }) => {
             let newDict = structuredClone(dict);
             newDict[id] = data.data.link;
             return newDict;
+          });
+          //looks like I have to do this to get the picture in the navbar to update
+          setViewer((v) => {
+            let newV = structuredClone(v);
+            newV.pictureURL = data.data.link;
+            return newV;
           });
         } else {
           alert("An unexpected error occurred!");

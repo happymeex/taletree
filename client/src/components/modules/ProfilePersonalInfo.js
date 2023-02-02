@@ -84,6 +84,7 @@ const FollowButton = ({ profileId, initialState }) => {
  * @param {String} bio profile's bio
  * @param {String} profilePicURL
  * @param {Object} viewer
+ * @param {Function} setViewer
  * @param {Function} setAuthorToPic
  * @param {[String]} allFriends array of profile's friends' ids (NOT the viewer's)
  * @param {Function} goTo
@@ -146,6 +147,7 @@ const ProfilePersonalInfo = (props) => {
           id={props.profileId}
           pictureURL={props.profilePicURL}
           setAuthorToPic={props.setAuthorToPic}
+          setViewer={props.setViewer}
           editable={props.profileId === props.viewer._id}
         />
         <div className="Profile-name u-textCenter">{props.name}</div>

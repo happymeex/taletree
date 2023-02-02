@@ -31,7 +31,7 @@ const LOADING_START = {
  * @param {Object} goTo navigation functions
  * @param {Object} popupHandlers
  */
-const Profile = ({ profileId, viewer, goTo, popupHandlers }) => {
+const Profile = ({ profileId, viewer, setViewer, goTo, popupHandlers }) => {
   const [data, setData] = useState(undefined);
   const [snippetData, setSnippetData] = useState(undefined);
   const [authorToPic, setAuthorToPic] = useState(undefined);
@@ -111,6 +111,7 @@ const Profile = ({ profileId, viewer, goTo, popupHandlers }) => {
             bio={data.bio}
             profilePicURL={data.pictureURL}
             viewer={viewer}
+            setViewer={setViewer}
             setAuthorToPic={setAuthorToPic}
             allFriends={data.friends}
             goTo={goTo}
