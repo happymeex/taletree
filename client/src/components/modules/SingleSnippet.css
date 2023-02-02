@@ -11,7 +11,8 @@
 
 .SingleSnippet-contentBox {
   margin-left: var(--xs);
-  overflow-wrap: break-word;
+  max-width: 100%;
+  overflow-wrap: anywhere;
   overflow-y: hidden;
   hyphens: auto;
   white-space: pre-wrap;
